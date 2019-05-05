@@ -1,0 +1,87 @@
+﻿<Page
+    x:Class="RSS_Stalker.Pages.ChannelDetailPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:RSS_Stalker.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:RSS_Stalker.Models"
+    xmlns:controls="using:RSS_Stalker.Controls"
+    xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <DataTemplate x:DataType="x:String" x:Key="TagItemTemplate">
+            <Border CornerRadius="4" Padding="5,3" BorderBrush="{ThemeResource LineColor}" BorderThickness="1">
+                <TextBlock Text="{Binding}" FontFamily="{StaticResource Basic}" FontSize="11" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{ThemeResource TipTextColor}"/>
+            </Border>
+        </DataTemplate>
+        <DataTemplate x:DataType="models:Feed" x:Key="FeddItemTemplate">
+            <Grid Background="{ThemeResource CardBackground}" Width="250" Height="360">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <controls:HoldImage Visibility="{x:Bind ImgVisibility,Mode=OneWay}" ImageLink="{x:Bind ImageUrl}" Height="150" HorizontalAlignment="Stretch"/>
+                <StackPanel Grid.Row="1" Margin="20,0" Padding="0,20" BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,0,1">
+                    <TextBlock Margin="10,0,10,5" Text="{x:Bind Title}" ToolTipService.ToolTip="{x:Bind Title}" Foreground="{ThemeResource ImportantTextColor}" TextTrimming="CharacterEllipsis" FontSize="14" FontWeight="Bold" FontFamily="{StaticResource Title}"/>
+                    <TextBlock Margin="10,0" Text="{x:Bind Date}" Foreground="{ThemeResource TipTextColor}" FontSize="9" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource Basic}"/>
+                    <TextBlock Margin="10,10,10,0" Text="{x:Bind Summary}" Foreground="{ThemeResource NormalTextColor}" FontSize="12" FontFamily="{StaticResource Basic}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" MaxLines="4"/>
+                    <ListView ItemTemplate="{StaticResource TagItemTemplate}"
+                              ItemsSource="{x:Bind Categories}"
+                              ItemContainerStyle="{StaticResource TransparentListItemContainer}"
+                              Style="{StaticResource BasicListView}"
+                              >
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <controls1:WrapPanel
+                                                Padding="0,0,0,0"
+                                            HorizontalAlignment="Stretch"
+                                            Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ListView>
+                </StackPanel>
+                <Grid Row="2" Margin="0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="1"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Style="{StaticResource TransparentButtonStyle}" Name="OpenFeedButton" Click="OpenFeedButton_Click" FontSize="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="{StaticResource Icon}" Content="&#xE975;"/>
+                    <StackPanel Grid.Column="1" Background="{ThemeResource LineColor}"/>
+                    <Button Grid.Column="2" Style="{StaticResource TransparentButtonStyle}" Name="ShareFeedButton" Click="ShareFeedButton_Click" FontSize="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="{StaticResource Icon}" Content="&#xE9CC;"/>
+                </Grid>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,0,1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Padding="30,15">
+                <TextBlock Name="ChannelNameTextBlock" FontFamily="{StaticResource Title}" FontWeight="Bold" Foreground="{ThemeResource ImportantTextColor}" FontSize="20"/>
+                <TextBlock Name="ChannelDescriptionTextBlock" Margin="0,20,0,0" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource NormalTextColor}" FontSize="13" TextWrapping="Wrap"/>
+            </StackPanel>
+            <Button Style="{StaticResource PrimaryCircleButtonStyle}" Name="OpenChannelButton" Click="OpenChannelButton_Click" Content="&#xE975;" VerticalAlignment="Center" Grid.Column="1" Margin="0,0,30,0"/>
+        </Grid>
+        <GridView HorizontalAlignment="Center"
+                  Grid.Row="1"
+                  Padding="30"
+                  Name="FeedGridView"
+                  ItemTemplate="{StaticResource FeddItemTemplate}"
+                  ItemsSource="{x:Bind SchemaCollection}"
+                  IsItemClickEnabled="True"
+                  ItemContainerStyle="{StaticResource BasicGridViewItemContainerStyle}"
+                  Style="{StaticResource BasicGridView}"
+                  ItemClick="FeedGridView_ItemClick"
+                  >
+        </GridView>
+    </Grid>
+</Page>

@@ -1,0 +1,11 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:RSS_Stalker.Template">
+    <FontFamily x:Key="Icon">/Assets/Fonts/rss.ttf#rss</FontFamily>
+    <FontFamily x:Key="English">/Assets/Fonts/Lobste.ttf#Lobster</FontFamily>
+    <!--<FontFamily x:Key="Basic">/Assets/Fonts/NotoSansSC.otf#Noto Sans SC Regular</FontFamily>-->
+    <FontFamily x:Key="Basic">/Assets/Fonts/PingFang.otf#PingFang SC</FontFamily>
+    <!--<FontFamily x:Key="Title">/Assets/Fonts/NotoSansSC-Bold.otf#Noto Sans SC Bold</FontFamily>-->
+    <FontFamily x:Key="Title">/Assets/Fonts/XiaoHua.ttf#HYXiaoBoHuaYueYuan</FontFamily>
+</ResourceDictionary>

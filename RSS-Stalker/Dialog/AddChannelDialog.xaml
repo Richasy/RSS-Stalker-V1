@@ -1,0 +1,46 @@
+﻿<ContentDialog
+    x:Class="RSS_Stalker.Dialog.AddChannelDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:RSS_Stalker.Dialog"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    BorderBrush="{ThemeResource LineColor}"
+    BorderThickness="1"
+    Background="{ThemeResource FlyoutBackground}"
+    TitleTemplate="{StaticResource DialogTitle}"
+    PrimaryButtonStyle="{StaticResource PrimaryDialogButton}"
+    SecondaryButtonStyle="{StaticResource DefaultDialogButton}"
+    CloseButtonStyle="{StaticResource DefaultDialogButton}"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+
+    <Grid>
+        <StackPanel MaxWidth="300">
+            <StackPanel>
+                <TextBlock x:Uid="Control_ChannelLinkTipBlock" Style="{StaticResource BasicTipTextStyle}" Margin="0,0,0,5"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Style="{StaticResource BasicTextBoxStyle}" TextChanged="ChannelLinkTextBox_TextChanged" VerticalAlignment="Center" HorizontalAlignment="Stretch" Name="ChannelLinkTextBox"/>
+                    <Button Style="{StaticResource GhostCircleButtonStyle}" Content="&#xE9C8;" FontFamily="{StaticResource Icon}" Name="TryLinkButton" Click="TryLinkButton_Click" Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                </Grid>
+            </StackPanel>
+            <StackPanel Name="DetailContainer" Visibility="Collapsed">
+                <StackPanel Margin="0,15,0,0">
+                    <TextBlock x:Uid="Control_ChannelNameTipBlock" Style="{StaticResource BasicTipTextStyle}" Margin="0,0,0,5"/>
+                    <TextBox Style="{StaticResource BasicTextBoxStyle}" VerticalAlignment="Center" HorizontalAlignment="Stretch" Name="ChannelNameTextBox"/>
+                </StackPanel>
+                <StackPanel Margin="0,15,0,0">
+                    <TextBlock x:Uid="Control_ChannelDescriptionTipBlock" Style="{StaticResource BasicTipTextStyle}" Margin="0,0,0,5"/>
+                    <TextBox Style="{StaticResource BasicTextBoxStyle}" VerticalAlignment="Center" HorizontalAlignment="Stretch" AcceptsReturn="True" Name="ChannelDescriptionTextBox" TextWrapping="Wrap"/>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+        <ProgressRing Style="{StaticResource BasicProgressRingStyle}" Name="LoadingRing"/>
+    </Grid>
+    
+</ContentDialog>

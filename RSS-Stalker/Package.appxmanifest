@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  IgnorableNamespaces="uap mp">
+
+  <Identity
+    Name="f7914819-89de-431c-8cf2-2c0cfbed3079"
+    Publisher="CN=richasy"
+    Version="1.0.0.0" />
+
+  <mp:PhoneIdentity PhoneProductId="f7914819-89de-431c-8cf2-2c0cfbed3079" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+
+  <Properties>
+    <DisplayName>RSS-Stalker</DisplayName>
+    <PublisherDisplayName>richasy</PublisherDisplayName>
+    <Logo>Assets\Logo\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-US"/>
+    <Resource Language="zh-CN"/>
+  </Resources>
+
+  <Applications>
+    <Application Id="App"
+      Executable="$targetnametoken$.exe"
+      EntryPoint="RSS_Stalker.App">
+      <uap:VisualElements
+        DisplayName="RSS Stalker"
+        Square150x150Logo="Assets\Logo\Square150x150Logo.png"
+        Square44x44Logo="Assets\Logo\Square44x44Logo.png"
+        Description="RSS-Stalker"
+        BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="Assets\Logo\Wide310x150Logo.png" ShortName="RSS Stalker" Square71x71Logo="Assets\Logo\SmallTile.png" Square310x310Logo="Assets\Logo\LargeTile.png">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square150x150Logo"/>
+            <uap:ShowOn Tile="wide310x150Logo"/>
+            <uap:ShowOn Tile="square310x310Logo"/>
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile >
+        <uap:SplashScreen Image="Assets\Logo\SplashScreen.png" />
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <Capability Name="internetClient" />
+  </Capabilities>
+</Package>

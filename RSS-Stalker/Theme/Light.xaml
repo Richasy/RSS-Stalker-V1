@@ -1,0 +1,29 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:RSS_Stalker.Theme">
+    
+    <SolidColorBrush x:Key="SideBackground" Color="#FFFFFF"/>
+    <AcrylicBrush x:Key="MaskBackground" BackgroundSource="Backdrop" TintColor="Black" TintOpacity="0.7" FallbackColor="Black"/>
+    <AcrylicBrush x:Key="FlyoutBackground" BackgroundSource="Backdrop" TintColor="#FFFFFF" TintOpacity="0.9" FallbackColor="#FFFFFF"/>
+    <SolidColorBrush x:Key="MediaControlsBackground" Color="#FFFFFF" Opacity="0.4"/>
+    <SolidColorBrush x:Key="PageBackground" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="CardBackground" Color="#FAFAFA"/>
+
+    <SolidColorBrush x:Key="PrimaryColor" Color="#00D59C"/>
+
+    <SolidColorBrush x:Key="PrimaryMenuTextColor" Color="#3c3c3c"/>
+    <SolidColorBrush x:Key="PrimaryInsideColor" Color="#034C39"/>
+    <SolidColorBrush x:Key="PrimaryColorOver" Color="#06BF8E"/>
+    <SolidColorBrush x:Key="SpecialColor" Color="#594AAD"/>
+    <SolidColorBrush x:Key="SpecialColorOver" Color="#413296"/>
+    <SolidColorBrush x:Key="LineColor" Color="#E4E4E4"/>
+    <SolidColorBrush x:Key="LineColorOver" Color="#C4C4C4"/>
+    <SolidColorBrush x:Key="PrimaryMenuOverBackground" Color="#FFFFFF" Opacity="0.6"/>
+    <SolidColorBrush x:Key="BasicListOverBackground" Color="#F8F8F8" Opacity="0.6"/>
+    <SolidColorBrush x:Key="TransparentBackground" Color="White" Opacity="0.01"/>
+
+    <SolidColorBrush x:Key="ImportantTextColor" Color="#1C1C1C"/>
+    <SolidColorBrush x:Key="NormalTextColor" Color="#737373"/>
+    <SolidColorBrush x:Key="TipTextColor" Color="#969696"/>
+</ResourceDictionary>

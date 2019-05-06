@@ -91,7 +91,31 @@ namespace RSS_Stalker
 
         private void ChannelSearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            string text = ChannelSearchBox.Text?.Trim();
+            var selectCategory = CategoryListView.SelectedItem as Category;
+            if (!string.IsNullOrEmpty(text))
+            {
+                if (selectCategory != null)
+                {
+                    var list = selectCategory.Channels.Where(p => AppTools.NormalString(p.Name).IndexOf(AppTools.NormalString(text)) != -1).ToList();
+                    Channels.Clear();
+                    foreach (var item in list)
+                    {
+                        Channels.Add(item);
+                    }
+                }
+            }
+            else
+            {
+                Channels.Clear();
+                if (selectCategory != null)
+                {
+                    foreach (var item in selectCategory.Channels)
+                    {
+                        Channels.Add(item);
+                    }
+                }
+            }
         }
 
         private async void AddChannelButton_Click(object sender, RoutedEventArgs e)
@@ -107,9 +131,10 @@ namespace RSS_Stalker
             MainFrame.Navigate(typeof(Pages.SettingPage));
         }
 
-        private void UpdateChannelMenuItem_Click(object sender, RoutedEventArgs e)
+        private async void UpdateChannelMenuItem_Click(object sender, RoutedEventArgs e)
         {
-
+            var dialog = new ModifyChannelDialog(_tempChannel);
+            await dialog.ShowAsync();
         }
 
         private async void DeleteChannelMenuItem_Click(object sender, RoutedEventArgs e)
@@ -119,8 +144,13 @@ namespace RSS_Stalker
             {
                 _e.Cancel = true;
                 var category = CategoryListView.SelectedItem as Category;
+                var selectChannel = ChannelListView.SelectedItem as Channel;
                 if (category != null)
                 {
+                    if(selectChannel!=null && selectChannel.Link == _tempChannel.Link)
+                    {
+                        MainFrame.Navigate(typeof(Pages.WelcomePage));
+                    }
                     confirmDialog.IsPrimaryButtonEnabled = false;
                     confirmDialog.PrimaryButtonText = AppTools.GetReswLanguage("Tip_Waiting");
                     category.Channels.RemoveAll(p => p.Link == _tempChannel.Link);
@@ -145,9 +175,10 @@ namespace RSS_Stalker
             ChannelMenuFlyout.ShowAt((FrameworkElement)sender,e.GetPosition((FrameworkElement)sender));
         }
 
-        private void MoveChannelMenuItem_Click(object sender, RoutedEventArgs e)
+        private async void MoveChannelMenuItem_Click(object sender, RoutedEventArgs e)
         {
-
+            var dialog = new MoveChannelDialog(_tempChannel);
+            await dialog.ShowAsync();
         }
     }
 }

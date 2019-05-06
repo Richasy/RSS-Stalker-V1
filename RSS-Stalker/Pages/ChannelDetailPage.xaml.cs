@@ -29,37 +29,57 @@ namespace RSS_Stalker.Pages
     /// </summary>
     public sealed partial class ChannelDetailPage : Page
     {
-        private Channel _sourceData = null;
+        public Channel _sourceData = null;
         private ObservableCollection<Feed> SchemaCollection = new ObservableCollection<Feed>();
         private Feed _shareData = null;
+        public static ChannelDetailPage Current;
         public ChannelDetailPage()
         {
             this.InitializeComponent();
+            Current = this;
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if(e.Parameter!=null && e.Parameter is Channel)
+            if(e.Parameter!=null)
             {
-                LoadingRing.IsActive=true;
-                _sourceData = e.Parameter as Channel;
-                ChannelDescriptionTextBlock.Text = _sourceData.Description;
-                ChannelNameTextBlock.Text = _sourceData.Name;
-                var feed=await AppTools.GetScheamFromUrl(_sourceData.Link);
-                if (feed != null && feed.Count>0)
+                if(e.Parameter is Channel)
                 {
-                    foreach (var item in feed)
+                    LoadingRing.IsActive = true;
+                    _sourceData = e.Parameter as Channel;
+                    ChannelDescriptionTextBlock.Text = _sourceData.Description;
+                    ChannelNameTextBlock.Text = _sourceData.Name;
+                    var feed = await AppTools.GetScheamFromUrl(_sourceData.Link);
+                    if (feed != null && feed.Count > 0)
                     {
-                        SchemaCollection.Add(item);
+                        foreach (var item in feed)
+                        {
+                            SchemaCollection.Add(item);
+                        }
+                    }
+                    LoadingRing.IsActive = false;
+                }
+                else if(e.Parameter is List<Feed>)
+                {
+                    var feed = e.Parameter as List<Feed>;
+                    _sourceData = MainPage.Current.ChannelListView.SelectedItem as Channel;
+                    if (_sourceData != null)
+                    {
+                        ChannelDescriptionTextBlock.Text = _sourceData.Description;
+                        ChannelNameTextBlock.Text = _sourceData.Name;
+                        foreach (var item in feed)
+                        {
+                            SchemaCollection.Add(item);
+                        }
                     }
                 }
-                LoadingRing.IsActive = false;
             }
         }
 
         private void FeedGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as Feed;
-            MainPage.Current.MainFrame.Navigate(typeof(FeedDetailPage), item);
+            var t = new Tuple<Feed, List<Feed>>(item, SchemaCollection.ToList());
+            MainPage.Current.MainFrame.Navigate(typeof(FeedDetailPage), t);
         }
 
         private async void OpenChannelButton_Click(object sender, RoutedEventArgs e)
@@ -114,6 +134,21 @@ namespace RSS_Stalker.Pages
             DataRequest request = args.Request;
             request.Data = dataPackage;
             _shareData = null;
+        }
+
+        private async void RefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadingRing.IsActive = true;
+            SchemaCollection.Clear();
+            var feed = await AppTools.GetScheamFromUrl(_sourceData.Link);
+            if (feed != null && feed.Count > 0)
+            {
+                foreach (var item in feed)
+                {
+                    SchemaCollection.Add(item);
+                }
+            }
+            LoadingRing.IsActive = false;
         }
     }
 }

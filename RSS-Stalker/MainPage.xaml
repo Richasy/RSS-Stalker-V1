@@ -30,8 +30,8 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Text="{x:Bind Name}" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource Title}" Foreground="{ThemeResource ImportantTextColor}" FontWeight="Bold" FontSize="15"/>
-                <TextBlock Text="{x:Bind Description}" Grid.Row="1" Margin="0,5,0,0" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource TipTextColor}" FontSize="11" TextWrapping="Wrap" MaxLines="1" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Text="{x:Bind Name,Mode=OneWay}" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource Title}" Foreground="{ThemeResource ImportantTextColor}" FontWeight="Bold" FontSize="15"/>
+                <TextBlock Text="{x:Bind Description,Mode=OneWay}" Grid.Row="1" Margin="0,5,0,0" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource TipTextColor}" FontSize="11" TextWrapping="Wrap" MaxLines="1" TextTrimming="CharacterEllipsis"/>
             </Grid>
         </DataTemplate>
     </Page.Resources>
@@ -66,7 +66,7 @@
                       />
             <Button Style="{StaticResource GhostCircleButtonStyle}" Content="&#xE9CB;" Grid.Row="3" HorizontalAlignment="Center" Margin="0,15" FontFamily="{StaticResource Icon}" Name="SettingButton" Click="SettingButton_Click"/>
         </Grid>
-        <Grid Name="SideChannelGrid" Width="300" Grid.Column="1" Background="{ThemeResource SideBackground}" BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,1,0">
+        <Grid Name="SideChannelGrid" Width="300" Grid.Column="1" Background="{ThemeResource PageBackground}" BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,1,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>

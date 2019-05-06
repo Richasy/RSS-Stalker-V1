@@ -1,18 +1,23 @@
 ﻿html {
     padding: 0;
     overflow-y: auto;
-    max-width: 90vw;
-    margin:0 auto;
+    width: 90vw;
+    max-width: 700px;
+    margin: 0 auto;
+    font-size: 90%;
 }
 
 body {
     margin: 0 auto;
-    color: #2c3e50;
+    color: #FFFFFF;
+    font-family: 'Tw Cen MT'
 }
-figcaption{
-    display:block;
-    margin:0 auto;
+
+figcaption {
+    display: block;
+    margin: 0 auto;
 }
+
 h1, h2, h3, h4, h5, h6 {
     font-weight: bold;
     line-height: 1.25;
@@ -27,7 +32,7 @@ h1 {
 h2 {
     font-size: 1.4rem;
     padding-bottom: .3rem;
-    border-bottom: 1px solid #eaecef;
+    border-bottom: 1px solid #8984D1;
 }
 
 h3 {
@@ -47,8 +52,7 @@ h6 {
 }
 
 img {
-    max-width: 90% !important;
-    height:auto !important;
+    max-width: 100%;
     text-align: center;
     display: block;
     margin: 0 auto;
@@ -78,7 +82,7 @@ p {
 }
 
     a, p a code {
-        color: #5b309f;
+        color: #2D7CD8;
     }
 
 a {
@@ -89,9 +93,11 @@ a {
 hr {
     height: 0.1rem;
     border: 0;
-    color: #CCCCCC;
-    background-color: #CCCCCC;
+    color: #8984D1;
+    background-color: #8984D1;
     overflow: hidden;
+    display: block;
+    margin: 0 auto;
 }
 
 mark {
@@ -99,8 +105,8 @@ mark {
     width: auto;
     text-align: center;
     margin: 0 auto;
-    background-color: #e9fdf0;
-    color: #000;
+    background-color: #2D7CD8;
+    color: #fff;
     padding: .4rem;
     display: block;
     font-style: italic;
@@ -108,18 +114,18 @@ mark {
 
 code, pre {
     border-radius: 3px;
-    background-color: #F8F8F8;
     color: inherit;
 }
 
 code {
-    border: 1px solid #EAEAEA;
+    border: 1px solid #100F21;
+    background-color: #100F21;
     margin: 0 2px;
     padding: 0 5px;
 }
 
 pre {
-    border: 1px solid #CCCCCC;
+    border: 1px solid #333333;
     line-height: 1.25em;
     overflow: auto;
     padding: 6px 10px;
@@ -134,15 +140,15 @@ pre {
 table {
     width: 100%;
     margin-bottom: 20px;
-    border-right: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #444;
+    border-bottom: 1px solid #444;
 }
 
 blockquote {
     padding: 10px 15px;
     border-left-style: solid;
     border-left-width: 10px;
-    border-color: #D6DBDF;
+    border-color: #4A708F;
     background: none repeat scroll 0 0 rgba(102,128,153,.05);
     margin-left: 0
 }
@@ -152,13 +158,13 @@ table th, table td {
     line-height: 20px;
     text-align: left;
     vertical-align: top;
-    border-top: 1px solid #ddd;
-    border-left: 1px solid #ddd;
+    border-top: 1px solid #444;
+    border-left: 1px solid #444;
     margin: 0;
 }
 
 tbody > tr:nth-child(2n+1) > td, tbody > tr:nth-child(2n+1) > th {
-    background-color: rgba(102,128,153,.05);
+    background-color: rgba(102,128,153,.1);
 }
 
 .footnote-item {
@@ -168,7 +174,7 @@ tbody > tr:nth-child(2n+1) > td, tbody > tr:nth-child(2n+1) > th {
 }
 
 .tip {
-    background-color: #f3f5f7;
+    background-color: rgba(14,13,26,.3);
     border-color: #42b983;
     padding: .1rem 1.5rem;
     border-left-width: .5rem;
@@ -177,9 +183,9 @@ tbody > tr:nth-child(2n+1) > td, tbody > tr:nth-child(2n+1) > th {
 }
 
 .warning {
-    background-color: rgba(255,229,100,.3);
+    background-color: rgba(14,13,26,.3);
     border-color: #e7c000;
-    color: #6b5900;
+    color: #F7ECB5;
     padding: .1rem 1.5rem;
     border-left-width: .5rem;
     border-left-style: solid;
@@ -187,13 +193,11 @@ tbody > tr:nth-child(2n+1) > td, tbody > tr:nth-child(2n+1) > th {
 }
 
 .danger {
-    background-color: #ffe6e6;
+    background-color: rgba(14,13,26,.3);
     border-color: #c00;
-    color: #4d0000;
+    color: #FCC2C2;
     padding: .1rem 1.5rem;
     border-left-width: .5rem;
     border-left-style: solid;
     margin: 1rem 0;
 }
-
-

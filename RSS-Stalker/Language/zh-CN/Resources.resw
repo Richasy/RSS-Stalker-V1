@@ -201,6 +201,12 @@
   <data name="Tip_FieldFormatError" xml:space="preserve">
     <value>数据格式有误</value>
   </data>
+  <data name="Tip_MoveChannel" xml:space="preserve">
+    <value>转移频道</value>
+  </data>
+  <data name="Tip_MoveChannelSuccess" xml:space="preserve">
+    <value>成功转移频道</value>
+  </data>
   <data name="Tip_NoCategorySelected" xml:space="preserve">
     <value>没有选中分类</value>
   </data>
@@ -212,6 +218,9 @@
   </data>
   <data name="Tip_UpdateCategorySuccess" xml:space="preserve">
     <value>成功更新分类</value>
+  </data>
+  <data name="Tip_UpdateChannel" xml:space="preserve">
+    <value>修改频道</value>
   </data>
   <data name="Tip_UpdateChannelSuccess" xml:space="preserve">
     <value>成功更新频道</value>

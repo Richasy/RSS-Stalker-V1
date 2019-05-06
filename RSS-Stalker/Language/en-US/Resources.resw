@@ -198,6 +198,12 @@
   <data name="Tip_FieldFormatError" xml:space="preserve">
     <value>Data format is wrong</value>
   </data>
+  <data name="Tip_MoveChannel" xml:space="preserve">
+    <value>Move Channel</value>
+  </data>
+  <data name="Tip_MoveChannelSuccess" xml:space="preserve">
+    <value>Channel moved.</value>
+  </data>
   <data name="Tip_NoCategorySelected" xml:space="preserve">
     <value>No Category selected</value>
   </data>
@@ -209,6 +215,9 @@
   </data>
   <data name="Tip_UpdateCategorySuccess" xml:space="preserve">
     <value>Category updated.</value>
+  </data>
+  <data name="Tip_UpdateChannel" xml:space="preserve">
+    <value>Modify Channel</value>
   </data>
   <data name="Tip_UpdateChannelSuccess" xml:space="preserve">
     <value>Channel updated.</value>

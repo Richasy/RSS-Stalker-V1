@@ -1,18 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Web.Syndication;
 
 namespace RSS_Stalker.Models
 {
-    public class Channel
+    public class Channel:INotifyPropertyChanged
     {
+        private string _name;
+        private string _description;
         /// <summary>
         /// 频道名称
         /// </summary>
-        public string Name { get; set; }
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; OnPropertyChanged(); }
+        }
         /// <summary>
         /// RSS数据源链接
         /// </summary>
@@ -20,7 +28,11 @@ namespace RSS_Stalker.Models
         /// <summary>
         /// 频道描述
         /// </summary>
-        public string Description { get; set; }
+        public string Description
+        {
+            get { return _description; }
+            set { _description = value; OnPropertyChanged(); }
+        }
         /// <summary>
         /// 频道原始链接
         /// </summary>
@@ -56,6 +68,12 @@ namespace RSS_Stalker.Models
         public override int GetHashCode()
         {
             return 924860401 + EqualityComparer<string>.Default.GetHashCode(Link);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName]string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

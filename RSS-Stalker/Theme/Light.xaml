@@ -7,8 +7,8 @@
     <AcrylicBrush x:Key="MaskBackground" BackgroundSource="Backdrop" TintColor="Black" TintOpacity="0.7" FallbackColor="Black"/>
     <AcrylicBrush x:Key="FlyoutBackground" BackgroundSource="Backdrop" TintColor="#FFFFFF" TintOpacity="0.9" FallbackColor="#FFFFFF"/>
     <SolidColorBrush x:Key="MediaControlsBackground" Color="#FFFFFF" Opacity="0.4"/>
-    <SolidColorBrush x:Key="PageBackground" Color="#FFFFFF"/>
-    <SolidColorBrush x:Key="CardBackground" Color="#FAFAFA"/>
+    <SolidColorBrush x:Key="PageBackground" Color="#FCFDFF"/>
+    <SolidColorBrush x:Key="CardBackground" Color="#FFFFFF"/>
 
     <SolidColorBrush x:Key="PrimaryColor" Color="#00D59C"/>
 
@@ -21,11 +21,11 @@
     <SolidColorBrush x:Key="LineColorOver" Color="#C4C4C4"/>
     <SolidColorBrush x:Key="PrimaryMenuOverBackground" Color="#FFFFFF" Opacity="0.6"/>
     <SolidColorBrush x:Key="BasicListOverBackground" Color="#F8F8F8" Opacity="0.6"/>
-    <SolidColorBrush x:Key="TransparentBackground" Color="White" Opacity="0.01"/>
+    <SolidColorBrush x:Key="TransparentBackground" Color="White" Opacity="0.09"/>
 
     <SolidColorBrush x:Key="ImportantTextColor" Color="#1C1C1C"/>
     <SolidColorBrush x:Key="NormalTextColor" Color="#737373"/>
     <SolidColorBrush x:Key="TipTextColor" Color="#969696"/>
 
-    <Color x:Key="PageColor">#FFFFFF</Color>
+    <Color x:Key="PageColor">#FCFDFF</Color>
 </ResourceDictionary>

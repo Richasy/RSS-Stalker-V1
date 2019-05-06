@@ -137,6 +137,9 @@
     <Compile Include="Dialog\ModifyChannelDialog.xaml.cs">
       <DependentUpon>ModifyChannelDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialog\MoveChannelDialog.xaml.cs">
+      <DependentUpon>MoveChannelDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Enums\AppSettings.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -165,7 +168,8 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <Content Include="Template\Default.css" />
+    <Content Include="Template\Dark.css" />
+    <Content Include="Template\Light.css" />
     <PRIResource Include="Language\zh-CN\Resources.resw" />
     <PRIResource Include="Language\en-US\Resources.resw" />
     <Content Include="Assets\Fonts\eyepetizer.ttf" />
@@ -260,6 +264,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialog\ModifyChannelDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialog\MoveChannelDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

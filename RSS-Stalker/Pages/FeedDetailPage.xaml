@@ -13,7 +13,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Border BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,0,1" Padding="0,10">
-            <TextBlock Name="TitleTextBlock" FontFamily="{StaticResource Title}" FontSize="20" HorizontalAlignment="Left"/>
+            <TextBlock Name="TitleTextBlock" FontFamily="{StaticResource Title}" TextAlignment="Center" TextWrapping="Wrap" FontSize="20" HorizontalAlignment="Center"/>
         </Border>
         <WebView Name="DetailWebView"
                  Grid.Row="1"

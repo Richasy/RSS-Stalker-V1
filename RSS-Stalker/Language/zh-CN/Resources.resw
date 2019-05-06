@@ -150,6 +150,9 @@
   <data name="Control_IconTipBlock.Text" xml:space="preserve">
     <value>图标</value>
   </data>
+  <data name="Control_MoveMenuItem.Text" xml:space="preserve">
+    <value>转移</value>
+  </data>
   <data name="Control_TutorialButton.Content" xml:space="preserve">
     <value>阅读教程</value>
   </data>
@@ -180,8 +183,17 @@
   <data name="Tip_DeleteCategorySuccess" xml:space="preserve">
     <value>成功删除分类</value>
   </data>
+  <data name="Tip_DeleteCategoryWarning" xml:space="preserve">
+    <value>您确定要删除该分类吗？分类下的所有频道都会被移除。</value>
+  </data>
   <data name="Tip_DeleteChannelSuccess" xml:space="preserve">
     <value>成功删除频道</value>
+  </data>
+  <data name="Tip_DeleteChannelWarning" xml:space="preserve">
+    <value>您确定要删除该频道吗？</value>
+  </data>
+  <data name="Tip_DeleteWarning" xml:space="preserve">
+    <value>删除提醒</value>
   </data>
   <data name="Tip_FieldEmpty" xml:space="preserve">
     <value>不要留空哦~</value>

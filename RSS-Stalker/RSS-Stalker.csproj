@@ -131,6 +131,12 @@
     <Compile Include="Dialog\AddChannelDialog.xaml.cs">
       <DependentUpon>AddChannelDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialog\ConfirmDialog.xaml.cs">
+      <DependentUpon>ConfirmDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog\ModifyChannelDialog.xaml.cs">
+      <DependentUpon>ModifyChannelDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Enums\AppSettings.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -246,6 +252,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialog\AddChannelDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialog\ConfirmDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialog\ModifyChannelDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

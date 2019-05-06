@@ -46,5 +46,16 @@ namespace RSS_Stalker.Models
             Description = feedly.Description;
             SourceUrl = feedly.SourceLink;
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Channel channel &&
+                   Link == channel.Link;
+        }
+
+        public override int GetHashCode()
+        {
+            return 924860401 + EqualityComparer<string>.Default.GetHashCode(Link);
+        }
     }
 }

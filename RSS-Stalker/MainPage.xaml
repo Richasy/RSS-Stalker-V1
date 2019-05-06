@@ -8,8 +8,10 @@
     xmlns:models="using:RSS_Stalker.Models"
     mc:Ignorable="d">
     <Page.Resources>
-        <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource BasicMenuFlyoutStyle}" x:Key="ChannelMenuFlyout">
+        <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource BasicMenuFlyoutStyle}" x:Name="ChannelMenuFlyout" x:Key="ChannelMenuFlyout">
             <MenuFlyoutItem x:Uid="Control_UpdateMenuItem" FontFamily="{StaticResource Basic}" Name="UpdateChannelMenuItem" Click="UpdateChannelMenuItem_Click"/>
+            <MenuFlyoutItem x:Uid="Control_MoveMenuItem" FontFamily="{StaticResource Basic}" Name="MoveChannelMenuItem" Click="MoveChannelMenuItem_Click"/>
+            <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="Control_DeleteMenuItem" FontFamily="{StaticResource Basic}" Name="DeleteChannelMenuItem" Click="DeleteChannelMenuItem_Click"/>
         </MenuFlyout>
         <DataTemplate x:DataType="models:Category" x:Key="CategoryItemTemplate">
@@ -23,7 +25,7 @@
             </Grid>
         </DataTemplate>
         <DataTemplate x:DataType="models:Channel" x:Key="ChannelItemTemplate">
-            <Grid Padding="20,10" Background="{ThemeResource TransparentBackground}">
+            <Grid Padding="20,10" Background="{ThemeResource TransparentBackground}" RightTapped="ChannelItem_RightTapped">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>

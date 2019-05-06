@@ -150,6 +150,9 @@
   <data name="Control_IconTipBlock.Text" xml:space="preserve">
     <value>Icon</value>
   </data>
+  <data name="Control_MoveMenuItem.Text" xml:space="preserve">
+    <value>Move</value>
+  </data>
   <data name="Control_TutorialButton.Content" xml:space="preserve">
     <value>Tutorial</value>
   </data>
@@ -180,8 +183,14 @@
   <data name="Tip_DeleteCategorySuccess" xml:space="preserve">
     <value>Category deleted.</value>
   </data>
+  <data name="Tip_DeleteCategoryWarning" xml:space="preserve">
+    <value>Aare you sure to delete this category? All of channels in the category will be removed.</value>
+  </data>
   <data name="Tip_DeleteChannelSuccess" xml:space="preserve">
     <value>Channel deleted.</value>
+  </data>
+  <data name="Tip_DeleteChannelWarning" xml:space="preserve">
+    <value>Are you sure to delete this channel?</value>
   </data>
   <data name="Tip_FieldEmpty" xml:space="preserve">
     <value>Field can't be empty.</value>

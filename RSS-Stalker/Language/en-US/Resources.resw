@@ -192,6 +192,9 @@
   <data name="Tip_NoCategorySelected" xml:space="preserve">
     <value>No Category selected</value>
   </data>
+  <data name="Tip_NoData" xml:space="preserve">
+    <value>No data here.</value>
+  </data>
   <data name="Tip_TryLinkFirst" xml:space="preserve">
     <value>Please validate the link first.</value>
   </data>

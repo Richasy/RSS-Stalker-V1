@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.Parsers.Rss;
+using Newtonsoft.Json;
 using RSS_Stalker.Enums;
 using RSS_Stalker.Models;
 using System;
@@ -219,6 +220,48 @@ namespace RSS_Stalker.Tools
             }
         }
         /// <summary>
+        /// 从URL获取文本
+        /// </summary>
+        /// <param name="url">地址</param>
+        /// <returns></returns>
+        public static async Task<string> GetTextFromUrl(string url)
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    return await client.GetStringAsync(url);
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            
+        }
+        /// <summary>
+        /// 从URL获取实体类
+        /// </summary>
+        /// <typeparam name="T">类型</typeparam>
+        /// <param name="url">地址</param>
+        /// <returns></returns>
+        public static async Task<T> GetEntityFromUrl<T>(string url)
+        {
+            string text = await GetTextFromUrl(url);
+            if (!string.IsNullOrEmpty(text))
+            {
+                try
+                {
+                    var result = JsonConvert.DeserializeObject<T>(text);
+                    return result;
+                }
+                catch (Exception)
+                {
+                }
+            }
+            return default(T);
+        }
+        /// <summary>
         /// 从URL获取解析后的Channel的信息
         /// </summary>
         /// <param name="url">地址</param>
@@ -263,13 +306,21 @@ namespace RSS_Stalker.Tools
             var list = new List<Feed>();
             if (feed != null)
             {
-                var parser = new RssParser();
-                var rss = parser.Parse(feed);
-                
-                foreach (var item in rss)
+                try
                 {
-                    list.Add(new Feed(item));
+                    var parser = new RssParser();
+                    var rss = parser.Parse(feed);
+
+                    foreach (var item in rss)
+                    {
+                        list.Add(new Feed(item));
+                    }
                 }
+                catch (Exception)
+                {
+
+                }
+                
             }
             return list;
         }
@@ -299,6 +350,12 @@ namespace RSS_Stalker.Tools
                 "","","","","","","","","","","","","","","","","","","",""
             };
             return list;
+        }
+
+        public static string GetHTML(string css,string body)
+        {
+            string container = $"<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"referrer\" content=\"no-referrer\" /><meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=0; \"><style>{css}</style></head><body>{body}</body></html>";
+            return container;
         }
     }
 }

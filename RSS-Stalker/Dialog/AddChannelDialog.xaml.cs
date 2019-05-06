@@ -3,6 +3,7 @@ using RSS_Stalker.Models;
 using RSS_Stalker.Tools;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -24,6 +25,7 @@ namespace RSS_Stalker.Dialog
     public sealed partial class AddChannelDialog : ContentDialog
     {
         private Channel _sourceChannel = null;
+        private ObservableCollection<FeedlyResult> FeedlyResults = new ObservableCollection<FeedlyResult>();
         public AddChannelDialog()
         {
             this.InitializeComponent();
@@ -86,25 +88,45 @@ namespace RSS_Stalker.Dialog
             {
                 new PopupToast(AppTools.GetReswLanguage("Tip_FieldEmpty")).ShowPopup();
             }
-            else if(!reg.IsMatch(link))
-            {
-                new PopupToast(AppTools.GetReswLanguage("Tip_FieldFormatError")).ShowPopup();
-            }
             else
             {
                 TryLinkButton.IsEnabled = false;
                 LoadingRing.IsActive = true;
-                var channel = await AppTools.GetChannelFromUrl(link);
-                if(channel!=null && !string.IsNullOrEmpty(channel.Name))
+                if (!reg.IsMatch(link))
                 {
-                    _sourceChannel = channel;
-                    LoadingRing.IsActive = false;
+                    var results = await FeedlyResult.GetFeedlyResultFromText(link);
                     TryLinkButton.IsEnabled = true;
-                    DetailContainer.Visibility = Visibility.Visible;
-                    if(string.IsNullOrEmpty(ChannelNameTextBox.Text) && string.IsNullOrEmpty(ChannelDescriptionTextBox.Text))
+                    LoadingRing.IsActive = false;
+                    if (results.Count > 0)
                     {
-                        ChannelNameTextBox.Text = channel.Name;
-                        ChannelDescriptionTextBox.Text = channel.Description;
+                        SearchResultContainer.Visibility = Visibility.Visible;
+                        FeedlyResults.Clear();
+                        foreach (var item in results)
+                        {
+                            FeedlyResults.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        SearchResultContainer.Visibility = Visibility.Collapsed;
+                        FeedlyResults.Clear();
+                        new PopupToast(AppTools.GetReswLanguage("Tip_NoData")).ShowPopup();
+                    }
+                }
+                else
+                {
+                    var channel = await AppTools.GetChannelFromUrl(link);
+                    if (channel != null && !string.IsNullOrEmpty(channel.Name))
+                    {
+                        _sourceChannel = channel;
+                        LoadingRing.IsActive = false;
+                        TryLinkButton.IsEnabled = true;
+                        DetailContainer.Visibility = Visibility.Visible;
+                        if (string.IsNullOrEmpty(ChannelNameTextBox.Text) && string.IsNullOrEmpty(ChannelDescriptionTextBox.Text))
+                        {
+                            ChannelNameTextBox.Text = channel.Name;
+                            ChannelDescriptionTextBox.Text = channel.Description;
+                        }
                     }
                 }
             }
@@ -117,6 +139,21 @@ namespace RSS_Stalker.Dialog
             {
                 DetailContainer.Visibility = Visibility.Collapsed;
             }
+            if (SearchResultContainer.Visibility == Visibility.Visible)
+            {
+                SearchResultContainer.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void SearchResultListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var item = e.ClickedItem as FeedlyResult;
+            _sourceChannel = new Channel(item);
+            DetailContainer.Visibility = Visibility.Visible;
+            ChannelNameTextBox.Text = _sourceChannel.Name;
+            ChannelDescriptionTextBox.Text = _sourceChannel.Description;
+            FeedlyResults.Clear();
+            SearchResultContainer.Visibility = Visibility.Collapsed;
         }
     }
 }

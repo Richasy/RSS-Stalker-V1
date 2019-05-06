@@ -26,4 +26,6 @@
     <SolidColorBrush x:Key="ImportantTextColor" Color="#1C1C1C"/>
     <SolidColorBrush x:Key="NormalTextColor" Color="#737373"/>
     <SolidColorBrush x:Key="TipTextColor" Color="#969696"/>
+
+    <Color x:Key="PageColor">#FFFFFF</Color>
 </ResourceDictionary>

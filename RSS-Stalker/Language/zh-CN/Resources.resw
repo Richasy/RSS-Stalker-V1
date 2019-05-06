@@ -192,6 +192,9 @@
   <data name="Tip_NoCategorySelected" xml:space="preserve">
     <value>没有选中分类</value>
   </data>
+  <data name="Tip_NoData" xml:space="preserve">
+    <value>没有查找到相应数据</value>
+  </data>
   <data name="Tip_TryLinkFirst" xml:space="preserve">
     <value>请先完成链接验证</value>
   </data>

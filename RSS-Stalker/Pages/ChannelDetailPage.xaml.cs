@@ -40,6 +40,7 @@ namespace RSS_Stalker.Pages
         {
             if(e.Parameter!=null && e.Parameter is Channel)
             {
+                LoadingRing.IsActive=true;
                 _sourceData = e.Parameter as Channel;
                 ChannelDescriptionTextBlock.Text = _sourceData.Description;
                 ChannelNameTextBlock.Text = _sourceData.Name;
@@ -51,12 +52,14 @@ namespace RSS_Stalker.Pages
                         SchemaCollection.Add(item);
                     }
                 }
+                LoadingRing.IsActive = false;
             }
         }
 
         private void FeedGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
-
+            var item = e.ClickedItem as Feed;
+            MainPage.Current.MainFrame.Navigate(typeof(FeedDetailPage), item);
         }
 
         private async void OpenChannelButton_Click(object sender, RoutedEventArgs e)

@@ -39,5 +39,12 @@ namespace RSS_Stalker.Models
                 SourceUrl = link.Uri.ToString();
             }
         }
+        public Channel(FeedlyResult feedly)
+        {
+            Name = feedly.Title;
+            Link = feedly.FellowLink;
+            Description = feedly.Description;
+            SourceUrl = feedly.SourceLink;
+        }
     }
 }

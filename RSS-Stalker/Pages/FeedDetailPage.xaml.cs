@@ -51,7 +51,7 @@ namespace RSS_Stalker.Pages
                 }
                 TitleTextBlock.Text = _sourceFeed.Title;
                 LoadingRing.IsActive = true;
-                string theme = AppTools.GetLocalSetting(Enums.AppSettings.Theme, "Light");
+                string theme = AppTools.GetRoamingSetting(Enums.AppSettings.Theme, "Light");
                 string css = await FileIO.ReadTextAsync(await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Template/{theme}.css")));
                 string html = AppTools.GetHTML(css, _sourceFeed.Content ?? "");
                 DetailWebView.NavigateToString(html);
@@ -76,7 +76,7 @@ namespace RSS_Stalker.Pages
                 }
             }
             TitleTextBlock.Text = _sourceFeed.Title;
-            string theme = AppTools.GetLocalSetting(Enums.AppSettings.Theme, "Light");
+            string theme = AppTools.GetRoamingSetting(Enums.AppSettings.Theme, "Light");
             string css = await FileIO.ReadTextAsync(await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Template/{theme}.css")));
             string html = AppTools.GetHTML(css, _sourceFeed.Content ?? "");
             DetailWebView.NavigateToString(html);
@@ -118,6 +118,11 @@ namespace RSS_Stalker.Pages
             //给dataRequest对象赋值
             DataRequest request = args.Request;
             request.Data = dataPackage;
+        }
+
+        private void Menu_ReInit_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

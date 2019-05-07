@@ -33,6 +33,11 @@
                     <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE9CC;"/>
                 </MenuFlyoutItem.Icon>
             </MenuFlyoutItem>
+            <MenuFlyoutItem Name="Menu_ReInit" x:Uid="Control_ReInitMenuItem" Click="Menu_ReInit_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE9C3;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
         </MenuFlyout>
     </Page.Resources>
     <Grid>
@@ -57,7 +62,7 @@
                  DefaultBackgroundColor="{ThemeResource PageColor}"
                  />
                 <StackPanel VerticalAlignment="Stretch" Width="12" Background="{ThemeResource PageBackground}" Margin="0,0,0,0" HorizontalAlignment="Right"/>
-                <Button Style="{StaticResource PrimaryCircleButtonStyle}" FlyoutBase.AttachedFlyout="{StaticResource MoreMenuFlyout}" Name="MoreButton" Click="MoreButton_Click" Width="40" Height="40" FontFamily="{StaticResource Icon}" Content="&#xE9C5;" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,30,20" Opacity="0.5"/>
+                <Button Style="{StaticResource PrimaryCircleButtonStyle}" FlyoutBase.AttachedFlyout="{StaticResource MoreMenuFlyout}" Name="MoreButton" Click="MoreButton_Click" Width="40" Height="40" FontFamily="{StaticResource Icon}" Content="&#xE9C5;" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,30,20" Opacity="0.8"/>
             </Grid>
 
             <StackPanel VerticalAlignment="Stretch" Width="1" Background="{ThemeResource LineColor}" Margin="0,0,10,0" Grid.Column="1"/>

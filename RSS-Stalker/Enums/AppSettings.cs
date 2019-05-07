@@ -10,5 +10,8 @@ namespace RSS_Stalker.Enums
     {
         Theme,
         Language,
+        UpdateTime,
+        IsBindingOneDrive,
+        UserName
     }
 }

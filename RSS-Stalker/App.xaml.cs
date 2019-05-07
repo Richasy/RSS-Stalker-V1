@@ -30,12 +30,14 @@ namespace RSS_Stalker
         /// 初始化单一实例应用程序对象。这是执行的创作代码的第一行，
         /// 已执行，逻辑上等同于 main() 或 WinMain()。
         /// </summary>
+        /// 
+        public static OneDriveTools OneDrive=new OneDriveTools();
         public App()
         {
             ChangeLanguage();
             this.InitializeComponent();
             this.Suspending += OnSuspending;
-            RequestedTheme = AppTools.GetLocalSetting(Enums.AppSettings.Theme, "Light") == "Light" ? ApplicationTheme.Light : ApplicationTheme.Dark;
+            RequestedTheme = AppTools.GetRoamingSetting(Enums.AppSettings.Theme, "Light") == "Light" ? ApplicationTheme.Light : ApplicationTheme.Dark;
             UnhandledException += UnhandleExceptionHandle;
         }
 
@@ -47,7 +49,7 @@ namespace RSS_Stalker
         }
         private void ChangeLanguage()
         {
-            string lan = AppTools.GetLocalSetting(AppSettings.Language, "");
+            string lan = AppTools.GetRoamingSetting(AppSettings.Language, "");
 
             if (lan == "")
             {
@@ -57,7 +59,7 @@ namespace RSS_Stalker
                     var language = Languages[0];
                     if (language.ToLower().IndexOf("zh") != -1)
                     {
-                        AppTools.WriteLocalSetting(AppSettings.Language, "zh_CN");
+                        AppTools.WriteRoamingSetting(AppSettings.Language, "zh_CN");
                         //if (language.ToLower() == "zh-hans-cn")
                         //{
 
@@ -69,15 +71,15 @@ namespace RSS_Stalker
                     }
                     else
                     {
-                        AppTools.WriteLocalSetting(AppSettings.Language, "en_US");
+                        AppTools.WriteRoamingSetting(AppSettings.Language, "en_US");
                     }
                 }
                 else
                 {
-                    AppTools.WriteLocalSetting(AppSettings.Language, "en_US");
+                    AppTools.WriteRoamingSetting(AppSettings.Language, "en_US");
                 }
             }
-            lan = AppTools.GetLocalSetting(AppSettings.Language, "zh_CN");
+            lan = AppTools.GetRoamingSetting(AppSettings.Language, "zh_CN");
             string code = "";
             switch (lan)
             {
@@ -127,7 +129,11 @@ namespace RSS_Stalker
                     // 当导航堆栈尚未还原时，导航到第一页，
                     // 并通过将所需信息作为导航参数传入来配置
                     // 参数
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    bool isBinding = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsBindingOneDrive, "False"));
+                    if (isBinding)
+                        rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    else
+                        rootFrame.Navigate(typeof(Pages.OneDrivePage));
                 }
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();

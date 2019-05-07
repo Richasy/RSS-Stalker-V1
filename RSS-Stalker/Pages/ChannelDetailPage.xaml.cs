@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -44,19 +45,7 @@ namespace RSS_Stalker.Pages
             {
                 if(e.Parameter is Channel)
                 {
-                    LoadingRing.IsActive = true;
-                    _sourceData = e.Parameter as Channel;
-                    ChannelDescriptionTextBlock.Text = _sourceData.Description;
-                    ChannelNameTextBlock.Text = _sourceData.Name;
-                    var feed = await AppTools.GetScheamFromUrl(_sourceData.Link);
-                    if (feed != null && feed.Count > 0)
-                    {
-                        foreach (var item in feed)
-                        {
-                            SchemaCollection.Add(item);
-                        }
-                    }
-                    LoadingRing.IsActive = false;
+                    await UpdateLayout(e.Parameter as Channel);
                 }
                 else if(e.Parameter is List<Feed>)
                 {
@@ -75,6 +64,23 @@ namespace RSS_Stalker.Pages
             }
         }
 
+        public async Task UpdateLayout(Channel channel)
+        {
+            LoadingRing.IsActive = true;
+            _sourceData = channel;
+            ChannelDescriptionTextBlock.Text = _sourceData.Description;
+            ChannelNameTextBlock.Text = _sourceData.Name;
+            SchemaCollection.Clear();
+            var feed = await AppTools.GetScheamFromUrl(_sourceData.Link);
+            if (feed != null && feed.Count > 0)
+            {
+                foreach (var item in feed)
+                {
+                    SchemaCollection.Add(item);
+                }
+            }
+            LoadingRing.IsActive = false;
+        }
         private void FeedGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as Feed;

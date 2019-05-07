@@ -32,8 +32,8 @@ namespace RSS_Stalker.Pages
         }
         public void PageInit()
         {
-            string theme = AppTools.GetLocalSetting(Enums.AppSettings.Theme, "Light");
-            string language = AppTools.GetLocalSetting(Enums.AppSettings.Language, "zh_CN");
+            string theme = AppTools.GetRoamingSetting(Enums.AppSettings.Theme, "Light");
+            string language = AppTools.GetRoamingSetting(Enums.AppSettings.Language, "zh_CN");
             if (theme == "Light")
                 ThemeComboBox.SelectedIndex = 0;
             else
@@ -51,7 +51,7 @@ namespace RSS_Stalker.Pages
             if (!_isInit)
                 return;
             var item = ThemeComboBox.SelectedItem as ComboBoxItem;
-            AppTools.WriteLocalSetting(Enums.AppSettings.Theme, item.Name);
+            AppTools.WriteRoamingSetting(Enums.AppSettings.Theme, item.Name);
             MainPage.Current.RequestedTheme = item.Name == "Light" ? ElementTheme.Light : ElementTheme.Dark;
             new PopupToast(AppTools.GetReswLanguage("Tip_NeedRestartApp")).ShowPopup();
         }
@@ -60,8 +60,8 @@ namespace RSS_Stalker.Pages
         {
             if (!_isInit)
                 return;
-            var item = ThemeComboBox.SelectedItem as ComboBoxItem;
-            AppTools.WriteLocalSetting(Enums.AppSettings.Language, item.Name);
+            var item = LanguageComboBox.SelectedItem as ComboBoxItem;
+            AppTools.WriteRoamingSetting(Enums.AppSettings.Language, item.Name);
             new PopupToast(AppTools.GetReswLanguage("Tip_NeedRestartApp")).ShowPopup();
         }
     }

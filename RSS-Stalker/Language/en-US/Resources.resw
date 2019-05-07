@@ -165,6 +165,12 @@
   <data name="Control_MoveMenuItem.Text" xml:space="preserve">
     <value>Move</value>
   </data>
+  <data name="Control_OneDriveButton.Content" xml:space="preserve">
+    <value>Link to OneDrive</value>
+  </data>
+  <data name="Control_ReInitMenuItem.Text" xml:space="preserve">
+    <value>Content Reinit</value>
+  </data>
   <data name="Control_SettingTipBlock.Text" xml:space="preserve">
     <value>Setting Page</value>
   </data>
@@ -195,6 +201,9 @@
   <data name="Tip_AddChannelSuccess" xml:space="preserve">
     <value>Channel added.</value>
   </data>
+  <data name="Tip_BindingOneDriveFailed" xml:space="preserve">
+    <value>Can't link to OneDrive /(ㄒoㄒ)/~~</value>
+  </data>
   <data name="Tip_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
@@ -215,6 +224,9 @@
   </data>
   <data name="Tip_DeleteChannelWarning" xml:space="preserve">
     <value>Are you sure to delete this channel?</value>
+  </data>
+  <data name="Tip_DeleteWarning" xml:space="preserve">
+    <value>Delete Warning</value>
   </data>
   <data name="Tip_FieldEmpty" xml:space="preserve">
     <value>Field can't be empty.</value>
@@ -237,8 +249,14 @@
   <data name="Tip_NoData" xml:space="preserve">
     <value>No data here.</value>
   </data>
+  <data name="Tip_PreWelcome" xml:space="preserve">
+    <value>Welcome! </value>
+  </data>
   <data name="Tip_TryLinkFirst" xml:space="preserve">
     <value>Please validate the link first.</value>
+  </data>
+  <data name="Tip_UpdateCategory" xml:space="preserve">
+    <value>Modify Category</value>
   </data>
   <data name="Tip_UpdateCategorySuccess" xml:space="preserve">
     <value>Category updated.</value>
@@ -248,6 +266,9 @@
   </data>
   <data name="Tip_UpdateChannelSuccess" xml:space="preserve">
     <value>Channel updated.</value>
+  </data>
+  <data name="Tip_Updated" xml:space="preserve">
+    <value>Data updated</value>
   </data>
   <data name="Tip_Waiting" xml:space="preserve">
     <value>Waiting...</value>

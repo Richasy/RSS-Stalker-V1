@@ -156,6 +156,7 @@ namespace RSS_Stalker.Tools
             list.Add(category);
             text = JsonConvert.SerializeObject(list);
             await FileIO.WriteTextAsync(file, text);
+            await App.OneDrive.UpdateCategoryList(list);
         }
         /// <summary>
         /// 更新标签
@@ -181,6 +182,7 @@ namespace RSS_Stalker.Tools
             }
             text = JsonConvert.SerializeObject(list);
             await FileIO.WriteTextAsync(file, text);
+            await App.OneDrive.UpdateCategoryList(list);
         }
         /// <summary>
         /// 删除标签
@@ -199,6 +201,19 @@ namespace RSS_Stalker.Tools
             var list = JsonConvert.DeserializeObject<List<Category>>(text);
             list.RemoveAll(p => p.Equals(category));
             text = JsonConvert.SerializeObject(list);
+            await FileIO.WriteTextAsync(file, text);
+            await App.OneDrive.UpdateCategoryList(list);
+        }
+        /// <summary>
+        /// 完全替换
+        /// </summary>
+        /// <param name="categories">标签列表</param>
+        /// <returns></returns>
+        public async static Task ReplaceCategory(List<Category> categories)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("Channels.json", CreationCollisionOption.OpenIfExists);
+            string text = JsonConvert.SerializeObject(categories);
             await FileIO.WriteTextAsync(file, text);
         }
     }

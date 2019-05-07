@@ -56,6 +56,37 @@ namespace RSS_Stalker.Tools
             }
         }
         /// <summary>
+        /// 写入漫游设置
+        /// </summary>
+        /// <param name="key">设置名</param>
+        /// <param name="value">设置值</param>
+        public static void WriteRoamingSetting(AppSettings key, string value)
+        {
+            var roamSetting = ApplicationData.Current.RoamingSettings;
+            var roamContainer = roamSetting.CreateContainer("RSS", ApplicationDataCreateDisposition.Always);
+            roamContainer.Values[key.ToString()] = value;
+        }
+        /// <summary>
+        /// 读取漫游设置
+        /// </summary>
+        /// <param name="key">设置名</param>
+        /// <returns></returns>
+        public static string GetRoamingSetting(AppSettings key, string defaultValue)
+        {
+            var roamSetting = ApplicationData.Current.RoamingSettings;
+            var roamContainer = roamSetting.CreateContainer("RSS", ApplicationDataCreateDisposition.Always);
+            bool isKeyExist = roamContainer.Values.ContainsKey(key.ToString());
+            if (isKeyExist)
+            {
+                return roamContainer.Values[key.ToString()].ToString();
+            }
+            else
+            {
+                WriteRoamingSetting(key, defaultValue);
+                return defaultValue;
+            }
+        }
+        /// <summary>
         /// 获取Unix时间戳
         /// </summary>
         /// <returns></returns>

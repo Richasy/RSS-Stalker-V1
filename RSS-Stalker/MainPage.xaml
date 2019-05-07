@@ -9,23 +9,48 @@
     mc:Ignorable="d">
     <Page.Resources>
         <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource BasicMenuFlyoutStyle}" x:Name="ChannelMenuFlyout" x:Key="ChannelMenuFlyout">
-            <MenuFlyoutItem x:Uid="Control_UpdateMenuItem" FontFamily="{StaticResource Basic}" Name="UpdateChannelMenuItem" Click="UpdateChannelMenuItem_Click"/>
-            <MenuFlyoutItem x:Uid="Control_MoveMenuItem" FontFamily="{StaticResource Basic}" Name="MoveChannelMenuItem" Click="MoveChannelMenuItem_Click"/>
+            <MenuFlyoutItem x:Uid="Control_UpdateMenuItem" FontFamily="{StaticResource Basic}" Name="UpdateChannelMenuItem" Click="UpdateChannelMenuItem_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE95A;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem x:Uid="Control_MoveMenuItem" FontFamily="{StaticResource Basic}" Name="MoveChannelMenuItem" Click="MoveChannelMenuItem_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE9D2;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
             <MenuFlyoutSeparator/>
-            <MenuFlyoutItem x:Uid="Control_DeleteMenuItem" FontFamily="{StaticResource Basic}" Name="DeleteChannelMenuItem" Click="DeleteChannelMenuItem_Click"/>
+            <MenuFlyoutItem x:Uid="Control_DeleteMenuItem" FontFamily="{StaticResource Basic}" Name="DeleteChannelMenuItem" Click="DeleteChannelMenuItem_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE9EB;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+        </MenuFlyout>
+        <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource BasicMenuFlyoutStyle}" x:Name="CategoryMenuFlyout" x:Key="CategoryMenuFlyout">
+            <MenuFlyoutItem x:Uid="Control_UpdateMenuItem" FontFamily="{StaticResource Basic}" Name="UpdateCategoryMenuItem" Click="UpdateCategoryMenuItem_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE95A;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="Control_DeleteMenuItem" FontFamily="{StaticResource Basic}" Name="DeleteCategoryMenuItem" Click="DeleteCategoryMenuItem_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE9EB;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
         </MenuFlyout>
         <DataTemplate x:DataType="models:Category" x:Key="CategoryItemTemplate">
-            <Grid Padding="15,15,0,15">
+            <Grid Padding="15,15,0,15" Background="{ThemeResource TransparentBackground}" RightTapped="CategoryItem_RightTapped" Holding="CategoryItem_Holding">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="{x:Bind Icon}" FontFamily="{StaticResource Icon}" FontSize="18" VerticalAlignment="Center"/>
-                <TextBlock Text="{x:Bind Name}" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource PrimaryMenuTextColor}" FontSize="14" VerticalAlignment="Center" Grid.Column="1" Margin="15,0" TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{x:Bind Icon,Mode=OneWay}" FontFamily="{StaticResource Icon}" FontSize="18" VerticalAlignment="Center"/>
+                <TextBlock Text="{x:Bind Name,Mode=OneWay}" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource PrimaryMenuTextColor}" FontSize="14" VerticalAlignment="Center" Grid.Column="1" Margin="15,0" TextTrimming="CharacterEllipsis" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:DataType="models:Channel" x:Key="ChannelItemTemplate">
-            <Grid Padding="20,10" Background="{ThemeResource TransparentBackground}" RightTapped="ChannelItem_RightTapped">
+            <Grid Padding="20,10" Background="{ThemeResource TransparentBackground}" RightTapped="ChannelItem_RightTapped" Holding="ChannelItem_Holding" IsHoldingEnabled="True">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>

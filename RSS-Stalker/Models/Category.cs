@@ -1,15 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace RSS_Stalker.Models
 {
-    public class Category
+    public class Category:INotifyPropertyChanged
     {
-        public string Name { get; set; }
-        public string Icon { get; set; }
+        private string _name;
+        private string _icon;
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; OnPropertyChanged(); }
+        }
+        public string Icon
+        {
+            get { return _icon; }
+            set { _icon = value; OnPropertyChanged(); }
+        }
         public string Id { get; set; }
         public List<Channel> Channels { get; set; }
         public Category()
@@ -33,6 +45,12 @@ namespace RSS_Stalker.Models
         public override int GetHashCode()
         {
             return -737073652 + EqualityComparer<string>.Default.GetHashCode(Id);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName]string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

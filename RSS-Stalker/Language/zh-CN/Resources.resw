@@ -165,6 +165,12 @@
   <data name="Control_MoveMenuItem.Text" xml:space="preserve">
     <value>转移</value>
   </data>
+  <data name="Control_OneDriveButton.Content" xml:space="preserve">
+    <value>连接到OneDrive</value>
+  </data>
+  <data name="Control_ReInitMenuItem.Text" xml:space="preserve">
+    <value>内容重载</value>
+  </data>
   <data name="Control_SettingTipBlock.Text" xml:space="preserve">
     <value>设置页面</value>
   </data>
@@ -194,6 +200,9 @@
   </data>
   <data name="Tip_AddChannelSuccess" xml:space="preserve">
     <value>成功添加频道</value>
+  </data>
+  <data name="Tip_BindingOneDriveFailed" xml:space="preserve">
+    <value>未能连接到OneDrive /(ㄒoㄒ)/~~</value>
   </data>
   <data name="Tip_Cancel" xml:space="preserve">
     <value>取消</value>
@@ -240,8 +249,14 @@
   <data name="Tip_NoData" xml:space="preserve">
     <value>没有查找到相应数据</value>
   </data>
+  <data name="Tip_PreWelcome" xml:space="preserve">
+    <value>欢迎您，</value>
+  </data>
   <data name="Tip_TryLinkFirst" xml:space="preserve">
     <value>请先完成链接验证</value>
+  </data>
+  <data name="Tip_UpdateCategory" xml:space="preserve">
+    <value>修改分类</value>
   </data>
   <data name="Tip_UpdateCategorySuccess" xml:space="preserve">
     <value>成功更新分类</value>
@@ -251,6 +266,9 @@
   </data>
   <data name="Tip_UpdateChannelSuccess" xml:space="preserve">
     <value>成功更新频道</value>
+  </data>
+  <data name="Tip_Updated" xml:space="preserve">
+    <value>数据已更新</value>
   </data>
   <data name="Tip_Waiting" xml:space="preserve">
     <value>等待中...</value>

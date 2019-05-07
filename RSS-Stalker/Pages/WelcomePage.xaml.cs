@@ -23,10 +23,16 @@ namespace RSS_Stalker.Pages
     /// </summary>
     public sealed partial class WelcomePage : Page
     {
+        public static WelcomePage Current;
         public WelcomePage()
         {
             this.InitializeComponent();
-            WelcomeTextBlock.Text = AppTools.GetReswLanguage("Tip_WelcomeText");
+            Current = this;
+            string name = AppTools.GetLocalSetting(Enums.AppSettings.UserName, "");
+            if (string.IsNullOrEmpty(name))
+                WelcomeTextBlock.Text = AppTools.GetReswLanguage("Tip_WelcomeText");
+            else
+                WelcomeTextBlock.Text = AppTools.GetReswLanguage("Tip_PreWelcome") + name;
         }
     }
 }

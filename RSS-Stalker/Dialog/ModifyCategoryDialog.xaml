@@ -1,0 +1,55 @@
+﻿<ContentDialog
+    x:Class="RSS_Stalker.Dialog.ModifyCategoryDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:RSS_Stalker.Dialog"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    BorderBrush="{ThemeResource LineColor}"
+    BorderThickness="1"
+    Background="{ThemeResource FlyoutBackground}"
+    TitleTemplate="{StaticResource DialogTitle}"
+    PrimaryButtonStyle="{StaticResource PrimaryDialogButton}"
+    SecondaryButtonStyle="{StaticResource DefaultDialogButton}"
+    CloseButtonStyle="{StaticResource DefaultDialogButton}"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+    <ContentDialog.Resources>
+        <DataTemplate x:DataType="x:String" x:Key="IconItemTemplate">
+            <Border Width="30" Height="30">
+                <TextBlock Text="{Binding}" FontFamily="{StaticResource Icon}" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </Border>
+        </DataTemplate>
+        <Flyout FlyoutPresenterStyle="{StaticResource BasicFlyoutStyle}" x:Key="IconFlyout">
+            <GridView x:Name="IconGridView"
+                      ItemContainerStyle="{StaticResource BasicGridViewItemContainerStyle}"
+                      Style="{StaticResource BasicGridView}"
+                      ItemTemplate="{StaticResource IconItemTemplate}"
+                      MaxWidth="300"
+                      Margin="5,0,0,0"
+                      MaxHeight="200"
+                      ItemsSource="{x:Bind local:AddCategoryDialog.Current.IconCollection}"
+                      IsItemClickEnabled="True"
+                      ItemClick="IconGridView_ItemClick"
+                      HorizontalAlignment="Center"
+                      />
+        </Flyout>
+    </ContentDialog.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel VerticalAlignment="Center">
+            <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_IconTipBlock" Margin="0,0,0,5"/>
+            <Border Width="35" Height="35" CornerRadius="3" BorderBrush="{ThemeResource LineColor}" BorderThickness="1" FlyoutBase.AttachedFlyout="{StaticResource IconFlyout}" Background="{ThemeResource TransparentBackground}" Name="IconContainer" Tapped="IconContainer_Tapped">
+                <TextBlock Name="IconTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="{StaticResource Icon}" Foreground="{ThemeResource ImportantTextColor}" FontSize="17"/>
+            </Border>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Margin="15,0,0,0" VerticalAlignment="Center">
+            <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_CategoryNameTipBlock" Margin="0,0,0,5"/>
+            <TextBox Style="{StaticResource BasicTextBoxStyle}" Name="CategoryNameTextBox" x:Uid="Control_CategoryNameTextBox" HorizontalAlignment="Stretch"/>
+        </StackPanel>
+    </Grid>
+</ContentDialog>

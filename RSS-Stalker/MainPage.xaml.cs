@@ -35,6 +35,7 @@ namespace RSS_Stalker
         {
             this.InitializeComponent();
             Current = this;
+            Window.Current.SetTitleBar(TitleBarControl);
             PageInit();
         }
 

@@ -168,6 +168,9 @@
   <data name="Control_SettingTipBlock.Text" xml:space="preserve">
     <value>Setting Page</value>
   </data>
+  <data name="Control_ShareMenuItem.Text" xml:space="preserve">
+    <value>Share</value>
+  </data>
   <data name="Control_ThemeSettingTipBlock.Text" xml:space="preserve">
     <value>Theme selections</value>
   </data>
@@ -176,6 +179,9 @@
   </data>
   <data name="Control_UpdateMenuItem.Text" xml:space="preserve">
     <value>Update</value>
+  </data>
+  <data name="Control_WebMenuItem.Text" xml:space="preserve">
+    <value>See in web</value>
   </data>
   <data name="Tip_AddCategory" xml:space="preserve">
     <value>Add Category</value>

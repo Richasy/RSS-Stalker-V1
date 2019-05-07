@@ -36,7 +36,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox Style="{StaticResource BasicTextBoxStyle}" TextChanged="ChannelLinkTextBox_TextChanged" VerticalAlignment="Center" HorizontalAlignment="Stretch" Name="ChannelLinkTextBox"/>
+                    <TextBox Style="{StaticResource BasicTextBoxStyle}" KeyDown="ChannelLinkTextBox_KeyDown" TextChanged="ChannelLinkTextBox_TextChanged" VerticalAlignment="Center" HorizontalAlignment="Stretch" Name="ChannelLinkTextBox"/>
                     <Button Style="{StaticResource GhostCircleButtonStyle}" Content="&#xE9C8;" FontFamily="{StaticResource Icon}" Name="TryLinkButton" Click="TryLinkButton_Click" Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center"/>
                 </Grid>
             </StackPanel>

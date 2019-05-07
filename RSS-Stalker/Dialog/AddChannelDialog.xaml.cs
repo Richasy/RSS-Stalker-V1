@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -82,6 +83,10 @@ namespace RSS_Stalker.Dialog
 
         private async void TryLinkButton_Click(object sender, RoutedEventArgs e)
         {
+            await ValidateChannelLink();
+        }
+        private async Task ValidateChannelLink()
+        {
             var reg = new Regex(@"(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]");
             string link = ChannelLinkTextBox.Text.Trim();
             if (string.IsNullOrEmpty(link))
@@ -131,7 +136,6 @@ namespace RSS_Stalker.Dialog
                 }
             }
         }
-
         private void ChannelLinkTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             _sourceChannel = null;
@@ -154,6 +158,14 @@ namespace RSS_Stalker.Dialog
             ChannelDescriptionTextBox.Text = _sourceChannel.Description;
             FeedlyResults.Clear();
             SearchResultContainer.Visibility = Visibility.Collapsed;
+        }
+
+        private async void ChannelLinkTextBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                await ValidateChannelLink();
+            }
         }
     }
 }

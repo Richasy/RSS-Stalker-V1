@@ -100,5 +100,6 @@
         <Grid Name="MainGrid" Grid.Column="2" Background="{ThemeResource PageBackground}">
             <Frame Name="MainFrame" x:FieldModifier="Public"/>
         </Grid>
+        <StackPanel Grid.ColumnSpan="3" VerticalAlignment="Top" Height="20" Name="TitleBarControl" Background="{ThemeResource TransparentBackground}"/>
     </Grid>
 </Page>

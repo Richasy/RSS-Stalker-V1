@@ -7,5 +7,5 @@
     <!--<FontFamily x:Key="Basic">/Assets/Fonts/NotoSansSC.otf#Noto Sans SC Regular</FontFamily>-->
     <FontFamily x:Key="Basic">/Assets/Fonts/PingFang.otf#PingFang SC</FontFamily>
     <!--<FontFamily x:Key="Title">/Assets/Fonts/NotoSansSC-Bold.otf#Noto Sans SC Bold</FontFamily>-->
-    <FontFamily x:Key="Title">/Assets/Fonts/XiaoHua.ttf#HYXiaoBoHuaYueYuan</FontFamily>
+    <FontFamily x:Key="Title">/Assets/Fonts/YunLinHeiTi.ttf#H-Gothic-YunLin</FontFamily>
 </ResourceDictionary>

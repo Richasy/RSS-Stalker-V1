@@ -117,15 +117,11 @@ namespace RSS_Stalker.Pages
         }
         private void IndexPage_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
         {
-            //分享一个链接
-            string shareLinkString = _shareData.FeedUrl;
-
             //创建一个数据包
             DataPackage dataPackage = new DataPackage();
-
             //把要分享的链接放到数据包里
-            dataPackage.SetWebLink(new Uri(shareLinkString));
-
+            dataPackage.SetHtmlFormat(HtmlFormatHelper.CreateHtmlFormat(_shareData.Content));
+            dataPackage.SetWebLink(new Uri(_shareData.FeedUrl));
             //数据包的标题（内容和标题必须提供）
             dataPackage.Properties.Title = _shareData.Title;
             //数据包的描述

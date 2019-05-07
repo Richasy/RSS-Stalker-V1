@@ -22,6 +22,18 @@
                 </StackPanel>
             </Grid>
         </DataTemplate>
+        <MenuFlyout x:Key="MoreMenuFlyout" Placement="Top" MenuFlyoutPresenterStyle="{StaticResource BasicMenuFlyoutStyle}">
+            <MenuFlyoutItem Name="Menu_Web" x:Uid="Control_WebMenuItem" Click="Menu_Web_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE975;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem Name="Menu_Share" x:Uid="Control_ShareMenuItem" Click="Menu_Share_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE9CC;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+        </MenuFlyout>
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -31,7 +43,7 @@
         </Grid.RowDefinitions>
         <StackPanel BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,0,1" Padding="30,17.5" Orientation="Horizontal">
             <Button Style="{StaticResource GhostCircleButtonStyle}" Content="&#xE976;" FontFamily="{StaticResource Icon}" VerticalAlignment="Center" Name="GridViewButton" Click="GridViewButton_Click"/>
-            <TextBlock Margin="10,0,0,0" Name="TitleTextBlock" FontFamily="{StaticResource Title}" TextWrapping="Wrap" FontSize="19" HorizontalAlignment="Left"/>
+            <TextBlock Margin="10,3,0,0" Name="TitleTextBlock" VerticalAlignment="Center" FontFamily="{StaticResource Title}" TextWrapping="Wrap" FontSize="19" HorizontalAlignment="Left"/>
         </StackPanel>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -44,6 +56,8 @@
                  Loaded="DetailWebView_Loaded"
                  DefaultBackgroundColor="{ThemeResource PageColor}"
                  />
+                <StackPanel VerticalAlignment="Stretch" Width="12" Background="{ThemeResource PageBackground}" Margin="0,0,0,0" HorizontalAlignment="Right"/>
+                <Button Style="{StaticResource PrimaryCircleButtonStyle}" FlyoutBase.AttachedFlyout="{StaticResource MoreMenuFlyout}" Name="MoreButton" Click="MoreButton_Click" Width="40" Height="40" FontFamily="{StaticResource Icon}" Content="&#xE9C5;" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,30,20" Opacity="0.5"/>
             </Grid>
 
             <StackPanel VerticalAlignment="Stretch" Width="1" Background="{ThemeResource LineColor}" Margin="0,0,10,0" Grid.Column="1"/>
@@ -56,8 +70,11 @@
                       ItemClick="FeedListView_ItemClick"
                       MaxWidth="250"
                       Grid.Column="2"
+                      Padding="0,0,15,0"
                       />
+             
         </Grid>
+        
         <ProgressRing Name="LoadingRing" Style="{StaticResource BasicProgressRingStyle}" Grid.Row="1"/>
     </Grid>
 </Page>

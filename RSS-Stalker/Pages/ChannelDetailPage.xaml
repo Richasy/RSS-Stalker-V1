@@ -68,7 +68,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <StackPanel Padding="30,15">
-                <TextBlock Name="ChannelNameTextBlock" x:FieldModifier="Public" FontFamily="{StaticResource Title}" FontWeight="Bold" Foreground="{ThemeResource ImportantTextColor}" FontSize="20"/>
+                <TextBlock Name="ChannelNameTextBlock" x:FieldModifier="Public" FontFamily="{StaticResource Title}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource ImportantTextColor}" FontSize="20"/>
                 <TextBlock Name="ChannelDescriptionTextBlock" x:FieldModifier="Public" Margin="0,10,0,0" LineHeight="20" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource NormalTextColor}" FontSize="13" TextWrapping="Wrap"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,0,30,0" Grid.Column="1">

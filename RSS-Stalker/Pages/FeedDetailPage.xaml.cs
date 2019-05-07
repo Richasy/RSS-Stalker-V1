@@ -6,9 +6,11 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -83,6 +85,39 @@ namespace RSS_Stalker.Pages
         private void GridViewButton_Click(object sender, RoutedEventArgs e)
         {
             MainPage.Current.MainFrame.Navigate(typeof(ChannelDetailPage), AllFeeds);
+        }
+
+        private void MoreButton_Click(object sender, RoutedEventArgs e)
+        {
+            FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
+        }
+
+        private async void Menu_Web_Click(object sender, RoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri(_sourceFeed.FeedUrl));
+        }
+
+        private void Menu_Share_Click(object sender, RoutedEventArgs e)
+        {
+            DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
+            dataTransferManager.DataRequested += IndexPage_DataRequested;
+            DataTransferManager.ShowShareUI();
+        }
+        private void IndexPage_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+        {
+            //创建一个数据包
+            DataPackage dataPackage = new DataPackage();
+
+            //把要分享的链接放到数据包里
+            dataPackage.SetHtmlFormat(HtmlFormatHelper.CreateHtmlFormat(_sourceFeed.Content));
+            dataPackage.SetWebLink(new Uri(_sourceFeed.FeedUrl));
+            //数据包的标题（内容和标题必须提供）
+            dataPackage.Properties.Title = _sourceFeed.Title;
+            //数据包的描述
+            dataPackage.Properties.Description = _sourceFeed.Summary;
+            //给dataRequest对象赋值
+            DataRequest request = args.Request;
+            request.Data = dataPackage;
         }
     }
 }

@@ -172,13 +172,11 @@
     <Content Include="Template\Light.css" />
     <PRIResource Include="Language\zh-CN\Resources.resw" />
     <PRIResource Include="Language\en-US\Resources.resw" />
-    <Content Include="Assets\Fonts\eyepetizer.ttf" />
     <Content Include="Assets\Fonts\NotoSansSC.otf" />
     <Content Include="Assets\Fonts\NotoSansSC-Bold.otf" />
     <Content Include="Assets\Fonts\rss.ttf" />
     <Content Include="Assets\Fonts\Lobste.ttf" />
-    <Content Include="Assets\Fonts\XiaoHua.ttf" />
-    <Content Include="Assets\Fonts\PingFang.otf" />
+    <Content Include="Assets\Fonts\YunLinHeiTi.ttf" />
     <None Include="RSS-Stalker_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

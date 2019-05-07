@@ -13,7 +13,7 @@
     <SolidColorBrush x:Key="PrimaryColor" Color="#00D59C"/>
 
     <SolidColorBrush x:Key="PrimaryMenuTextColor" Color="#3c3c3c"/>
-    <SolidColorBrush x:Key="PrimaryInsideColor" Color="#034C39"/>
+    <SolidColorBrush x:Key="PrimaryInsideColor" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="PrimaryColorOver" Color="#06BF8E"/>
     <SolidColorBrush x:Key="SpecialColor" Color="#594AAD"/>
     <SolidColorBrush x:Key="SpecialColorOver" Color="#413296"/>

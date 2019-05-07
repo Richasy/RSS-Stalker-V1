@@ -10,7 +10,7 @@
     <AcrylicBrush x:Key="PageBackground" BackgroundSource="Backdrop" TintColor="#1C1C1C" TintOpacity="0.9" FallbackColor="#1C1C1C"/>
     <SolidColorBrush x:Key="CardBackground" Color="#101010"/>
 
-    <SolidColorBrush x:Key="PrimaryMenuTextColor" Color="#C6C2FC"/>
+    <SolidColorBrush x:Key="PrimaryMenuTextColor" Color="#aaa"/>
     <SolidColorBrush x:Key="PrimaryColor" Color="#208CF7"/>
     <SolidColorBrush x:Key="PrimaryInsideColor" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="PrimaryColorOver" Color="#1D81E3"/>

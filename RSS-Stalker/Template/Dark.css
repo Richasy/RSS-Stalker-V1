@@ -4,7 +4,6 @@
     width: 90vw;
     max-width: 700px;
     margin: 0 auto;
-    font-size: 90%;
 }
 
 body {
@@ -52,7 +51,8 @@ h6 {
 }
 
 img {
-    max-width: 100%;
+    max-width: 100% !important;
+    height: auto !important;
     text-align: center;
     display: block;
     margin: 0 auto;

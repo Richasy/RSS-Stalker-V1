@@ -129,6 +129,9 @@
   <data name="Control_AddCategoryButton.Content" xml:space="preserve">
     <value>Add Category</value>
   </data>
+  <data name="Control_BaseSettingTipBlock.Text" xml:space="preserve">
+    <value>Basic settings</value>
+  </data>
   <data name="Control_CategoryNameTipBlock.Text" xml:space="preserve">
     <value>Category name</value>
   </data>
@@ -144,14 +147,29 @@
   <data name="Control_ChannelSearchBox.PlaceholderText" xml:space="preserve">
     <value>Serch channel...</value>
   </data>
+  <data name="Control_DarkComboItem.Content" xml:space="preserve">
+    <value>Dark</value>
+  </data>
   <data name="Control_DeleteMenuItem.Text" xml:space="preserve">
     <value>Delete</value>
   </data>
   <data name="Control_IconTipBlock.Text" xml:space="preserve">
     <value>Icon</value>
   </data>
+  <data name="Control_LanguageSettingTipBlock.Text" xml:space="preserve">
+    <value>Language options</value>
+  </data>
+  <data name="Control_LightComboItem.Content" xml:space="preserve">
+    <value>Light</value>
+  </data>
   <data name="Control_MoveMenuItem.Text" xml:space="preserve">
     <value>Move</value>
+  </data>
+  <data name="Control_SettingTipBlock.Text" xml:space="preserve">
+    <value>Setting Page</value>
+  </data>
+  <data name="Control_ThemeSettingTipBlock.Text" xml:space="preserve">
+    <value>Theme selections</value>
   </data>
   <data name="Control_TutorialButton.Content" xml:space="preserve">
     <value>Tutorial</value>
@@ -203,6 +221,9 @@
   </data>
   <data name="Tip_MoveChannelSuccess" xml:space="preserve">
     <value>Channel moved.</value>
+  </data>
+  <data name="Tip_NeedRestartApp" xml:space="preserve">
+    <value>Please restart the application for better experience</value>
   </data>
   <data name="Tip_NoCategorySelected" xml:space="preserve">
     <value>No Category selected</value>

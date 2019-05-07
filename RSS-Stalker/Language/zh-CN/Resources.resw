@@ -129,6 +129,9 @@
   <data name="Control_AddCategoryButton.Content" xml:space="preserve">
     <value>添加分类</value>
   </data>
+  <data name="Control_BaseSettingTipBlock.Text" xml:space="preserve">
+    <value>基础设置</value>
+  </data>
   <data name="Control_CategoryNameTipBlock.Text" xml:space="preserve">
     <value>分类名</value>
   </data>
@@ -144,14 +147,29 @@
   <data name="Control_ChannelSearchBox.PlaceholderText" xml:space="preserve">
     <value>搜索频道</value>
   </data>
+  <data name="Control_DarkComboItem.Content" xml:space="preserve">
+    <value>暗色主题</value>
+  </data>
   <data name="Control_DeleteMenuItem.Text" xml:space="preserve">
     <value>删除</value>
   </data>
   <data name="Control_IconTipBlock.Text" xml:space="preserve">
     <value>图标</value>
   </data>
+  <data name="Control_LanguageSettingTipBlock.Text" xml:space="preserve">
+    <value>语言选项</value>
+  </data>
+  <data name="Control_LightComboItem.Content" xml:space="preserve">
+    <value>亮色主题</value>
+  </data>
   <data name="Control_MoveMenuItem.Text" xml:space="preserve">
     <value>转移</value>
+  </data>
+  <data name="Control_SettingTipBlock.Text" xml:space="preserve">
+    <value>设置页面</value>
+  </data>
+  <data name="Control_ThemeSettingTipBlock.Text" xml:space="preserve">
+    <value>应用主题</value>
   </data>
   <data name="Control_TutorialButton.Content" xml:space="preserve">
     <value>阅读教程</value>
@@ -206,6 +224,9 @@
   </data>
   <data name="Tip_MoveChannelSuccess" xml:space="preserve">
     <value>成功转移频道</value>
+  </data>
+  <data name="Tip_NeedRestartApp" xml:space="preserve">
+    <value>请重启软件以完成更好的体验</value>
   </data>
   <data name="Tip_NoCategorySelected" xml:space="preserve">
     <value>没有选中分类</value>

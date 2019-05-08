@@ -30,6 +30,8 @@ namespace RSS_Stalker
     {
         public ObservableCollection<Category> Categories = new ObservableCollection<Category>();
         public ObservableCollection<Channel> Channels = new ObservableCollection<Channel>();
+        public List<Feed> TodoList = new List<Feed>();
+        public List<Feed> StarList = new List<Feed>();
         public static MainPage Current;
         public int _categoryListCount = -1;
         public int _channelListCount = -1;
@@ -37,13 +39,13 @@ namespace RSS_Stalker
         private Category _tempCategory;
         private DispatcherTimer _checkUpdateTimer=new DispatcherTimer();
         private bool _isInit = false;
+        private bool _isTodoButtonClick = false;
         public MainPage()
         {
             this.InitializeComponent();
             Current = this;
             Window.Current.SetTitleBar(TitleBarControl);
             PageInit();
-            
         }
 
         private async void CategoryCollectionReordered(object sender, NotifyCollectionChangedEventArgs e)
@@ -90,11 +92,13 @@ namespace RSS_Stalker
             }
             if (Categories.Count == 0)
             {
+                CategoryNameTextBlock.Text = "RSS Stalker";
                 SideChannelGrid.Visibility = Visibility.Collapsed;
             }
             else
             {
                 CategoryListView.SelectedItem = Categories.First();
+                CategoryNameTextBlock.Text = Categories.First().Name;
                 foreach (var channel in Categories.First().Channels)
                 {
                     Channels.Add(channel);
@@ -105,6 +109,8 @@ namespace RSS_Stalker
             MainFrame.Navigate(typeof(Pages.WelcomePage));
             await App.OneDrive.OneDriveAuthorize();
             TimerInit();
+            TodoList = await IOTools.GetLocalTodoReadList();
+            StarList = await IOTools.GetLocalStarList();
             _isInit = true;
         }
 
@@ -117,45 +123,77 @@ namespace RSS_Stalker
 
         private async void CheckRssListUpdate(object sender, object e)
         {
-            string localTime = AppTools.GetLocalSetting(Enums.AppSettings.UpdateTime, "0");
-            string roamTime = AppTools.GetRoamingSetting(Enums.AppSettings.UpdateTime, "0");
-            if (localTime != roamTime)
+            string localBasicTime = AppTools.GetLocalSetting(Enums.AppSettings.BasicUpdateTime, "0");
+            string roamBasicTime = AppTools.GetRoamingSetting(Enums.AppSettings.BasicUpdateTime, "0");
+            string localTodoTime = AppTools.GetLocalSetting(Enums.AppSettings.TodoUpdateTime, "0");
+            string roamTodoTime = AppTools.GetRoamingSetting(Enums.AppSettings.TodoUpdateTime, "0");
+            string localStarTime = AppTools.GetLocalSetting(Enums.AppSettings.StarUpdateTime, "0");
+            string roamStarTime = AppTools.GetRoamingSetting(Enums.AppSettings.StarUpdateTime, "0");
+            if (localBasicTime != roamBasicTime)
             {
                 var list = await App.OneDrive.GetCategoryList();
                 await IOTools.ReplaceCategory(list);
-                string selectCategoryId = (CategoryListView.SelectedItem as Category)?.Id;
-                string selectChannelLink = (ChannelListView.SelectedItem as Channel)?.Link;
-                Categories.Clear();
-                foreach (var item in list)
+                ReplaceList(list);
+                new PopupToast(AppTools.GetReswLanguage("Tip_Updated")).ShowPopup();
+            }
+            if (localTodoTime != roamTodoTime)
+            {
+                var list = await App.OneDrive.GetTodoList();
+                await IOTools.ReplaceTodo(list);
+                TodoList = list;
+                // 如果正在浏览待读页，则替换
+                if(MainFrame.Content is Pages.FeedCollectionPage && _isTodoButtonClick)
                 {
-                    Categories.Add(item);
+                    Pages.FeedCollectionPage.Current.UpdateLayout(TodoList, AppTools.GetReswLanguage("Tip_Todo"));
                 }
-                if (!string.IsNullOrEmpty(selectCategoryId))
+                new PopupToast(AppTools.GetReswLanguage("Tip_Updated")).ShowPopup();
+            }
+            if (localStarTime != roamStarTime)
+            {
+                var list = await App.OneDrive.GetStarList();
+                StarList = list;
+                await IOTools.ReplaceStar(list);
+                if (MainFrame.Content is Pages.FeedCollectionPage && !_isTodoButtonClick)
                 {
-                    var selectCategory = Categories.Where(p => p.Id == selectCategoryId).FirstOrDefault();
-                    if (selectCategory != null)
-                    {
-                        CategoryListView.SelectedItem = selectCategory;
-                        Channels.Clear();
-                        foreach (var cha in selectCategory.Channels)
-                        {
-                            Channels.Add(cha);
-                            if (!string.IsNullOrEmpty(selectChannelLink))
-                            {
-                                var selectChannel = Channels.Where(c => c.Link == selectChannelLink).FirstOrDefault();
-                                if (selectChannel != null)
-                                    ChannelListView.SelectedItem = selectChannel;
-                            }
-                        }
-                    }
+                    Pages.FeedCollectionPage.Current.UpdateLayout(StarList, AppTools.GetReswLanguage("Tip_Star"));
                 }
-                _categoryListCount = Categories.Count;
-                _channelListCount = Channels.Count;
-                AppTools.WriteLocalSetting(Enums.AppSettings.UpdateTime, roamTime);
+                // 如果正在浏览待读页，则替换
                 new PopupToast(AppTools.GetReswLanguage("Tip_Updated")).ShowPopup();
             }
         }
-
+        public void ReplaceList(List<Category> list)
+        {
+            string roamTime = AppTools.GetRoamingSetting(Enums.AppSettings.BasicUpdateTime, "0");
+            string selectCategoryId = (CategoryListView.SelectedItem as Category)?.Id;
+            string selectChannelId = (ChannelListView.SelectedItem as Channel)?.Id;
+            Categories.Clear();
+            foreach (var item in list)
+            {
+                Categories.Add(item);
+            }
+            if (!string.IsNullOrEmpty(selectCategoryId))
+            {
+                var selectCategory = Categories.Where(p => p.Id == selectCategoryId).FirstOrDefault();
+                if (selectCategory != null)
+                {
+                    CategoryListView.SelectedItem = selectCategory;
+                    Channels.Clear();
+                    foreach (var cha in selectCategory.Channels)
+                    {
+                        Channels.Add(cha);
+                        if (!string.IsNullOrEmpty(selectChannelId))
+                        {
+                            var selectChannel = Channels.Where(c => c.Id == selectChannelId).FirstOrDefault();
+                            if (selectChannel != null)
+                                ChannelListView.SelectedItem = selectChannel;
+                        }
+                    }
+                }
+            }
+            _categoryListCount = Categories.Count;
+            _channelListCount = Channels.Count;
+            AppTools.WriteLocalSetting(Enums.AppSettings.BasicUpdateTime, roamTime);
+        }
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             _checkUpdateTimer.Stop();
@@ -166,8 +204,11 @@ namespace RSS_Stalker
         private void CategoryListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as Category;
+            CategoryNameTextBlock.Text = item.Name;
             ChannelListView.SelectedIndex = -1;
             SideChannelGrid.Visibility = Visibility.Visible;
+            AppSplitView.OpenPaneLength = 550;
+            _channelListCount = -1;
             Channels.Clear();
             foreach (var cha in item.Channels)
             {
@@ -241,6 +282,7 @@ namespace RSS_Stalker
         private void SettingButton_Click(object sender, RoutedEventArgs e)
         {
             SideChannelGrid.Visibility = Visibility.Collapsed;
+            AppSplitView.OpenPaneLength = 250;
             CategoryListView.SelectedIndex = -1;
             MainFrame.Navigate(typeof(Pages.SettingPage));
         }
@@ -261,13 +303,13 @@ namespace RSS_Stalker
                 var selectChannel = ChannelListView.SelectedItem as Channel;
                 if (category != null)
                 {
-                    if(selectChannel!=null && selectChannel.Link == _tempChannel.Link)
+                    if(selectChannel!=null && selectChannel.Id == _tempChannel.Id)
                     {
                         MainFrame.Navigate(typeof(Pages.WelcomePage));
                     }
                     confirmDialog.IsPrimaryButtonEnabled = false;
                     confirmDialog.PrimaryButtonText = AppTools.GetReswLanguage("Tip_Waiting");
-                    category.Channels.RemoveAll(p => p.Link == _tempChannel.Link);
+                    category.Channels.RemoveAll(p => p.Id == _tempChannel.Id);
                     await IOTools.UpdateCategory(category);
                     Channels.Remove(_tempChannel);
                     _channelListCount -= 1;
@@ -354,6 +396,62 @@ namespace RSS_Stalker
             var data = (sender as FrameworkElement).DataContext as Category;
             _tempCategory = data;
             CategoryMenuFlyout.ShowAt((FrameworkElement)sender, e.GetPosition((FrameworkElement)sender));
+        }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            double width = e.NewSize.Width;
+            if (width > 1100)
+            {
+                AppSplitView.IsPaneOpen = true;
+                AppSplitView.DisplayMode = SplitViewDisplayMode.Inline;
+                MinsizeHeaderContainer.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                AppSplitView.IsPaneOpen = false;
+                AppSplitView.DisplayMode = SplitViewDisplayMode.Overlay;
+                MinsizeHeaderContainer.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void MenuButton_Click(object sender, RoutedEventArgs e)
+        {
+            AppSplitView.IsPaneOpen = !AppSplitView.IsPaneOpen;
+        }
+
+        private void TodoButton_Click(object sender, RoutedEventArgs e)
+        {
+            _isTodoButtonClick = true;
+            SideChannelGrid.Visibility = Visibility.Collapsed;
+            AppSplitView.OpenPaneLength = 250;
+            CategoryListView.SelectedIndex = -1;
+            string title = AppTools.GetReswLanguage("Tip_TodoList");
+            if (MainFrame.Content is Pages.FeedCollectionPage)
+            {
+                Pages.FeedCollectionPage.Current.UpdateLayout(TodoList, title);
+            }
+            else
+            {
+                MainFrame.Navigate(typeof(Pages.FeedCollectionPage), new Tuple<List<Feed>, string>(TodoList, title));
+            }
+        }
+
+        private void StarButton_Click(object sender, RoutedEventArgs e)
+        {
+            _isTodoButtonClick = false;
+            SideChannelGrid.Visibility = Visibility.Collapsed;
+            AppSplitView.OpenPaneLength = 250;
+            CategoryListView.SelectedIndex = -1;
+            string title = AppTools.GetReswLanguage("Tip_StarList");
+            if (MainFrame.Content is Pages.FeedCollectionPage)
+            {
+                Pages.FeedCollectionPage.Current.UpdateLayout(StarList, title);
+            }
+            else
+            {
+                MainFrame.Navigate(typeof(Pages.FeedCollectionPage), new Tuple<List<Feed>, string>(StarList, title));
+            }
         }
     }
 }

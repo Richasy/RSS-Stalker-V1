@@ -156,8 +156,23 @@
   <data name="Control_DeleteMenuItem.Text" xml:space="preserve">
     <value>删除</value>
   </data>
+  <data name="Control_ExportButton.Content" xml:space="preserve">
+    <value>导出</value>
+  </data>
+  <data name="Control_ExportOpmlTipBlock.Text" xml:space="preserve">
+    <value>导出OPML</value>
+  </data>
+  <data name="Control_FeedSearchBox.PlaceholderText" xml:space="preserve">
+    <value>搜索文章</value>
+  </data>
   <data name="Control_IconTipBlock.Text" xml:space="preserve">
     <value>图标</value>
+  </data>
+  <data name="Control_ImportButton.Content" xml:space="preserve">
+    <value>导入</value>
+  </data>
+  <data name="Control_ImportOpmlTipBlock.Text" xml:space="preserve">
+    <value>导入OPML</value>
   </data>
   <data name="Control_LanguageSettingTipBlock.Text" xml:space="preserve">
     <value>语言选项</value>
@@ -170,6 +185,9 @@
   </data>
   <data name="Control_MoveMenuItem.Text" xml:space="preserve">
     <value>转移</value>
+  </data>
+  <data name="Control_NoDataTipBlock.Text" xml:space="preserve">
+    <value>抱歉，数据获取失败</value>
   </data>
   <data name="Control_OneDriveButton.Content" xml:space="preserve">
     <value>连接到OneDrive</value>
@@ -213,6 +231,18 @@
   <data name="Tip_AddChannelSuccess" xml:space="preserve">
     <value>成功添加频道</value>
   </data>
+  <data name="Tip_AddStarList" xml:space="preserve">
+    <value>添加进收藏列表</value>
+  </data>
+  <data name="Tip_AddStarListSuccess" xml:space="preserve">
+    <value>已添加进收藏列表</value>
+  </data>
+  <data name="Tip_AddTodoList" xml:space="preserve">
+    <value>添加进稍后阅读</value>
+  </data>
+  <data name="Tip_AddTodoListSuccess" xml:space="preserve">
+    <value>已添加进稍后阅读列表</value>
+  </data>
   <data name="Tip_BindingOneDriveFailed" xml:space="preserve">
     <value>未能连接到OneDrive /(ㄒoㄒ)/~~</value>
   </data>
@@ -240,14 +270,44 @@
   <data name="Tip_DeleteChannelWarning" xml:space="preserve">
     <value>您确定要删除该频道吗？</value>
   </data>
+  <data name="Tip_DeleteStarList" xml:space="preserve">
+    <value>移出收藏列表</value>
+  </data>
+  <data name="Tip_DeleteStarListSuccess" xml:space="preserve">
+    <value>已从收藏列表中移除</value>
+  </data>
+  <data name="Tip_DeleteTodoList" xml:space="preserve">
+    <value>移出稍后阅读列表</value>
+  </data>
+  <data name="Tip_DeleteTodoListSuccess" xml:space="preserve">
+    <value>已从稍后阅读列表中移除</value>
+  </data>
   <data name="Tip_DeleteWarning" xml:space="preserve">
     <value>删除提醒</value>
+  </data>
+  <data name="Tip_Export" xml:space="preserve">
+    <value>导出</value>
+  </data>
+  <data name="Tip_ExportError" xml:space="preserve">
+    <value>导出失败</value>
+  </data>
+  <data name="Tip_ExportSuccess" xml:space="preserve">
+    <value>导出成功</value>
   </data>
   <data name="Tip_FieldEmpty" xml:space="preserve">
     <value>不要留空哦~</value>
   </data>
   <data name="Tip_FieldFormatError" xml:space="preserve">
     <value>数据格式有误</value>
+  </data>
+  <data name="Tip_Import" xml:space="preserve">
+    <value>导入</value>
+  </data>
+  <data name="Tip_ImportError" xml:space="preserve">
+    <value>导入失败</value>
+  </data>
+  <data name="Tip_ImportSuccess" xml:space="preserve">
+    <value>导入成功</value>
   </data>
   <data name="Tip_LogoutWarning" xml:space="preserve">
     <value>退出提醒</value>
@@ -275,6 +335,18 @@
   </data>
   <data name="Tip_RebindOneDrive" xml:space="preserve">
     <value>请重新绑定OneDrive</value>
+  </data>
+  <data name="Tip_StarList" xml:space="preserve">
+    <value>收藏列表</value>
+  </data>
+  <data name="Tip_StarRepeat" xml:space="preserve">
+    <value>收藏列表中已存在该文章</value>
+  </data>
+  <data name="Tip_TodoList" xml:space="preserve">
+    <value>稍后阅读列表</value>
+  </data>
+  <data name="Tip_TodoRepeat" xml:space="preserve">
+    <value>稍后阅读列表中已存在该文章</value>
   </data>
   <data name="Tip_TryLinkFirst" xml:space="preserve">
     <value>请先完成链接验证</value>

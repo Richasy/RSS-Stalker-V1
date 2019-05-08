@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -35,7 +36,23 @@ namespace RSS_Stalker.Models
             Icon = icon;
             Channels = new List<Channel>();
         }
-
+        public Category(Outline outline):this()
+        {
+            Name = outline.Title;
+            Icon = "";
+            Channels = new List<Channel>();
+            if (outline.Outlines.Count > 0)
+            {
+                foreach (var item in outline.Outlines)
+                {
+                    var c = new Channel(item);
+                    if (!string.IsNullOrEmpty(c.Name))
+                    {
+                        Channels.Add(c);
+                    }
+                }
+            }
+        }
         public override bool Equals(object obj)
         {
             return obj is Category category &&

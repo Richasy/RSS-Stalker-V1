@@ -19,7 +19,7 @@
     <StackPanel MaxWidth="300">
         <StackPanel>
             <TextBlock x:Uid="Control_ChannelLinkTipBlock" Style="{StaticResource BasicTipTextStyle}" Margin="0,0,0,5"/>
-            <TextBox Style="{StaticResource BasicTextBoxStyle}" VerticalAlignment="Center" HorizontalAlignment="Stretch" IsReadOnly="True" Name="ChannelLinkTextBox"/>
+            <TextBox Style="{StaticResource BasicTextBoxStyle}" VerticalAlignment="Center" HorizontalAlignment="Stretch" Name="ChannelLinkTextBox"/>
         </StackPanel>
         <StackPanel Margin="0,15,0,0">
             <TextBlock x:Uid="Control_ChannelNameTipBlock" Style="{StaticResource BasicTipTextStyle}" Margin="0,0,0,5"/>

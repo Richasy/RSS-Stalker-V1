@@ -21,7 +21,7 @@
                 <TextBlock Text="{Binding}" FontFamily="{StaticResource Icon}" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             </Border>
         </DataTemplate>
-        <Flyout FlyoutPresenterStyle="{StaticResource BasicFlyoutStyle}" x:Key="IconFlyout">
+        <Flyout FlyoutPresenterStyle="{StaticResource BasicFlyoutStyle}" x:Key="IconFlyout" x:Name="IconFlyout">
             <GridView x:Name="IconGridView"
                       ItemContainerStyle="{StaticResource BasicGridViewItemContainerStyle}"
                       Style="{StaticResource BasicGridView}"

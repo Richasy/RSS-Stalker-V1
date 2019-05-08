@@ -1,5 +1,4 @@
-﻿using Microsoft.Toolkit.Parsers.Rss;
-using RSS_Stalker.Controls;
+﻿using RSS_Stalker.Controls;
 using RSS_Stalker.Models;
 using RSS_Stalker.Tools;
 using System;
@@ -28,52 +27,41 @@ namespace RSS_Stalker.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class ChannelDetailPage : Page
+    public sealed partial class FeedCollectionPage : Page
     {
-        public Channel _sourceData = null;
         private ObservableCollection<Feed> SchemaCollection = new ObservableCollection<Feed>();
         private Feed _shareData = null;
-        public static ChannelDetailPage Current;
-        
-        public ChannelDetailPage()
+        private List<Feed> AllFeed = new List<Feed>();
+        public static FeedCollectionPage Current;
+        public FeedCollectionPage()
         {
             this.InitializeComponent();
             Current = this;
         }
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if(e.Parameter!=null)
+            if (e.Parameter != null)
             {
-                if(e.Parameter is Channel)
+                if (e.Parameter is Tuple<List<Feed>,string>)
                 {
-                    await UpdateLayout(e.Parameter as Channel);
-                }
-                else if(e.Parameter is List<Feed>)
-                {
-                    var feed = e.Parameter as List<Feed>;
-                    _sourceData = MainPage.Current.ChannelListView.SelectedItem as Channel;
-                    if (_sourceData != null)
+                    var data = e.Parameter as Tuple<List<Feed>, string>;
+                    var feed = data.Item1;
+                    AllFeed = feed;
+                    TitleTextBlock.Text = data.Item2;
+                    foreach (var item in feed)
                     {
-                        ChannelDescriptionTextBlock.Text = _sourceData.Description;
-                        ChannelNameTextBlock.Text = _sourceData.Name;
-                        foreach (var item in feed)
-                        {
-                            SchemaCollection.Add(item);
-                        }
+                        SchemaCollection.Add(item);
                     }
                 }
             }
         }
-
-        public async Task UpdateLayout(Channel channel)
+        public void UpdateLayout(List<Feed> feed,string title)
         {
             LoadingRing.IsActive = true;
             NoDataTipContainer.Visibility = Visibility.Collapsed;
-            _sourceData = channel;
-            ChannelDescriptionTextBlock.Text = _sourceData.Description;
-            ChannelNameTextBlock.Text = _sourceData.Name;
+            TitleTextBlock.Text = title;
             SchemaCollection.Clear();
-            var feed = await AppTools.GetScheamFromUrl(_sourceData.Link);
+            AllFeed = feed;
             if (feed != null && feed.Count > 0)
             {
                 foreach (var item in feed)
@@ -92,18 +80,6 @@ namespace RSS_Stalker.Pages
             var item = e.ClickedItem as Feed;
             var t = new Tuple<Feed, List<Feed>>(item, SchemaCollection.ToList());
             MainPage.Current.MainFrame.Navigate(typeof(FeedDetailPage), t);
-        }
-
-        private async void OpenChannelButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (!string.IsNullOrEmpty(_sourceData.SourceUrl))
-            {
-                await Launcher.LaunchUriAsync(new Uri(_sourceData.SourceUrl));
-            }
-            else
-            {
-                new PopupToast(AppTools.GetReswLanguage("App_InvalidUrl")).ShowPopup();
-            }
         }
 
         private async void OpenFeedButton_Click(object sender, RoutedEventArgs e)
@@ -144,9 +120,25 @@ namespace RSS_Stalker.Pages
             _shareData = null;
         }
 
-        private async void RefreshButton_Click(object sender, RoutedEventArgs e)
+        private void FeedSearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            await UpdateLayout(_sourceData);
+            string text = FeedSearchBox.Text?.Trim();
+            SchemaCollection.Clear();
+            if (string.IsNullOrEmpty(text))
+            {
+                foreach (var item in AllFeed)
+                {
+                    SchemaCollection.Add(item);
+                }
+            }
+            else
+            {
+                var list = AllFeed.Where(p => p.Title.IndexOf(text, StringComparison.CurrentCultureIgnoreCase) != -1);
+                foreach (var item in list)
+                {
+                    SchemaCollection.Add(item);
+                }
+            }
         }
     }
 }

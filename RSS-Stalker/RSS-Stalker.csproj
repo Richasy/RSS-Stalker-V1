@@ -18,7 +18,7 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <PackageCertificateKeyFile>RSS-Stalker_StoreKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>ED21FCEC7C6D71C788EA648B8E91294C1A577710</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>99B45ABA0CF05A6B62BC563342390299397CAF65</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -148,12 +148,19 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Body.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Channel.cs" />
     <Compile Include="Models\Feed.cs" />
     <Compile Include="Models\FeedlyResult.cs" />
+    <Compile Include="Models\Head.cs" />
+    <Compile Include="Models\Opml.cs" />
+    <Compile Include="Models\Outline.cs" />
     <Compile Include="Pages\ChannelDetailPage.xaml.cs">
       <DependentUpon>ChannelDetailPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\FeedCollectionPage.xaml.cs">
+      <DependentUpon>FeedCollectionPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\FeedDetailPage.xaml.cs">
       <DependentUpon>FeedDetailPage.xaml</DependentUpon>
@@ -291,6 +298,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\FeedCollectionPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\FeedDetailPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -356,7 +367,6 @@
       <Version>4.3.4</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

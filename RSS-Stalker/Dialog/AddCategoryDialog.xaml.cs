@@ -75,6 +75,7 @@ namespace RSS_Stalker.Dialog
         {
             var str = e.ClickedItem as string;
             IconTextBlock.Text = str;
+            IconFlyout.Hide();
         }
     }
 }

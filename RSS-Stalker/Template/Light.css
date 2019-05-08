@@ -9,7 +9,9 @@
 body {
     margin: 0 auto;
     color: #2c3e50;
-    font-family: 'Tw Cen MT'
+    font-family: 'Tw Cen MT';
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 figcaption{
     display:block;

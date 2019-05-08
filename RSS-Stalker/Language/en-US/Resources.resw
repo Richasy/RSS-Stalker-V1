@@ -156,8 +156,23 @@
   <data name="Control_DeleteMenuItem.Text" xml:space="preserve">
     <value>Delete</value>
   </data>
+  <data name="Control_ExportButton.Content" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="Control_ExportOpmlTipBlock.Text" xml:space="preserve">
+    <value>Export OPML</value>
+  </data>
+  <data name="Control_FeedSearchBox.PlaceholderText" xml:space="preserve">
+    <value>Search article...</value>
+  </data>
   <data name="Control_IconTipBlock.Text" xml:space="preserve">
     <value>Icon</value>
+  </data>
+  <data name="Control_ImportButton.Content" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="Control_ImportOpmlTipBlock.Text" xml:space="preserve">
+    <value>Import OPML</value>
   </data>
   <data name="Control_LanguageSettingTipBlock.Text" xml:space="preserve">
     <value>Language options</value>
@@ -170,6 +185,9 @@
   </data>
   <data name="Control_MoveMenuItem.Text" xml:space="preserve">
     <value>Move</value>
+  </data>
+  <data name="Control_NoDataTipBlock.Text" xml:space="preserve">
+    <value>Sorry. Something wrong...</value>
   </data>
   <data name="Control_OneDriveButton.Content" xml:space="preserve">
     <value>Link to OneDrive</value>
@@ -213,6 +231,18 @@
   <data name="Tip_AddChannelSuccess" xml:space="preserve">
     <value>Channel added.</value>
   </data>
+  <data name="Tip_AddStarList" xml:space="preserve">
+    <value>Add in favourites list</value>
+  </data>
+  <data name="Tip_AddStarListSuccess" xml:space="preserve">
+    <value>Added to favorites list</value>
+  </data>
+  <data name="Tip_AddTodoList" xml:space="preserve">
+    <value>Add in read later list</value>
+  </data>
+  <data name="Tip_AddTodoListSuccess" xml:space="preserve">
+    <value>Added to reading later list</value>
+  </data>
   <data name="Tip_BindingOneDriveFailed" xml:space="preserve">
     <value>Can't link to OneDrive /(ㄒoㄒ)/~~</value>
   </data>
@@ -240,14 +270,38 @@
   <data name="Tip_DeleteChannelWarning" xml:space="preserve">
     <value>Are you sure to delete this channel?</value>
   </data>
+  <data name="Tip_DeleteStarList" xml:space="preserve">
+    <value>Remove from favorites list</value>
+  </data>
+  <data name="Tip_DeleteStarListSuccess" xml:space="preserve">
+    <value>Removed from favorites list</value>
+  </data>
+  <data name="Tip_DeleteTodoList" xml:space="preserve">
+    <value>Remove from reading later list</value>
+  </data>
+  <data name="Tip_DeleteTodoListSuccess" xml:space="preserve">
+    <value>Removed from reading later list</value>
+  </data>
   <data name="Tip_DeleteWarning" xml:space="preserve">
     <value>Delete Warning</value>
+  </data>
+  <data name="Tip_ExportError" xml:space="preserve">
+    <value>Failed to export.</value>
+  </data>
+  <data name="Tip_ExportSuccess" xml:space="preserve">
+    <value>Exported!</value>
   </data>
   <data name="Tip_FieldEmpty" xml:space="preserve">
     <value>Field can't be empty.</value>
   </data>
   <data name="Tip_FieldFormatError" xml:space="preserve">
     <value>Data format is wrong</value>
+  </data>
+  <data name="Tip_ImportError" xml:space="preserve">
+    <value>Failed to import.</value>
+  </data>
+  <data name="Tip_ImportSuccess" xml:space="preserve">
+    <value>Imported!</value>
   </data>
   <data name="Tip_LogoutWarning" xml:space="preserve">
     <value>Logout</value>
@@ -275,6 +329,18 @@
   </data>
   <data name="Tip_RebindOneDrive" xml:space="preserve">
     <value>Please rebind OneDrive</value>
+  </data>
+  <data name="Tip_StarList" xml:space="preserve">
+    <value>Favorites</value>
+  </data>
+  <data name="Tip_StarRepeat" xml:space="preserve">
+    <value>The article already exists in the favorites list</value>
+  </data>
+  <data name="Tip_TodoList" xml:space="preserve">
+    <value>Read Later</value>
+  </data>
+  <data name="Tip_TodoRepeat" xml:space="preserve">
+    <value>This article already exists in the reading later list</value>
   </data>
   <data name="Tip_TryLinkFirst" xml:space="preserve">
     <value>Please validate the link first.</value>

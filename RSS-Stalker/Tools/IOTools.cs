@@ -123,7 +123,7 @@ namespace RSS_Stalker.Tools
         }
 
         /// <summary>
-        /// 获取本地保存的频道信息
+        /// 获取本地保存的标签信息
         /// </summary>
         /// <returns></returns>
         public async static Task<List<Category>> GetLocalCategories()
@@ -205,7 +205,7 @@ namespace RSS_Stalker.Tools
             await App.OneDrive.UpdateCategoryList(file);
         }
         /// <summary>
-        /// 完全替换
+        /// 完全替换RSS列表
         /// </summary>
         /// <param name="categories">标签列表</param>
         /// <returns></returns>
@@ -217,6 +217,155 @@ namespace RSS_Stalker.Tools
             await FileIO.WriteTextAsync(file, text);
             if (isUpdate)
                 await App.OneDrive.UpdateCategoryList(file);
+        }
+        /// <summary>
+        /// 完全替换待读列表
+        /// </summary>
+        /// <param name="categories">标签列表</param>
+        /// <returns></returns>
+        public async static Task ReplaceTodo(List<Feed> feeds, bool isUpdate = false)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("TodoRead.json", CreationCollisionOption.OpenIfExists);
+            string text = JsonConvert.SerializeObject(feeds);
+            await FileIO.WriteTextAsync(file, text);
+            if (isUpdate)
+                await App.OneDrive.UpdateTodoList(file);
+        }
+        /// <summary>
+        /// 完全替换收藏列表
+        /// </summary>
+        /// <param name="feeds">标签列表</param>
+        /// <returns></returns>
+        public async static Task ReplaceStar(List<Feed> feeds, bool isUpdate = false)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("Star.json", CreationCollisionOption.OpenIfExists);
+            string text = JsonConvert.SerializeObject(feeds);
+            await FileIO.WriteTextAsync(file, text);
+            if (isUpdate)
+                await App.OneDrive.UpdateStarList(file);
+        }
+        /// <summary>
+        /// 获取本地保存的待阅读信息
+        /// </summary>
+        /// <returns></returns>
+        public async static Task<List<Feed>> GetLocalTodoReadList()
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("TodoRead.json", CreationCollisionOption.OpenIfExists);
+            string text = await FileIO.ReadTextAsync(file);
+            if (string.IsNullOrEmpty(text))
+            {
+                text = "[]";
+            }
+            var list = JsonConvert.DeserializeObject<List<Feed>>(text);
+            return list;
+        }
+        /// <summary>
+        /// 添加新待读文章
+        /// </summary>
+        /// <param name="feed"></param>
+        /// <returns></returns>
+        public async static Task AddTodoRead(Feed feed)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("TodoRead.json", CreationCollisionOption.OpenIfExists);
+            string text = await FileIO.ReadTextAsync(file);
+            if (string.IsNullOrEmpty(text))
+            {
+                text = "[]";
+            }
+            var list = JsonConvert.DeserializeObject<List<Feed>>(text);
+            if (list.Any(p => p.FeedUrl.Equals(feed.FeedUrl, StringComparison.CurrentCultureIgnoreCase)))
+            {
+                throw new Exception(AppTools.GetReswLanguage("Tip_TodoRepeat"));
+            }
+            list.Add(feed);
+            text = JsonConvert.SerializeObject(list);
+            await FileIO.WriteTextAsync(file, text);
+            await App.OneDrive.UpdateTodoList(file);
+        }
+        /// <summary>
+        /// 删除待读文章
+        /// </summary>
+        /// <param name="feed"></param>
+        /// <returns></returns>
+        public async static Task DeleteTodoRead(Feed feed)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("TodoRead.json", CreationCollisionOption.OpenIfExists);
+            string text = await FileIO.ReadTextAsync(file);
+            if (string.IsNullOrEmpty(text))
+            {
+                text = "[]";
+            }
+            var list = JsonConvert.DeserializeObject<List<Feed>>(text);
+            list.RemoveAll(p => p.Equals(feed));
+            text = JsonConvert.SerializeObject(list);
+            await FileIO.WriteTextAsync(file, text);
+            await App.OneDrive.UpdateTodoList(file);
+        }
+
+        /// <summary>
+        /// 获取本地保存的收藏信息
+        /// </summary>
+        /// <returns></returns>
+        public async static Task<List<Feed>> GetLocalStarList()
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("Star.json", CreationCollisionOption.OpenIfExists);
+            string text = await FileIO.ReadTextAsync(file);
+            if (string.IsNullOrEmpty(text))
+            {
+                text = "[]";
+            }
+            var list = JsonConvert.DeserializeObject<List<Feed>>(text);
+            return list;
+        }
+        /// <summary>
+        /// 收藏新文章
+        /// </summary>
+        /// <param name="feed"></param>
+        /// <returns></returns>
+        public async static Task AddStar(Feed feed)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("Star.json", CreationCollisionOption.OpenIfExists);
+            string text = await FileIO.ReadTextAsync(file);
+            if (string.IsNullOrEmpty(text))
+            {
+                text = "[]";
+            }
+            var list = JsonConvert.DeserializeObject<List<Feed>>(text);
+            if (list.Any(p => p.FeedUrl.Equals(feed.FeedUrl, StringComparison.CurrentCultureIgnoreCase)))
+            {
+                throw new Exception(AppTools.GetReswLanguage("Tip_StarRepeat"));
+            }
+            list.Add(feed);
+            text = JsonConvert.SerializeObject(list);
+            await FileIO.WriteTextAsync(file, text);
+            await App.OneDrive.UpdateStarList(file);
+        }
+        /// <summary>
+        /// 删除收藏文章
+        /// </summary>
+        /// <param name="feed"></param>
+        /// <returns></returns>
+        public async static Task DeleteStar(Feed feed)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("Star.json", CreationCollisionOption.OpenIfExists);
+            string text = await FileIO.ReadTextAsync(file);
+            if (string.IsNullOrEmpty(text))
+            {
+                text = "[]";
+            }
+            var list = JsonConvert.DeserializeObject<List<Feed>>(text);
+            list.RemoveAll(p => p.Equals(feed));
+            text = JsonConvert.SerializeObject(list);
+            await FileIO.WriteTextAsync(file, text);
+            await App.OneDrive.UpdateStarList(file);
         }
     }
 }

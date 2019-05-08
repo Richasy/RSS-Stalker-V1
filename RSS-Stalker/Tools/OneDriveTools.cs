@@ -109,6 +109,80 @@ namespace RSS_Stalker.Tools
             }
         }
         /// <summary>
+        /// 获取OneDrive中存储的稍后阅读列表数据
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<Feed>> GetTodoList()
+        {
+            if (_appFolder == null)
+            {
+                throw new UnauthorizedAccessException("You need to complete OneDrive authorization before you can get this file");
+            }
+            try
+            {
+                var file = await _appFolder.GetFileAsync("TodoList.json");
+                using (var stream = (await file.StorageFilePlatformService.OpenAsync()) as IRandomAccessStream)
+                {
+                    Stream st = WindowsRuntimeStreamExtensions.AsStreamForRead(stream);
+                    st.Position = 0;
+                    StreamReader sr = new StreamReader(st, Encoding.UTF8);
+                    string result = sr.ReadToEnd();
+                    result = result.Replace("\0", "");
+                    if (string.IsNullOrEmpty(result))
+                    {
+                        result = "[]";
+                    }
+                    var list = JsonConvert.DeserializeObject<List<Feed>>(result);
+                    return list;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex is ServiceException)
+                {
+                    await _appFolder.StorageFolderPlatformService.CreateFileAsync("TodoList.json", CreationCollisionOption.ReplaceExisting);
+                }
+                return new List<Feed>();
+            }
+        }
+        /// <summary>
+        /// 获取OneDrive中存储的收藏列表数据
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<Feed>> GetStarList()
+        {
+            if (_appFolder == null)
+            {
+                throw new UnauthorizedAccessException("You need to complete OneDrive authorization before you can get this file");
+            }
+            try
+            {
+                var file = await _appFolder.GetFileAsync("StarList.json");
+                using (var stream = (await file.StorageFilePlatformService.OpenAsync()) as IRandomAccessStream)
+                {
+                    Stream st = WindowsRuntimeStreamExtensions.AsStreamForRead(stream);
+                    st.Position = 0;
+                    StreamReader sr = new StreamReader(st, Encoding.UTF8);
+                    string result = sr.ReadToEnd();
+                    result = result.Replace("\0", "");
+                    if (string.IsNullOrEmpty(result))
+                    {
+                        result = "[]";
+                    }
+                    var list = JsonConvert.DeserializeObject<List<Feed>>(result);
+                    return list;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex is ServiceException)
+                {
+                    await _appFolder.StorageFolderPlatformService.CreateFileAsync("StarList.json", CreationCollisionOption.ReplaceExisting);
+                }
+                return new List<Feed>();
+            }
+        }
+        /// <summary>
         /// 更新OneDrive中存储的Rss列表
         /// </summary>
         /// <param name="list">列表</param>
@@ -125,8 +199,60 @@ namespace RSS_Stalker.Tools
                 {
                     await _appFolder.StorageFolderPlatformService.CreateFileAsync("RssList.json", CreationCollisionOption.ReplaceExisting,stream);
                     double time = AppTools.DateToTimeStamp(DateTime.Now.ToUniversalTime());
-                    AppTools.WriteRoamingSetting(Enums.AppSettings.UpdateTime, time.ToString());
-                    AppTools.WriteLocalSetting(Enums.AppSettings.UpdateTime, time.ToString());
+                    AppTools.WriteRoamingSetting(Enums.AppSettings.BasicUpdateTime, time.ToString());
+                    AppTools.WriteLocalSetting(Enums.AppSettings.BasicUpdateTime, time.ToString());
+                }
+            }
+            catch (Exception)
+            {
+                return;
+            }
+        }
+        /// <summary>
+        /// 更新OneDrive中存储的待读列表
+        /// </summary>
+        /// <param name="list">列表</param>
+        /// <returns></returns>
+        public async Task UpdateTodoList(StorageFile localFile)
+        {
+            if (_appFolder == null)
+            {
+                throw new UnauthorizedAccessException("You need to complete OneDrive authorization before you can get this file");
+            }
+            try
+            {
+                using (var stream = await localFile.OpenReadAsync())
+                {
+                    await _appFolder.StorageFolderPlatformService.CreateFileAsync("TodoList.json", CreationCollisionOption.ReplaceExisting, stream);
+                    double time = AppTools.DateToTimeStamp(DateTime.Now.ToUniversalTime());
+                    AppTools.WriteRoamingSetting(Enums.AppSettings.TodoUpdateTime, time.ToString());
+                    AppTools.WriteLocalSetting(Enums.AppSettings.TodoUpdateTime, time.ToString());
+                }
+            }
+            catch (Exception)
+            {
+                return;
+            }
+        }
+        /// <summary>
+        /// 更新OneDrive中存储的收藏列表
+        /// </summary>
+        /// <param name="list">列表</param>
+        /// <returns></returns>
+        public async Task UpdateStarList(StorageFile localFile)
+        {
+            if (_appFolder == null)
+            {
+                throw new UnauthorizedAccessException("You need to complete OneDrive authorization before you can get this file");
+            }
+            try
+            {
+                using (var stream = await localFile.OpenReadAsync())
+                {
+                    await _appFolder.StorageFolderPlatformService.CreateFileAsync("StarList.json", CreationCollisionOption.ReplaceExisting, stream);
+                    double time = AppTools.DateToTimeStamp(DateTime.Now.ToUniversalTime());
+                    AppTools.WriteRoamingSetting(Enums.AppSettings.StarUpdateTime, time.ToString());
+                    AppTools.WriteLocalSetting(Enums.AppSettings.StarUpdateTime, time.ToString());
                 }
             }
             catch (Exception)

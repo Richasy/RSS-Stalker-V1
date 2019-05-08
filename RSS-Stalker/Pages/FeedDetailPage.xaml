@@ -68,7 +68,7 @@
                       ItemsSource="{x:Bind ShowFeeds}"
                       ItemClick="FeedListView_ItemClick"
                       Grid.Column="2"
-                      Padding="0,0,15,0"
+                      Padding="15,0,15,0"
                       />
                 </SplitView.Pane>
                 <Grid>
@@ -76,8 +76,25 @@
                  Loaded="DetailWebView_Loaded"
                  DefaultBackgroundColor="{ThemeResource PageColor}"
                  />
-                    <StackPanel VerticalAlignment="Stretch" Width="12" Background="{ThemeResource PageBackground}" Margin="0,0,0,0" HorizontalAlignment="Right"/>
-                    <Button Style="{StaticResource GhostCircleButtonStyle}" FlyoutBase.AttachedFlyout="{StaticResource MoreMenuFlyout}" Name="SideListButton" Click="SideListButton_Click"  Width="40" Height="40" FontFamily="{StaticResource Icon}" Content="&#xE994;" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,30,0" Opacity="0.8"/>
+                    <StackPanel VerticalAlignment="Stretch" Width="12" Background="{ThemeResource PageColor}" Margin="0,0,0,0" HorizontalAlignment="Right"/>
+                    <StackPanel Margin="0,20,30,0" HorizontalAlignment="Right" VerticalAlignment="Top">
+                        <Button Style="{StaticResource GhostCircleButtonStyle}" Name="SideListButton" Click="SideListButton_Click"  Width="40" Height="40" FontFamily="{StaticResource Icon}" Content="&#xE994;" Opacity="0.8"/>
+                        <Button Style="{StaticResource GhostCircleButtonStyle}" Margin="0,10,0,0" Name="AddTodoButton" Click="AddTodoButton_Click"  Width="40" Height="40" FontFamily="{StaticResource Icon}" Content="&#xE924;" Opacity="0.8"/>
+                        <Button Style="{StaticResource GhostCircleButtonStyle}" Margin="0,10,0,0" Name="RemoveTodoButton" Visibility="Collapsed" Click="RemoveTodoButton_Click"  Width="40" Height="40" FontFamily="{StaticResource Icon}" Opacity="0.8">
+                            <Grid>
+                                <TextBlock Text="&#xE924;" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="12"/>
+                                <TextBlock Text="&#xE9D7;" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24"/>
+                            </Grid>
+                        </Button>
+                        <Button Style="{StaticResource GhostCircleButtonStyle}" Content="&#xE9DD;" Margin="0,10,0,0" Name="AddStarButton" Click="AddStarButton_Click"  Width="40" Height="40" FontFamily="{StaticResource Icon}" Opacity="0.8"/>
+                        <Button Style="{StaticResource GhostCircleButtonStyle}" Margin="0,10,0,0" Name="RemoveStarButton" Visibility="Collapsed" Click="RemoveStarButton_Click"  Width="40" Height="40" FontFamily="{StaticResource Icon}" Opacity="0.8">
+                            <Grid>
+                                <TextBlock Text="&#xE9DD;" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="12"/>
+                                <TextBlock Text="&#xE9D7;" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24"/>
+                            </Grid>
+                        </Button>
+                    </StackPanel>
+                    
                     <Button Style="{StaticResource PrimaryCircleButtonStyle}" FlyoutBase.AttachedFlyout="{StaticResource MoreMenuFlyout}" Name="MoreButton" Click="MoreButton_Click" Width="40" Height="40" FontFamily="{StaticResource Icon}" Content="&#xE9C5;" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,30,20" Opacity="0.8"/>
                 </Grid>
              </SplitView>

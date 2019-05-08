@@ -1,4 +1,5 @@
-﻿using RSS_Stalker.Models;
+﻿using RSS_Stalker.Controls;
+using RSS_Stalker.Models;
 using RSS_Stalker.Tools;
 using System;
 using System.Collections.Generic;
@@ -35,14 +36,39 @@ namespace RSS_Stalker.Pages
         public FeedDetailPage()
         {
             this.InitializeComponent();
+            ToolTipService.SetToolTip(AddTodoButton, AppTools.GetReswLanguage("Tip_AddTodoList"));
+            ToolTipService.SetToolTip(RemoveTodoButton, AppTools.GetReswLanguage("Tip_DeleteTodoList"));
+            ToolTipService.SetToolTip(AddStarButton, AppTools.GetReswLanguage("Tip_AddStarList"));
+            ToolTipService.SetToolTip(RemoveStarButton, AppTools.GetReswLanguage("Tip_RemoveStarList"));
         }
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             if(e.Parameter!=null && e.Parameter is Tuple<Feed,List<Feed>>)
             {
                 var data = e.Parameter as Tuple<Feed, List<Feed>>;
+                
                 _sourceFeed = data.Item1;
                 AllFeeds = data.Item2;
+                if (MainPage.Current.TodoList.Any(p => p.Equals(_sourceFeed)))
+                {
+                    AddTodoButton.Visibility = Visibility.Collapsed;
+                    RemoveTodoButton.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    AddTodoButton.Visibility = Visibility.Visible;
+                    RemoveTodoButton.Visibility = Visibility.Collapsed;
+                }
+                if (MainPage.Current.StarList.Any(p => p.Equals(_sourceFeed)))
+                {
+                    AddStarButton.Visibility = Visibility.Collapsed;
+                    RemoveStarButton.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    AddStarButton.Visibility = Visibility.Visible;
+                    RemoveStarButton.Visibility = Visibility.Collapsed;
+                }
                 foreach (var item in data.Item2)
                 {
                     if (item.InternalID != _sourceFeed.InternalID)
@@ -143,6 +169,78 @@ namespace RSS_Stalker.Pages
                 if(DetailSplitView!=null)
                     DetailSplitView.IsPaneOpen = width >= 900 ? true : false;
             }
+        }
+
+        private async void AddTodoButton_Click(object sender, RoutedEventArgs e)
+        {
+            (sender as Button).IsEnabled = false;
+            try
+            {
+                await IOTools.AddTodoRead(_sourceFeed);
+                MainPage.Current.TodoList.Add(_sourceFeed);
+                AddTodoButton.Visibility = Visibility.Collapsed;
+                RemoveTodoButton.Visibility = Visibility.Visible;
+                new PopupToast(AppTools.GetReswLanguage("Tip_AddTodoListSuccess")).ShowPopup();
+            }
+            catch (Exception ex)
+            {
+                new PopupToast(ex.Message).ShowPopup();
+            }
+            (sender as Button).IsEnabled = true;
+        }
+
+        private async void AddStarButton_Click(object sender, RoutedEventArgs e)
+        {
+            (sender as Button).IsEnabled = false;
+            try
+            {
+                await IOTools.AddStar(_sourceFeed);
+                MainPage.Current.StarList.Add(_sourceFeed);
+                AddStarButton.Visibility = Visibility.Collapsed;
+                RemoveStarButton.Visibility = Visibility.Visible;
+                new PopupToast(AppTools.GetReswLanguage("Tip_AddStarListSuccess")).ShowPopup();
+            }
+            catch (Exception ex)
+            {
+                new PopupToast(ex.Message).ShowPopup();
+            }
+            (sender as Button).IsEnabled = true;
+        }
+
+        private async void RemoveTodoButton_Click(object sender, RoutedEventArgs e)
+        {
+            (sender as Button).IsEnabled = false;
+            try
+            {
+                await IOTools.DeleteTodoRead(_sourceFeed);
+                MainPage.Current.TodoList.RemoveAll(p=>p.Equals(_sourceFeed));
+                AddTodoButton.Visibility = Visibility.Visible;
+                RemoveTodoButton.Visibility = Visibility.Collapsed;
+                new PopupToast(AppTools.GetReswLanguage("Tip_DeleteTodoListSuccess")).ShowPopup();
+            }
+            catch (Exception ex)
+            {
+                new PopupToast(ex.Message).ShowPopup();
+            }
+            (sender as Button).IsEnabled = true;
+        }
+
+        private async void RemoveStarButton_Click(object sender, RoutedEventArgs e)
+        {
+            (sender as Button).IsEnabled = false;
+            try
+            {
+                await IOTools.DeleteStar(_sourceFeed);
+                MainPage.Current.StarList.RemoveAll(p => p.Equals(_sourceFeed));
+                AddStarButton.Visibility = Visibility.Visible;
+                RemoveStarButton.Visibility = Visibility.Collapsed;
+                new PopupToast(AppTools.GetReswLanguage("Tip_DeleteStarListSuccess")).ShowPopup();
+            }
+            catch (Exception ex)
+            {
+                new PopupToast(ex.Message).ShowPopup();
+            }
+            (sender as Button).IsEnabled = true;
         }
     }
 }

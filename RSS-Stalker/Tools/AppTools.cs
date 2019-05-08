@@ -373,13 +373,13 @@ namespace RSS_Stalker.Tools
             var list = new List<string>
             {
                 "","","","","","","","","","","","","","","","","","","","","","",
+                "","","","","","","","","","","","","","","","","","","","","","",
                 "","","","","","","","","","","","","","","","","","","","","","",
                 "","","","","","","","","","","","","","","","","","","","","","",
                 "","","","","","","","","","","","","","","","","","","","","","",
-                "","","","","","","","","","","","","","","","","","","","","","",
+                "","","","","","","","","","","","","","","","","","","","","","",
                 "","","","","","","","","","","","","","","","","","","","","","",
                 "","","","","","","","","","","","","","","","","","","","","","",
-                "","","","","","","","","","","","","","","","","","","",""
             };
             return list;
         }
@@ -388,6 +388,33 @@ namespace RSS_Stalker.Tools
         {
             string container = $"<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"referrer\" content=\"no-referrer\" /><meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=0; \"><style>{css}</style></head><body>{body}</body></html>";
             return container;
+        }
+
+        public async static Task<List<Category>> GetRssListFromFile(StorageFile file)
+        {
+            string content = await FileIO.ReadTextAsync(file);
+            var opml = new Opml(content);
+            var list = new List<Category>();
+            var defaultCategory = new Category("Default", "");
+            if (opml.Body.Outlines.Count > 0)
+            {
+                foreach (var outline in opml.Body.Outlines)
+                {
+                    if(outline.Outlines!=null && outline.Outlines.Count > 0 && string.IsNullOrEmpty(outline.XMLUrl))
+                    {
+                        list.Add(new Category(outline));
+                    }
+                    else
+                    {
+                        defaultCategory.Channels.Add(new Channel(outline));
+                    }
+                }
+            }
+            if (defaultCategory.Channels.Count > 0)
+            {
+                list.Add(defaultCategory);
+            }
+            return list;
         }
     }
 }

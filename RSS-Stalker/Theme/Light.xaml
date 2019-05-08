@@ -7,14 +7,14 @@
     <AcrylicBrush x:Key="MaskBackground" BackgroundSource="Backdrop" TintColor="Black" TintOpacity="0.7" FallbackColor="Black"/>
     <AcrylicBrush x:Key="FlyoutBackground" BackgroundSource="Backdrop" TintColor="#FFFFFF" TintOpacity="0.9" FallbackColor="#FFFFFF"/>
     <SolidColorBrush x:Key="MediaControlsBackground" Color="#FFFFFF" Opacity="0.4"/>
-    <SolidColorBrush x:Key="PageBackground" Color="#FCFDFF"/>
+    <SolidColorBrush x:Key="PageBackground" Color="#EDF0F5"/>
     <SolidColorBrush x:Key="CardBackground" Color="#FFFFFF"/>
 
-    <SolidColorBrush x:Key="PrimaryColor" Color="#00D59C"/>
+    <SolidColorBrush x:Key="PrimaryColor" Color="#5473E8"/>
 
     <SolidColorBrush x:Key="PrimaryMenuTextColor" Color="#3c3c3c"/>
     <SolidColorBrush x:Key="PrimaryInsideColor" Color="#FFFFFF"/>
-    <SolidColorBrush x:Key="PrimaryColorOver" Color="#06BF8E"/>
+    <SolidColorBrush x:Key="PrimaryColorOver" Color="#2940B0"/>
     <SolidColorBrush x:Key="SpecialColor" Color="#594AAD"/>
     <SolidColorBrush x:Key="SpecialColorOver" Color="#413296"/>
     <SolidColorBrush x:Key="LineColor" Color="#E4E4E4"/>

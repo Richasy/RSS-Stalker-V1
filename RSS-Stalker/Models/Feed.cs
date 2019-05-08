@@ -66,7 +66,7 @@ namespace RSS_Stalker.Models
         public override bool Equals(object obj)
         {
             return obj is Feed feed &&
-                   Date == feed.InternalID;
+                   FeedUrl == feed.FeedUrl;
         }
 
         public override int GetHashCode()

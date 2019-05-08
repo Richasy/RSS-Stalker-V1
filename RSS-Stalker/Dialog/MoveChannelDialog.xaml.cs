@@ -44,6 +44,7 @@ namespace RSS_Stalker.Dialog
             else
             {
                 var sourceCategory = MainPage.Current.CategoryListView.SelectedItem as Category;
+                
                 if (sourceCategory == null)
                 {
                     new PopupToast(AppTools.GetReswLanguage("Tip_NoCategorySelected")).ShowPopup();
@@ -51,14 +52,16 @@ namespace RSS_Stalker.Dialog
                 }
                 else
                 {
+                    IsPrimaryButtonEnabled = false;
+                    PrimaryButtonText = AppTools.GetReswLanguage("Tip_Waiting");
                     if (selectCategory.Id != sourceCategory.Id)
                     {
-                        sourceCategory.Channels.RemoveAll(p => p.Link == _sourceChannel.Link);
+                        sourceCategory.Channels.RemoveAll(p => p.Id == _sourceChannel.Id);
                         selectCategory.Channels.Add(_sourceChannel);
                         await IOTools.UpdateCategory(sourceCategory);
                         await IOTools.UpdateCategory(selectCategory);
                         
-                        MainPage.Current.Channels.Remove(MainPage.Current.Channels.Where(p => p.Link == _sourceChannel.Link).FirstOrDefault());
+                        MainPage.Current.Channels.Remove(MainPage.Current.Channels.Where(p => p.Id == _sourceChannel.Id).FirstOrDefault());
                         MainPage.Current._channelListCount -= 1;
                     }
                     new PopupToast(AppTools.GetReswLanguage("Tip_MoveChannelSuccess")).ShowPopup();

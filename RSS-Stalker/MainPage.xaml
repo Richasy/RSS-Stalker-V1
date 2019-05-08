@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:RSS_Stalker.Models"
+    SizeChanged="Page_SizeChanged"
     mc:Ignorable="d">
     <Page.Resources>
         <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource BasicMenuFlyoutStyle}" x:Name="ChannelMenuFlyout" x:Key="ChannelMenuFlyout">
@@ -61,35 +62,33 @@
         </DataTemplate>
     </Page.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Grid Name="SideCategoryGrid" Width="250" Background="{ThemeResource SideBackground}" BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,1,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <StackPanel Orientation="Horizontal" Margin="0,30" HorizontalAlignment="Center">
-                <TextBlock FontFamily="{StaticResource Icon}" Text="&#xEA14;" Foreground="{ThemeResource PrimaryColor}" FontSize="22" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                <TextBlock Text="RSS Stalker" Foreground="{ThemeResource ImportantTextColor}" FontFamily="{ThemeResource English}" VerticalAlignment="Center" FontSize="15"/>
-            </StackPanel>
-            <Button Style="{StaticResource PrimaryButtonStyle}" Name="AddCategoryButton" Margin="20,0" Click="AddCategoryButton_Click" x:Uid="Control_AddCategoryButton" Grid.Row="1" HorizontalAlignment="Stretch" Height="40">
-                <ContentControl.ContentTransitions>
-                    <TransitionCollection>
-                        <ContentThemeTransition/>
-                    </TransitionCollection>
-                </ContentControl.ContentTransitions>
-            </Button>
-            <!--<Grid Grid.Row="2" Padding="20,0" Margin="0,10,0,0">
-                <TextBlock x:Uid="Control_CategoryTipBlock" VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource BasicTipTextStyle}"/>
-                <Button x:Uid="Control_ReorderButton" Name="CategoryReorderButton" Click="CategoryReorderButton_Click" FontSize="11" VerticalAlignment="Center" FontFamily="{StaticResource Basic}" HorizontalAlignment="Right" Style="{StaticResource TransparentButtonStyle}" Foreground="{ThemeResource PrimaryColor}"/>
-            </Grid>-->
-            <ListView ItemTemplate="{StaticResource CategoryItemTemplate}"
+        <SplitView Style="{StaticResource BasicSplitViewStyle}" Name="AppSplitView" DisplayMode="CompactInline" IsPaneOpen="True" OpenPaneLength="550" CompactPaneLength="50">
+            <SplitView.Pane>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Name="SideCategoryGrid" Width="250" Background="{ThemeResource SideBackground}" BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,1,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" Margin="0,30" HorizontalAlignment="Center">
+                            <TextBlock FontFamily="{StaticResource Icon}" Text="&#xEA14;" Foreground="{ThemeResource PrimaryColor}" FontSize="22" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <TextBlock Text="RSS Stalker" Foreground="{ThemeResource ImportantTextColor}" FontFamily="{ThemeResource English}" VerticalAlignment="Center" FontSize="15"/>
+                        </StackPanel>
+                        <Button Style="{StaticResource PrimaryButtonStyle}" Name="AddCategoryButton" Margin="20,0" Click="AddCategoryButton_Click" x:Uid="Control_AddCategoryButton" Grid.Row="1" HorizontalAlignment="Stretch" Height="40">
+                            <ContentControl.ContentTransitions>
+                                <TransitionCollection>
+                                    <ContentThemeTransition/>
+                                </TransitionCollection>
+                            </ContentControl.ContentTransitions>
+                        </Button>
+                        <ListView ItemTemplate="{StaticResource CategoryItemTemplate}"
                       Grid.Row="3"
                       x:FieldModifier="Public"
                       ItemsSource="{x:Bind Categories}"
@@ -103,22 +102,27 @@
                       Margin="20,10,20,0"
                       ItemClick="CategoryListView_ItemClick"
                       />
-            <Button Style="{StaticResource GhostCircleButtonStyle}" Content="&#xE9CB;" Grid.Row="4" HorizontalAlignment="Center" Margin="0,15" FontFamily="{StaticResource Icon}" Name="SettingButton" Click="SettingButton_Click"/>
-        </Grid>
-        <Grid Name="SideChannelGrid" Width="300" Grid.Column="1" Background="{ThemeResource PageBackground}" BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,1,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid Padding="15" BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,0,1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBox Name="ChannelSearchBox" x:Uid="Control_ChannelSearchBox" Style="{StaticResource BasicTextBoxStyle}" HorizontalAlignment="Stretch" TextChanged="ChannelSearchBox_TextChanged"/>
-                <Button Style="{StaticResource PrimaryCircleButtonStyle}" Content="&#xE9BA;" FontFamily="{StaticResource Icon}" VerticalAlignment="Center" Grid.Column="1" Margin="15,0,0,0" Name="AddChannelButton" Click="AddChannelButton_Click"/>
-            </Grid>
-            <ListView Name="ChannelListView"
+                        <StackPanel Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Center" Margin="0,15">
+                            <Button Style="{StaticResource GhostCircleButtonStyle}" Name="TodoButton" Click="TodoButton_Click" FontFamily="{StaticResource Icon}" Content="&#xE924;"/>
+                            <Button Style="{StaticResource GhostCircleButtonStyle}" Margin="15,0" Name="StarButton" Click="StarButton_Click" FontFamily="{StaticResource Icon}" Content="&#xE9DD;"/>
+                            <Button Style="{StaticResource GhostCircleButtonStyle}" Content="&#xE9CB;" FontFamily="{StaticResource Icon}" Name="SettingButton" Click="SettingButton_Click"/>
+                        </StackPanel>
+                        
+                    </Grid>
+                    <Grid Name="SideChannelGrid" Width="300" Grid.Column="1" Background="{ThemeResource PageBackground}" BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,1,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Padding="15" BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,0,1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Name="ChannelSearchBox" x:Uid="Control_ChannelSearchBox" Style="{StaticResource BasicTextBoxStyle}" HorizontalAlignment="Stretch" TextChanged="ChannelSearchBox_TextChanged"/>
+                            <Button Style="{StaticResource PrimaryCircleButtonStyle}" Content="&#xE9BA;" FontFamily="{StaticResource Icon}" VerticalAlignment="Center" Grid.Column="1" Margin="15,0,0,0" Name="AddChannelButton" Click="AddChannelButton_Click"/>
+                        </Grid>
+                        <ListView Name="ChannelListView"
                       x:FieldModifier="Public"
                       Grid.Row="1"
                       Margin="0,10,0,0"
@@ -132,10 +136,21 @@
                       ItemContainerStyle="{StaticResource BasicListItemContainer}"
                       Style="{StaticResource BasicListView}"
                       />
-        </Grid>
-        <Grid Name="MainGrid" Grid.Column="2" Background="{ThemeResource PageBackground}">
-            <Frame Name="MainFrame" x:FieldModifier="Public"/>
-        </Grid>
-        <StackPanel Grid.ColumnSpan="3" VerticalAlignment="Top" Height="20" Name="TitleBarControl" Background="{ThemeResource TransparentBackground}"/>
+                    </Grid>
+                </Grid>
+            </SplitView.Pane>
+            <Grid Name="MainGrid" Background="{ThemeResource PageBackground}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Name="MinsizeHeaderContainer" Padding="30,0" Height="60" BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,0,1">
+                    <Button Style="{StaticResource GhostCircleButtonStyle}" Name="MenuButton" Click="MenuButton_Click" Content="&#xE994;" VerticalAlignment="Center" FontFamily="{StaticResource Icon}" Width="35" Height="35" FontSize="18"/>
+                    <TextBlock TextTrimming="CharacterEllipsis" FontFamily="{StaticResource Basic}" Name="CategoryNameTextBlock" VerticalAlignment="Center" FontSize="15" Margin="15,0,0,0"/>
+                </StackPanel>
+                <Frame Name="MainFrame" x:FieldModifier="Public" Grid.Row="1"/>
+            </Grid>
+        </SplitView>
+        <StackPanel VerticalAlignment="Top" Height="20" Name="TitleBarControl" Background="{ThemeResource TransparentBackground}"/>
     </Grid>
 </Page>

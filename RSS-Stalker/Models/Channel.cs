@@ -37,10 +37,22 @@ namespace RSS_Stalker.Models
         /// 频道原始链接
         /// </summary>
         public string SourceUrl { get; set; }
+        public string Id { get; set; }
         public Channel()
         {
+            Id = Guid.NewGuid().ToString("N");
         }
-        public Channel(SyndicationFeed feed,string url)
+        public Channel(Outline outline) : this()
+        {
+            if (!string.IsNullOrEmpty(outline.XMLUrl))
+            {
+                Name = outline.Title;
+                Description = outline.Text;
+                Link = outline.XMLUrl;
+                SourceUrl = outline.HTMLUrl;
+            }
+        }
+        public Channel(SyndicationFeed feed,string url):this()
         {
             Name = feed.Title.Text;
             Link = url;
@@ -51,7 +63,7 @@ namespace RSS_Stalker.Models
                 SourceUrl = link.Uri.ToString();
             }
         }
-        public Channel(FeedlyResult feedly)
+        public Channel(FeedlyResult feedly):this()
         {
             Name = feedly.Title;
             Link = feedly.FellowLink;
@@ -62,12 +74,12 @@ namespace RSS_Stalker.Models
         public override bool Equals(object obj)
         {
             return obj is Channel channel &&
-                   Link == channel.Link;
+                   Id == channel.Id;
         }
 
         public override int GetHashCode()
         {
-            return 924860401 + EqualityComparer<string>.Default.GetHashCode(Link);
+            return 924860401 + EqualityComparer<string>.Default.GetHashCode(Id);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

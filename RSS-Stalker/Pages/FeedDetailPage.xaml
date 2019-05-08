@@ -7,6 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:RSS_Stalker.Models"
     xmlns:controls="using:RSS_Stalker.Controls"
+    xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    SizeChanged="Page_SizeChanged"
     mc:Ignorable="d">
     <Page.Resources>
         <DataTemplate x:DataType="models:Feed" x:Key="FeedItemTemplate">
@@ -51,33 +53,34 @@
             <TextBlock Margin="10,3,0,0" Name="TitleTextBlock" VerticalAlignment="Center" FontFamily="{StaticResource Title}" TextWrapping="Wrap" FontSize="19" HorizontalAlignment="Left"/>
         </StackPanel>
         <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <Grid>
-                <WebView Name="DetailWebView"
-                 Loaded="DetailWebView_Loaded"
-                 DefaultBackgroundColor="{ThemeResource PageColor}"
-                 />
-                <StackPanel VerticalAlignment="Stretch" Width="12" Background="{ThemeResource PageBackground}" Margin="0,0,0,0" HorizontalAlignment="Right"/>
-                <Button Style="{StaticResource PrimaryCircleButtonStyle}" FlyoutBase.AttachedFlyout="{StaticResource MoreMenuFlyout}" Name="MoreButton" Click="MoreButton_Click" Width="40" Height="40" FontFamily="{StaticResource Icon}" Content="&#xE9C5;" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,30,20" Opacity="0.8"/>
-            </Grid>
-
-            <StackPanel VerticalAlignment="Stretch" Width="1" Background="{ThemeResource LineColor}" Margin="0,0,10,0" Grid.Column="1"/>
-            <ListView ItemTemplate="{StaticResource FeedItemTemplate}"
+            <SplitView Name="DetailSplitView"
+                       PaneBackground="{ThemeResource PageBackground}"
+                       OpenPaneLength="250"
+                       DisplayMode="Inline"
+                       PanePlacement="Right"
+                       >
+                <SplitView.Pane>
+                    <ListView ItemTemplate="{StaticResource FeedItemTemplate}"
                       Name="FeedListView"
                       ItemContainerStyle="{StaticResource TransparentListItemContainer}"
                       IsItemClickEnabled="True"
                       Style="{StaticResource BasicListView}"
                       ItemsSource="{x:Bind ShowFeeds}"
                       ItemClick="FeedListView_ItemClick"
-                      MaxWidth="250"
                       Grid.Column="2"
                       Padding="0,0,15,0"
                       />
-             
+                </SplitView.Pane>
+                <Grid>
+                    <WebView Name="DetailWebView"
+                 Loaded="DetailWebView_Loaded"
+                 DefaultBackgroundColor="{ThemeResource PageColor}"
+                 />
+                    <StackPanel VerticalAlignment="Stretch" Width="12" Background="{ThemeResource PageBackground}" Margin="0,0,0,0" HorizontalAlignment="Right"/>
+                    <Button Style="{StaticResource GhostCircleButtonStyle}" FlyoutBase.AttachedFlyout="{StaticResource MoreMenuFlyout}" Name="SideListButton" Click="SideListButton_Click"  Width="40" Height="40" FontFamily="{StaticResource Icon}" Content="&#xE994;" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,30,0" Opacity="0.8"/>
+                    <Button Style="{StaticResource PrimaryCircleButtonStyle}" FlyoutBase.AttachedFlyout="{StaticResource MoreMenuFlyout}" Name="MoreButton" Click="MoreButton_Click" Width="40" Height="40" FontFamily="{StaticResource Icon}" Content="&#xE9C5;" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,30,20" Opacity="0.8"/>
+                </Grid>
+             </SplitView>
         </Grid>
         
         <ProgressRing Name="LoadingRing" Style="{StaticResource BasicProgressRingStyle}" Grid.Row="1"/>

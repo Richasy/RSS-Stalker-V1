@@ -1,4 +1,5 @@
 ﻿using RSS_Stalker.Controls;
+using RSS_Stalker.Dialog;
 using RSS_Stalker.Tools;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,7 @@ namespace RSS_Stalker.Pages
         {
             string theme = AppTools.GetRoamingSetting(Enums.AppSettings.Theme, "Light");
             string language = AppTools.GetRoamingSetting(Enums.AppSettings.Language, "zh_CN");
+            string oneDriveUserName = AppTools.GetLocalSetting(Enums.AppSettings.UserName, "");
             if (theme == "Light")
                 ThemeComboBox.SelectedIndex = 0;
             else
@@ -42,7 +44,7 @@ namespace RSS_Stalker.Pages
                 LanguageComboBox.SelectedIndex = 0;
             else
                 LanguageComboBox.SelectedIndex = 1;
-
+            OneDriveNameTextBlock.Text = oneDriveUserName;
             _isInit = true;
         }
 
@@ -63,6 +65,22 @@ namespace RSS_Stalker.Pages
             var item = LanguageComboBox.SelectedItem as ComboBoxItem;
             AppTools.WriteRoamingSetting(Enums.AppSettings.Language, item.Name);
             new PopupToast(AppTools.GetReswLanguage("Tip_NeedRestartApp")).ShowPopup();
+        }
+
+        private async void OneDriveLogoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new ConfirmDialog(AppTools.GetReswLanguage("Tip_LogoutWarning"), AppTools.GetReswLanguage("Tip_OneDriveLogoutTip"));
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                await App.OneDrive.Logout();
+                AppTools.WriteLocalSetting(Enums.AppSettings.UserName, "");
+                AppTools.WriteLocalSetting(Enums.AppSettings.UpdateTime, "0");
+                AppTools.WriteLocalSetting(Enums.AppSettings.IsBindingOneDrive, "False");
+                var frame = Window.Current.Content as Frame;
+                frame.Navigate(typeof(OneDrivePage));
+                new PopupToast(AppTools.GetReswLanguage("Tip_RebindOneDrive")).ShowPopup();
+            }
         }
     }
 }

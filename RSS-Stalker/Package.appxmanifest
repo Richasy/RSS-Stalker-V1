@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="f7914819-89de-431c-8cf2-2c0cfbed3079"
-    Publisher="CN=richasy"
+    Name="60520B029E250.RSSStalker"
+    Publisher="CN=9EFA2047-A580-400B-A5B2-0C7ABB0DB5C0"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="f7914819-89de-431c-8cf2-2c0cfbed3079" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="7a0da50b-a63f-49ac-b507-4ef2cc9f1714" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>RSS-Stalker</DisplayName>
-    <PublisherDisplayName>richasy</PublisherDisplayName>
+    <DisplayName>RSS Stalker</DisplayName>
+    <PublisherDisplayName>云之幻</PublisherDisplayName>
     <Logo>Assets\Logo\StoreLogo.png</Logo>
   </Properties>
 

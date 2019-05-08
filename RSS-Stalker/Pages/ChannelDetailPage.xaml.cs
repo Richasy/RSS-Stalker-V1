@@ -34,6 +34,7 @@ namespace RSS_Stalker.Pages
         private ObservableCollection<Feed> SchemaCollection = new ObservableCollection<Feed>();
         private Feed _shareData = null;
         public static ChannelDetailPage Current;
+        
         public ChannelDetailPage()
         {
             this.InitializeComponent();

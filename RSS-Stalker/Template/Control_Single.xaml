@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:local="using:RSS_Stalker.Template">
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary Source="ms-appx:///Theme/Light.xaml" x:Key="Light"/>
@@ -2372,6 +2373,41 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="BasicGridSplitterStyle" TargetType="controls:GridSplitter">
+        <Setter Property="IsTabStop" Value="True"/>
+        <Setter Property="UseSystemFocusVisuals" Value="True"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="IsFocusEngagementEnabled" Value="True"/>
+        <Setter Property="MinWidth" Value="16"/>
+        <Setter Property="MinHeight" Value="16"/>
+        <Setter Property="Background" Value="{ThemeResource TransparentBackground}"/>
+        <Setter Property="GripperForeground" Value="{ThemeResource LineColor}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:GridSplitter">
+                    <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="GridSplitterStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootGrid.Background" Value="{ThemeResource TransparentBackground}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootGrid.Background" Value="{ThemeResource TransparentBackground}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <ContentPresenter Content="{TemplateBinding Element}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

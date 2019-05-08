@@ -70,6 +70,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
@@ -84,18 +85,25 @@
                     </TransitionCollection>
                 </ContentControl.ContentTransitions>
             </Button>
+            <!--<Grid Grid.Row="2" Padding="20,0" Margin="0,10,0,0">
+                <TextBlock x:Uid="Control_CategoryTipBlock" VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource BasicTipTextStyle}"/>
+                <Button x:Uid="Control_ReorderButton" Name="CategoryReorderButton" Click="CategoryReorderButton_Click" FontSize="11" VerticalAlignment="Center" FontFamily="{StaticResource Basic}" HorizontalAlignment="Right" Style="{StaticResource TransparentButtonStyle}" Foreground="{ThemeResource PrimaryColor}"/>
+            </Grid>-->
             <ListView ItemTemplate="{StaticResource CategoryItemTemplate}"
-                      Grid.Row="2"
+                      Grid.Row="3"
                       x:FieldModifier="Public"
                       ItemsSource="{x:Bind Categories}"
                       IsItemClickEnabled="True"
                       ItemContainerStyle="{StaticResource PrimaryListItemContainer}"
                       Style="{StaticResource BasicListView}"
                       Name="CategoryListView"
+                      IsSwipeEnabled="True"
+                      AllowDrop="True"
+                      CanReorderItems="True"
                       Margin="20,10,20,0"
                       ItemClick="CategoryListView_ItemClick"
                       />
-            <Button Style="{StaticResource GhostCircleButtonStyle}" Content="&#xE9CB;" Grid.Row="3" HorizontalAlignment="Center" Margin="0,15" FontFamily="{StaticResource Icon}" Name="SettingButton" Click="SettingButton_Click"/>
+            <Button Style="{StaticResource GhostCircleButtonStyle}" Content="&#xE9CB;" Grid.Row="4" HorizontalAlignment="Center" Margin="0,15" FontFamily="{StaticResource Icon}" Name="SettingButton" Click="SettingButton_Click"/>
         </Grid>
         <Grid Name="SideChannelGrid" Width="300" Grid.Column="1" Background="{ThemeResource PageBackground}" BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,1,0">
             <Grid.RowDefinitions>
@@ -117,6 +125,9 @@
                       ItemTemplate="{StaticResource ChannelItemTemplate}"
                       ItemsSource="{x:Bind Channels}"
                       IsItemClickEnabled="True"
+                      IsSwipeEnabled="True"
+                      AllowDrop="True"
+                      CanReorderItems="True"
                       ItemClick="ChannelListView_ItemClick"
                       ItemContainerStyle="{StaticResource BasicListItemContainer}"
                       Style="{StaticResource BasicListView}"

@@ -17,7 +17,8 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
-    <PackageCertificateKeyFile>RSS-Stalker_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>RSS-Stalker_StoreKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>ED21FCEC7C6D71C788EA648B8E91294C1A577710</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -175,6 +176,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <None Include="Package.StoreAssociation.xml" />
     <Content Include="Template\Dark.css" />
     <Content Include="Template\Light.css" />
     <PRIResource Include="Language\zh-CN\Resources.resw" />
@@ -184,6 +186,7 @@
     <Content Include="Assets\Fonts\rss.ttf" />
     <Content Include="Assets\Fonts\Lobste.ttf" />
     <Content Include="Assets\Fonts\YunLinHeiTi.ttf" />
+    <None Include="RSS-Stalker_StoreKey.pfx" />
     <None Include="RSS-Stalker_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

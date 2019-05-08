@@ -5,6 +5,7 @@ using RSS_Stalker.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -30,9 +31,12 @@ namespace RSS_Stalker
         public ObservableCollection<Category> Categories = new ObservableCollection<Category>();
         public ObservableCollection<Channel> Channels = new ObservableCollection<Channel>();
         public static MainPage Current;
+        public int _categoryListCount = -1;
+        public int _channelListCount = -1;
         private Channel _tempChannel;
         private Category _tempCategory;
         private DispatcherTimer _checkUpdateTimer=new DispatcherTimer();
+        private bool _isInit = false;
         public MainPage()
         {
             this.InitializeComponent();
@@ -42,9 +46,41 @@ namespace RSS_Stalker
             
         }
 
+        private async void CategoryCollectionReordered(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (!_isInit)
+            {
+                return;
+            }
+            var list = Categories.ToList();
+            if (list.Count == _categoryListCount)
+            {
+                await IOTools.ReplaceCategory(list,true);
+            }
+        }
+        private async void ChannelCollectionReordered(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (!_isInit)
+            {
+                return;
+            }
+            var list = Channels.ToList();
+            if (list.Count == _channelListCount)
+            {
+                var selectCategory = CategoryListView.SelectedItem as Category;
+                if (selectCategory != null)
+                {
+                    selectCategory.Channels = list;
+                }
+                await IOTools.ReplaceCategory(Categories.ToList(), true);
+            }
+        }
+
         private async void PageInit()
         {
             AppTools.SetTitleBarColor();
+            Categories.CollectionChanged += CategoryCollectionReordered;
+            Channels.CollectionChanged += ChannelCollectionReordered;
             var categories = await IOTools.GetLocalCategories();
             Channels.Clear();
             Categories.Clear();
@@ -64,14 +100,17 @@ namespace RSS_Stalker
                     Channels.Add(channel);
                 }
             }
+            _categoryListCount = Categories.Count;
+            _channelListCount = Channels.Count;
             MainFrame.Navigate(typeof(Pages.WelcomePage));
             await App.OneDrive.OneDriveAuthorize();
             TimerInit();
+            _isInit = true;
         }
 
         private void TimerInit()
         {
-            _checkUpdateTimer.Interval = new TimeSpan(0, 1, 0);
+            _checkUpdateTimer.Interval = new TimeSpan(0, 0, 10);
             _checkUpdateTimer.Tick += CheckRssListUpdate;
             _checkUpdateTimer.Start();
         }
@@ -110,9 +149,18 @@ namespace RSS_Stalker
                         }
                     }
                 }
+                _categoryListCount = Categories.Count;
+                _channelListCount = Channels.Count;
                 AppTools.WriteLocalSetting(Enums.AppSettings.UpdateTime, roamTime);
                 new PopupToast(AppTools.GetReswLanguage("Tip_Updated")).ShowPopup();
             }
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            _checkUpdateTimer.Stop();
+            _checkUpdateTimer = null;
+            base.OnNavigatedFrom(e);
         }
 
         private void CategoryListView_ItemClick(object sender, ItemClickEventArgs e)
@@ -125,7 +173,8 @@ namespace RSS_Stalker
             {
                 Channels.Add(cha);
             }
-            if(!(MainFrame.Content is Pages.WelcomePage))
+            _channelListCount = Channels.Count;
+            if (!(MainFrame.Content is Pages.WelcomePage))
                 MainFrame.Navigate(typeof(Pages.WelcomePage));
         }
 
@@ -157,15 +206,18 @@ namespace RSS_Stalker
                 if (selectCategory != null)
                 {
                     var list = selectCategory.Channels.Where(p => AppTools.NormalString(p.Name).IndexOf(AppTools.NormalString(text)) != -1).ToList();
+                    _channelListCount = -1;
                     Channels.Clear();
                     foreach (var item in list)
                     {
                         Channels.Add(item);
                     }
+                    _channelListCount = list.Count;
                 }
             }
             else
             {
+                _channelListCount = -1;
                 Channels.Clear();
                 if (selectCategory != null)
                 {
@@ -173,7 +225,10 @@ namespace RSS_Stalker
                     {
                         Channels.Add(item);
                     }
+                    _channelListCount = selectCategory.Channels.Count;
                 }
+                else
+                    _channelListCount = 0;
             }
         }
 
@@ -215,6 +270,7 @@ namespace RSS_Stalker
                     category.Channels.RemoveAll(p => p.Link == _tempChannel.Link);
                     await IOTools.UpdateCategory(category);
                     Channels.Remove(_tempChannel);
+                    _channelListCount -= 1;
                     new PopupToast(AppTools.GetReswLanguage("Tip_DeleteChannelSuccess")).ShowPopup();
                     _tempChannel = null;
                     confirmDialog.Hide();
@@ -265,6 +321,7 @@ namespace RSS_Stalker
                     if (selectCategory != null && selectCategory.Id == _tempCategory.Id)
                     {
                         Channels.Clear();
+                        _channelListCount = 0;
                         SideChannelGrid.Visibility = Visibility.Collapsed;
                         MainFrame.Navigate(typeof(Pages.WelcomePage));
                     }
@@ -272,6 +329,7 @@ namespace RSS_Stalker
                     confirmDialog.PrimaryButtonText = AppTools.GetReswLanguage("Tip_Waiting");
                     await IOTools.DeleteCategory(_tempCategory);
                     Categories.Remove(_tempCategory);
+                    _categoryListCount -= 1;
                     new PopupToast(AppTools.GetReswLanguage("Tip_DeleteCategorySuccess")).ShowPopup();
                     _tempCategory = null;
                     confirmDialog.Hide();

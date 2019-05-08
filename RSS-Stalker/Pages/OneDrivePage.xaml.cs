@@ -38,6 +38,8 @@ namespace RSS_Stalker.Pages
             {
                 var list = await App.OneDrive.GetCategoryList();
                 await IOTools.ReplaceCategory(list);
+                string updateTime = AppTools.GetRoamingSetting(Enums.AppSettings.UpdateTime, "0");
+                AppTools.WriteLocalSetting(Enums.AppSettings.UpdateTime, updateTime);
                 AppTools.WriteLocalSetting(Enums.AppSettings.IsBindingOneDrive, "True");
                 var frame = Window.Current.Content as Frame;
                 frame.Navigate(typeof(MainPage));

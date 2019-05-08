@@ -150,6 +150,9 @@
   <data name="Control_DarkComboItem.Content" xml:space="preserve">
     <value>Dark</value>
   </data>
+  <data name="Control_DataSettingTipBlock.Text" xml:space="preserve">
+    <value>Data Settings</value>
+  </data>
   <data name="Control_DeleteMenuItem.Text" xml:space="preserve">
     <value>Delete</value>
   </data>
@@ -162,14 +165,23 @@
   <data name="Control_LightComboItem.Content" xml:space="preserve">
     <value>Light</value>
   </data>
+  <data name="Control_LogoutButton.Content" xml:space="preserve">
+    <value>Logout</value>
+  </data>
   <data name="Control_MoveMenuItem.Text" xml:space="preserve">
     <value>Move</value>
   </data>
   <data name="Control_OneDriveButton.Content" xml:space="preserve">
     <value>Link to OneDrive</value>
   </data>
+  <data name="Control_OneDriveSettingTipBlock.Text" xml:space="preserve">
+    <value>Current user for OneDrive</value>
+  </data>
   <data name="Control_ReInitMenuItem.Text" xml:space="preserve">
     <value>Content Reinit</value>
+  </data>
+  <data name="Control_ReorderButton.Content" xml:space="preserve">
+    <value>Reorder</value>
   </data>
   <data name="Control_SettingTipBlock.Text" xml:space="preserve">
     <value>Setting Page</value>
@@ -210,6 +222,9 @@
   <data name="Tip_ChannelRepeat" xml:space="preserve">
     <value>Channel repeat</value>
   </data>
+  <data name="Tip_Complete" xml:space="preserve">
+    <value>Complete</value>
+  </data>
   <data name="Tip_Confirm" xml:space="preserve">
     <value>Confirm</value>
   </data>
@@ -234,6 +249,9 @@
   <data name="Tip_FieldFormatError" xml:space="preserve">
     <value>Data format is wrong</value>
   </data>
+  <data name="Tip_LogoutWarning" xml:space="preserve">
+    <value>Logout</value>
+  </data>
   <data name="Tip_MoveChannel" xml:space="preserve">
     <value>Move Channel</value>
   </data>
@@ -249,8 +267,14 @@
   <data name="Tip_NoData" xml:space="preserve">
     <value>No data here.</value>
   </data>
+  <data name="Tip_OneDriveLogoutTip" xml:space="preserve">
+    <value>You need rebind OneDrive when you logout.</value>
+  </data>
   <data name="Tip_PreWelcome" xml:space="preserve">
     <value>Welcome! </value>
+  </data>
+  <data name="Tip_RebindOneDrive" xml:space="preserve">
+    <value>Please rebind OneDrive</value>
   </data>
   <data name="Tip_TryLinkFirst" xml:space="preserve">
     <value>Please validate the link first.</value>

@@ -57,7 +57,9 @@ namespace RSS_Stalker.Dialog
                         selectCategory.Channels.Add(_sourceChannel);
                         await IOTools.UpdateCategory(sourceCategory);
                         await IOTools.UpdateCategory(selectCategory);
+                        
                         MainPage.Current.Channels.Remove(MainPage.Current.Channels.Where(p => p.Link == _sourceChannel.Link).FirstOrDefault());
+                        MainPage.Current._channelListCount -= 1;
                     }
                     new PopupToast(AppTools.GetReswLanguage("Tip_MoveChannelSuccess")).ShowPopup();
                     Hide();

@@ -31,6 +31,7 @@ namespace RSS_Stalker.Pages
         private Feed _sourceFeed;
         private ObservableCollection<Feed> ShowFeeds = new ObservableCollection<Feed>();
         private List<Feed> AllFeeds = new List<Feed>();
+        private bool _isInit = false;
         public FeedDetailPage()
         {
             this.InitializeComponent();
@@ -55,6 +56,7 @@ namespace RSS_Stalker.Pages
                 string css = await FileIO.ReadTextAsync(await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Template/{theme}.css")));
                 string html = AppTools.GetHTML(css, _sourceFeed.Content ?? "");
                 DetailWebView.NavigateToString(html);
+                _isInit = true;
             }
         }
 
@@ -120,9 +122,27 @@ namespace RSS_Stalker.Pages
             request.Data = dataPackage;
         }
 
-        private void Menu_ReInit_Click(object sender, RoutedEventArgs e)
+        private async void Menu_ReInit_Click(object sender, RoutedEventArgs e)
         {
+            string theme = AppTools.GetRoamingSetting(Enums.AppSettings.Theme, "Light");
+            string css = await FileIO.ReadTextAsync(await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Template/{theme}.css")));
+            string html = AppTools.GetHTML(css, _sourceFeed.Content ?? "");
+            DetailWebView.NavigateToString(html);
+        }
 
+        private void SideListButton_Click(object sender, RoutedEventArgs e)
+        {
+            DetailSplitView.IsPaneOpen = !DetailSplitView.IsPaneOpen;
+        }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            double width = e.NewSize.Width;
+            if (!_isInit)
+            {
+                if(DetailSplitView!=null)
+                    DetailSplitView.IsPaneOpen = width >= 900 ? true : false;
+            }
         }
     }
 }

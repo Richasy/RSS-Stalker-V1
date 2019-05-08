@@ -150,6 +150,9 @@
   <data name="Control_DarkComboItem.Content" xml:space="preserve">
     <value>暗色主题</value>
   </data>
+  <data name="Control_DataSettingTipBlock.Text" xml:space="preserve">
+    <value>数据设置</value>
+  </data>
   <data name="Control_DeleteMenuItem.Text" xml:space="preserve">
     <value>删除</value>
   </data>
@@ -162,14 +165,23 @@
   <data name="Control_LightComboItem.Content" xml:space="preserve">
     <value>亮色主题</value>
   </data>
+  <data name="Control_LogoutButton.Content" xml:space="preserve">
+    <value>退出</value>
+  </data>
   <data name="Control_MoveMenuItem.Text" xml:space="preserve">
     <value>转移</value>
   </data>
   <data name="Control_OneDriveButton.Content" xml:space="preserve">
     <value>连接到OneDrive</value>
   </data>
+  <data name="Control_OneDriveSettingTipBlock.Text" xml:space="preserve">
+    <value>当前OneDrive用户</value>
+  </data>
   <data name="Control_ReInitMenuItem.Text" xml:space="preserve">
     <value>内容重载</value>
+  </data>
+  <data name="Control_ReorderButton.Content" xml:space="preserve">
+    <value>排序</value>
   </data>
   <data name="Control_SettingTipBlock.Text" xml:space="preserve">
     <value>设置页面</value>
@@ -210,6 +222,9 @@
   <data name="Tip_ChannelRepeat" xml:space="preserve">
     <value>频道重复</value>
   </data>
+  <data name="Tip_Complete" xml:space="preserve">
+    <value>完成</value>
+  </data>
   <data name="Tip_Confirm" xml:space="preserve">
     <value>确认</value>
   </data>
@@ -234,6 +249,9 @@
   <data name="Tip_FieldFormatError" xml:space="preserve">
     <value>数据格式有误</value>
   </data>
+  <data name="Tip_LogoutWarning" xml:space="preserve">
+    <value>退出提醒</value>
+  </data>
   <data name="Tip_MoveChannel" xml:space="preserve">
     <value>转移频道</value>
   </data>
@@ -249,8 +267,14 @@
   <data name="Tip_NoData" xml:space="preserve">
     <value>没有查找到相应数据</value>
   </data>
+  <data name="Tip_OneDriveLogoutTip" xml:space="preserve">
+    <value>当退出OneDrive账户后，需要重新绑定OneDrive账户</value>
+  </data>
   <data name="Tip_PreWelcome" xml:space="preserve">
     <value>欢迎您，</value>
+  </data>
+  <data name="Tip_RebindOneDrive" xml:space="preserve">
+    <value>请重新绑定OneDrive</value>
   </data>
   <data name="Tip_TryLinkFirst" xml:space="preserve">
     <value>请先完成链接验证</value>

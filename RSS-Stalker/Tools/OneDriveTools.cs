@@ -65,6 +65,12 @@ namespace RSS_Stalker.Tools
             }
 
         }
+        public async Task Logout()
+        {
+            await OneDriveService.Instance.LogoutAsync();
+            _appFolder = null;
+            _user = null;
+        }
         /// <summary>
         /// 获取OneDrive中存储的Rss列表数据
         /// </summary>
@@ -77,7 +83,7 @@ namespace RSS_Stalker.Tools
             }
             try
             {
-                var file = await _appFolder.StorageFolderPlatformService.CreateFileAsync("RssList.json",CreationCollisionOption.OpenIfExists);
+                var file = await _appFolder.GetFileAsync("RssList.json");
                 using (var stream = (await file.StorageFilePlatformService.OpenAsync()) as IRandomAccessStream)
                 {
                     Stream st = WindowsRuntimeStreamExtensions.AsStreamForRead(stream);
@@ -93,8 +99,12 @@ namespace RSS_Stalker.Tools
                     return list;
                 }
             }
-            catch
+            catch(Exception ex)
             {
+                if(ex is ServiceException)
+                {
+                    await _appFolder.StorageFolderPlatformService.CreateFileAsync("RssList.json", CreationCollisionOption.ReplaceExisting);
+                }
                 return new List<Category>();
             }
         }
@@ -103,7 +113,7 @@ namespace RSS_Stalker.Tools
         /// </summary>
         /// <param name="list">列表</param>
         /// <returns></returns>
-        public async Task UpdateCategoryList(List<Category> list)
+        public async Task UpdateCategoryList(StorageFile localFile)
         {
             if (_appFolder == null)
             {
@@ -111,14 +121,9 @@ namespace RSS_Stalker.Tools
             }
             try
             {
-                var file = await _appFolder.StorageFolderPlatformService.CreateFileAsync("RssList.json",CreationCollisionOption.OpenIfExists);
-                using (var stream = (await file.StorageFilePlatformService.OpenAsync()) as IRandomAccessStream)
+                using (var stream = await localFile.OpenReadAsync())
                 {
-                    Stream st = WindowsRuntimeStreamExtensions.AsStreamForWrite(stream);
-                    st.Position = 0;
-                    StreamWriter sr = new StreamWriter(st, Encoding.UTF8);
-                    string content = JsonConvert.SerializeObject(list);
-                    await sr.WriteAsync(content);
+                    await _appFolder.StorageFolderPlatformService.CreateFileAsync("RssList.json", CreationCollisionOption.ReplaceExisting,stream);
                     double time = AppTools.DateToTimeStamp(DateTime.Now.ToUniversalTime());
                     AppTools.WriteRoamingSetting(Enums.AppSettings.UpdateTime, time.ToString());
                     AppTools.WriteLocalSetting(Enums.AppSettings.UpdateTime, time.ToString());

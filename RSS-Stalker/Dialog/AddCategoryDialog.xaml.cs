@@ -53,6 +53,7 @@ namespace RSS_Stalker.Dialog
                 await IOTools.AddCategory(cate);
                 new PopupToast(AppTools.GetReswLanguage("Tip_AddCategorySuccess")).ShowPopup();
                 MainPage.Current.Categories.Add(cate);
+                MainPage.Current._categoryListCount += 1;
                 Hide();
             }
             else

@@ -396,4 +396,16 @@
   <data name="Tip_ToastRepeat" xml:space="preserve">
     <value>The feed notification already exists</value>
   </data>
+  <data name="Control_ForceSyncButton.Content" xml:space="preserve">
+    <value>Force Sync</value>
+  </data>
+  <data name="Control_SyncSettingTipBlock.Text" xml:space="preserve">
+    <value>Sync Setting</value>
+  </data>
+  <data name="Tip_ForceSync" xml:space="preserve">
+    <value>Force Sync</value>
+  </data>
+  <data name="Tip_SyncSuccess" xml:space="preserve">
+    <value>Sync Completed</value>
+  </data>
 </root>

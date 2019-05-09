@@ -20,6 +20,7 @@ using Windows.UI.Xaml.Navigation;
 using RSS_Stalker.Tools;
 using CoreLib.Enums;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -161,6 +162,7 @@ namespace RSS_Stalker.Pages
 
         private async void RemoveToastButton_Click(object sender, RoutedEventArgs e)
         {
+            (sender as Button).IsEnabled = false;
             var data = (sender as Button).DataContext as Channel;
             if (data != null)
             {
@@ -168,7 +170,63 @@ namespace RSS_Stalker.Pages
                 ToastChannels.Remove(data);
                 MainPage.Current.ToastList.RemoveAll(p => p.Id == data.Id);
                 new PopupToast(AppTools.GetReswLanguage("Tip_Removed")).ShowPopup();
+                return;
             }
+            (sender as Button).IsEnabled = true;
+        }
+
+        private async void ForceSyncButton_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as Button;
+            btn.IsEnabled = false;
+            btn.Content = AppTools.GetReswLanguage("Tip_Waiting");
+            var tasks = new List<Task>();
+            var cateList = new List<Category>();
+            var toastList = new List<Channel>();
+            var cate = Task.Run(async () =>
+            {
+                cateList = await App.OneDrive.GetCategoryList();
+                await IOTools.ReplaceCategory(cateList);
+                
+            });
+            var todo = Task.Run(async () =>
+            {
+                var TodoList = await App.OneDrive.GetTodoList();
+                await IOTools.ReplaceTodo(TodoList);
+            });
+            var star = Task.Run(async () =>
+            {
+                var StarList = await App.OneDrive.GetStarList();
+                await IOTools.ReplaceStar(StarList);
+            });
+            var toast = Task.Run(async () =>
+            {
+                toastList = await App.OneDrive.GetToastList();
+                await IOTools.ReplaceToast(toastList);
+            });
+            
+            tasks.Add(cate);
+            tasks.Add(todo);
+            tasks.Add(star);
+            tasks.Add(toast);
+            await Task.WhenAll(tasks.ToArray());
+            string basicUpdateTime = AppTools.GetRoamingSetting(AppSettings.BasicUpdateTime, "1");
+            string todoUpdateTime = AppTools.GetRoamingSetting(AppSettings.TodoUpdateTime, "1");
+            string starUpdateTime = AppTools.GetRoamingSetting(AppSettings.StarUpdateTime, "1");
+            string toastUpdateTime = AppTools.GetRoamingSetting(AppSettings.ToastUpdateTime, "1");
+            AppTools.WriteLocalSetting(AppSettings.BasicUpdateTime, basicUpdateTime);
+            AppTools.WriteLocalSetting(AppSettings.TodoUpdateTime, todoUpdateTime);
+            AppTools.WriteLocalSetting(AppSettings.StarUpdateTime, starUpdateTime);
+            AppTools.WriteLocalSetting(AppSettings.ToastUpdateTime, toastUpdateTime);
+            MainPage.Current.ReplaceList(cateList);
+            ToastChannels.Clear();
+            foreach (var item in toastList)
+            {
+                ToastChannels.Add(item);
+            }
+            btn.IsEnabled = true;
+            btn.Content = AppTools.GetReswLanguage("Tip_ForceSync");
+            new PopupToast(AppTools.GetReswLanguage("Tip_SyncSuccess")).ShowPopup();
         }
     }
 }

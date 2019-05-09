@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using CoreLib.Enums;
 using RSS_Stalker.Tools;
+using System.Threading.Tasks;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -39,14 +40,32 @@ namespace RSS_Stalker.Pages
             bool result=await App.OneDrive.OneDriveAuthorize();
             if (result)
             {
-                var categoryList = await App.OneDrive.GetCategoryList();
-                await IOTools.ReplaceCategory(categoryList);
-                var TodoList = await App.OneDrive.GetTodoList();
-                await IOTools.ReplaceTodo(TodoList);
-                var StarList = await App.OneDrive.GetStarList();
-                await IOTools.ReplaceStar(StarList);
-                var ToastList = await App.OneDrive.GetToastList();
-                await IOTools.ReplaceToast(ToastList);
+                var tasks = new List<Task>();
+                var cate = Task.Run(async () =>
+                {
+                    var categoryList = await App.OneDrive.GetCategoryList();
+                    await IOTools.ReplaceCategory(categoryList);
+                });
+                var todo = Task.Run(async () =>
+                {
+                    var TodoList = await App.OneDrive.GetTodoList();
+                    await IOTools.ReplaceTodo(TodoList);
+                });
+                var star = Task.Run(async () =>
+                {
+                    var StarList = await App.OneDrive.GetStarList();
+                    await IOTools.ReplaceStar(StarList);
+                });
+                var toast = Task.Run(async () =>
+                {
+                    var ToastList = await App.OneDrive.GetToastList();
+                    await IOTools.ReplaceToast(ToastList);
+                });
+                tasks.Add(cate);
+                tasks.Add(todo);
+                tasks.Add(star);
+                tasks.Add(toast);
+                Task.WaitAll(tasks.ToArray());
                 string basicUpdateTime = AppTools.GetRoamingSetting(AppSettings.BasicUpdateTime, "1");
                 string todoUpdateTime = AppTools.GetRoamingSetting(AppSettings.TodoUpdateTime, "1");
                 string starUpdateTime = AppTools.GetRoamingSetting(AppSettings.StarUpdateTime, "1");

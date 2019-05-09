@@ -396,4 +396,16 @@
   <data name="Tip_ToastRepeat" xml:space="preserve">
     <value>已存在该订阅源通知</value>
   </data>
+  <data name="Control_ForceSyncButton.Content" xml:space="preserve">
+    <value>强制同步</value>
+  </data>
+  <data name="Control_SyncSettingTipBlock.Text" xml:space="preserve">
+    <value>同步设置</value>
+  </data>
+  <data name="Tip_ForceSync" xml:space="preserve">
+    <value>强制同步</value>
+  </data>
+  <data name="Tip_SyncSuccess" xml:space="preserve">
+    <value>已完成数据同步</value>
+  </data>
 </root>

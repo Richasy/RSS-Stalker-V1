@@ -135,6 +135,12 @@ namespace RSS_Stalker.Dialog
                             ChannelDescriptionTextBox.Text = channel.Description;
                         }
                     }
+                    else
+                    {
+                        LoadingRing.IsActive = false;
+                        TryLinkButton.IsEnabled = true;
+                        new PopupToast(AppTools.GetReswLanguage("App_InvalidUrl")).ShowPopup();
+                    }
                 }
             }
         }

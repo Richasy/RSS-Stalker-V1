@@ -151,6 +151,7 @@ namespace RSS_Stalker
                 var list = await App.OneDrive.GetCategoryList();
                 await IOTools.ReplaceCategory(list);
                 ReplaceList(list);
+                AppTools.WriteLocalSetting(AppSettings.BasicUpdateTime, roamBasicTime);
                 new PopupToast(AppTools.GetReswLanguage("Tip_Updated")).ShowPopup();
             }
             if (localTodoTime != roamTodoTime)
@@ -163,6 +164,7 @@ namespace RSS_Stalker
                 {
                     Pages.FeedCollectionPage.Current.UpdateLayout(TodoList, AppTools.GetReswLanguage("Tip_Todo"));
                 }
+                AppTools.WriteLocalSetting(AppSettings.TodoUpdateTime, roamTodoTime);
                 new PopupToast(AppTools.GetReswLanguage("Tip_Updated")).ShowPopup();
             }
             if (localStarTime != roamStarTime)
@@ -174,6 +176,7 @@ namespace RSS_Stalker
                 {
                     Pages.FeedCollectionPage.Current.UpdateLayout(StarList, AppTools.GetReswLanguage("Tip_Star"));
                 }
+                AppTools.WriteLocalSetting(AppSettings.StarUpdateTime, roamStarTime);
                 // 如果正在浏览待读页，则替换
                 new PopupToast(AppTools.GetReswLanguage("Tip_Updated")).ShowPopup();
             }
@@ -190,6 +193,7 @@ namespace RSS_Stalker
                         Pages.SettingPage.Current.ToastChannels.Add(item);
                     }
                 }
+                AppTools.WriteLocalSetting(AppSettings.ToastUpdateTime, roamToastTime);
                 // 如果正在浏览待读页，则替换
                 new PopupToast(AppTools.GetReswLanguage("Tip_Updated")).ShowPopup();
             }

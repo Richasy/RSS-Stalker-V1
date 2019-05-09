@@ -1,5 +1,5 @@
 ﻿using Microsoft.Toolkit.Parsers.Rss;
-using RSS_Stalker.Tools;
+using CoreLib.Tools;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.Web.Syndication;
 
-namespace RSS_Stalker.Models
+namespace CoreLib.Models
 {
     public class Feed:RssSchema,INotifyPropertyChanged
     {

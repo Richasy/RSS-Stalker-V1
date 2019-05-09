@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RSS_Stalker.Enums
+namespace CoreLib.Enums
 {
     public enum AppSettings
     {
@@ -13,6 +13,7 @@ namespace RSS_Stalker.Enums
         BasicUpdateTime,
         TodoUpdateTime,
         StarUpdateTime,
+        ToastUpdateTime,
         IsBindingOneDrive,
         UserName
     }

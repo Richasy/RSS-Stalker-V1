@@ -1,6 +1,6 @@
 ﻿using RSS_Stalker.Controls;
-using RSS_Stalker.Models;
-using RSS_Stalker.Tools;
+using CoreLib.Models;
+using CoreLib.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

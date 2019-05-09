@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:controls="using:RSS_Stalker.Controls"
-    xmlns:models="using:RSS_Stalker.Models"
+    xmlns:models="using:CoreLib.Models"
     mc:Ignorable="d">
     <Page.Resources>
         <DataTemplate x:DataType="x:String" x:Key="TagItemTemplate">

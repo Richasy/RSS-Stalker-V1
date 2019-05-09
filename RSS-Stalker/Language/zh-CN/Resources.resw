@@ -210,6 +210,9 @@
   <data name="Control_ThemeSettingTipBlock.Text" xml:space="preserve">
     <value>应用主题</value>
   </data>
+  <data name="Control_ToastMenuItem.Text" xml:space="preserve">
+    <value>订阅通知</value>
+  </data>
   <data name="Control_TutorialButton.Content" xml:space="preserve">
     <value>阅读教程</value>
   </data>
@@ -230,6 +233,9 @@
   </data>
   <data name="Tip_AddChannelSuccess" xml:space="preserve">
     <value>成功添加频道</value>
+  </data>
+  <data name="Tip_Added" xml:space="preserve">
+    <value>已添加</value>
   </data>
   <data name="Tip_AddStarList" xml:space="preserve">
     <value>添加进收藏列表</value>
@@ -339,6 +345,9 @@
   <data name="Tip_RebindOneDrive" xml:space="preserve">
     <value>请重新绑定OneDrive</value>
   </data>
+  <data name="Tip_Removed" xml:space="preserve">
+    <value>已移除</value>
+  </data>
   <data name="Tip_StarList" xml:space="preserve">
     <value>收藏列表</value>
   </data>
@@ -369,10 +378,16 @@
   <data name="Tip_Updated" xml:space="preserve">
     <value>数据已更新</value>
   </data>
+  <data name="Tip_UpdateSuffix" xml:space="preserve">
+    <value> 有更新啦!</value>
+  </data>
   <data name="Tip_Waiting" xml:space="preserve">
     <value>等待中...</value>
   </data>
   <data name="Tip_WelcomeText" xml:space="preserve">
     <value>RSS Stalker\n简单的RSS追踪器</value>
+  </data>
+  <data name="Control_ToastListTipBlock.Text" xml:space="preserve">
+    <value>订阅通知列表</value>
   </data>
 </root>

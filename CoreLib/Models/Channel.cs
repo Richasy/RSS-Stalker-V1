@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Web.Syndication;
 
-namespace RSS_Stalker.Models
+namespace CoreLib.Models
 {
     public class Channel:INotifyPropertyChanged
     {

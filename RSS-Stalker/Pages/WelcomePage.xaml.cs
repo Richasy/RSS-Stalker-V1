@@ -1,4 +1,4 @@
-﻿using RSS_Stalker.Tools;
+﻿using CoreLib.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,7 +28,7 @@ namespace RSS_Stalker.Pages
         {
             this.InitializeComponent();
             Current = this;
-            string name = AppTools.GetLocalSetting(Enums.AppSettings.UserName, "");
+            string name = AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.UserName, "");
             if (string.IsNullOrEmpty(name))
                 WelcomeTextBlock.Text = AppTools.GetReswLanguage("Tip_WelcomeText");
             else

@@ -5,7 +5,7 @@
     xmlns:local="using:RSS_Stalker.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="using:RSS_Stalker.Models"
+    xmlns:models="using:CoreLib.Models"
     xmlns:controls="using:RSS_Stalker.Controls"
     xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
     SizeChanged="Page_SizeChanged"
@@ -48,9 +48,9 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <StackPanel BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,0,1" Padding="30,17.5" Orientation="Horizontal">
+        <StackPanel BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,0,1" Padding="30,0" Height="66" Orientation="Horizontal">
             <Button Style="{StaticResource GhostCircleButtonStyle}" Margin="0,0,10,0" Content="&#xE976;" FontFamily="{StaticResource Icon}" VerticalAlignment="Center" Name="GridViewButton" Click="GridViewButton_Click"/>
-            <TextBlock Margin="0,3,0,0" Name="TitleTextBlock" VerticalAlignment="Center" FontFamily="{StaticResource Title}" TextWrapping="Wrap" FontSize="19" HorizontalAlignment="Left"/>
+            <TextBlock Margin="0,6,0,0" Name="TitleTextBlock" VerticalAlignment="Center" FontFamily="{StaticResource Title}" TextWrapping="Wrap" FontSize="19" HorizontalAlignment="Left"/>
         </StackPanel>
         <Grid Grid.Row="1">
             <SplitView Name="DetailSplitView"

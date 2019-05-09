@@ -1,6 +1,6 @@
 ﻿using RSS_Stalker.Controls;
-using RSS_Stalker.Models;
-using RSS_Stalker.Tools;
+using CoreLib.Models;
+using CoreLib.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using RSS_Stalker.Tools;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 

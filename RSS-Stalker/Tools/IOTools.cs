@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using RSS_Stalker.Models;
+using CoreLib.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
+using CoreLib.Tools;
 
 namespace RSS_Stalker.Tools
 {
@@ -247,6 +248,20 @@ namespace RSS_Stalker.Tools
                 await App.OneDrive.UpdateStarList(file);
         }
         /// <summary>
+        /// 完全替换通知列表
+        /// </summary>
+        /// <param name="channels">标签列表</param>
+        /// <returns></returns>
+        public async static Task ReplaceToast(List<Channel> channels, bool isUpdate = false)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("ToastChannels.json", CreationCollisionOption.OpenIfExists);
+            string text = JsonConvert.SerializeObject(channels);
+            await FileIO.WriteTextAsync(file, text);
+            if (isUpdate)
+                await App.OneDrive.UpdateStarList(file);
+        }
+        /// <summary>
         /// 获取本地保存的待阅读信息
         /// </summary>
         /// <returns></returns>
@@ -366,6 +381,58 @@ namespace RSS_Stalker.Tools
             text = JsonConvert.SerializeObject(list);
             await FileIO.WriteTextAsync(file, text);
             await App.OneDrive.UpdateStarList(file);
+        }
+        /// <summary>
+        /// 获取需要通知的频道列表
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<List<Channel>> GetNeedToastChannels()
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("ToastChannels.json", CreationCollisionOption.OpenIfExists);
+            string text = await FileIO.ReadTextAsync(file);
+            if (string.IsNullOrEmpty(text))
+            {
+                text = "[]";
+            }
+            var list = JsonConvert.DeserializeObject<List<Channel>>(text);
+            return list;
+        }
+        /// <summary>
+        /// 添加需要通知的频道
+        /// </summary>
+        /// <returns></returns>
+        public static async Task AddNeedToastChannel(Channel channel)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("ToastChannels.json", CreationCollisionOption.OpenIfExists);
+            string text = await FileIO.ReadTextAsync(file);
+            if (string.IsNullOrEmpty(text))
+            {
+                text = "[]";
+            }
+            var list = JsonConvert.DeserializeObject<List<Channel>>(text);
+            list.Add(channel);
+            text = JsonConvert.SerializeObject(list);
+            await FileIO.WriteTextAsync(file, text);
+        }
+        /// <summary>
+        /// 移除需要通知的频道
+        /// </summary>
+        /// <returns></returns>
+        public static async Task RemoveNeedToastChannel(Channel channel)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("ToastChannels.json", CreationCollisionOption.OpenIfExists);
+            string text = await FileIO.ReadTextAsync(file);
+            if (string.IsNullOrEmpty(text))
+            {
+                text = "[]";
+            }
+            var list = JsonConvert.DeserializeObject<List<Channel>>(text);
+            list.RemoveAll(p=>p.Id==channel.Id);
+            text = JsonConvert.SerializeObject(list);
+            await FileIO.WriteTextAsync(file, text);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using RSS_Stalker.Tools;
+﻿using CoreLib.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace RSS_Stalker.Models
+namespace CoreLib.Models
 {
     public class Head
     {

@@ -1,6 +1,6 @@
 ﻿using RSS_Stalker.Controls;
-using RSS_Stalker.Enums;
-using RSS_Stalker.Tools;
+using CoreLib.Enums;
+using CoreLib.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -39,7 +39,7 @@ namespace RSS_Stalker
             ChangeLanguage();
             this.InitializeComponent();
             this.Suspending += OnSuspending;
-            RequestedTheme = AppTools.GetRoamingSetting(Enums.AppSettings.Theme, "Light") == "Light" ? ApplicationTheme.Light : ApplicationTheme.Dark;
+            RequestedTheme = AppTools.GetRoamingSetting(AppSettings.Theme, "Light") == "Light" ? ApplicationTheme.Light : ApplicationTheme.Dark;
             UnhandledException += UnhandleExceptionHandle;
         }
 
@@ -199,7 +199,10 @@ namespace RSS_Stalker
             string title = query.Where(p => p.StartsWith("title")).FirstOrDefault();
             string content=query.Where(p=>p.StartsWith("content")).FirstOrDefault();
             string url = query.Where(p => p.StartsWith("url")).FirstOrDefault();
-            if(string.IsNullOrEmpty(id) || string.IsNullOrEmpty(title) || string.IsNullOrEmpty(content) || string.IsNullOrEmpty(url))
+            string img = query.Where(p => p.StartsWith("img")).FirstOrDefault();
+            string date = query.Where(p => p.StartsWith("date")).FirstOrDefault();
+            string summary = query.Where(p => p.StartsWith("summary")).FirstOrDefault();
+            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(title) || string.IsNullOrEmpty(content) || string.IsNullOrEmpty(url))
             {
                 return;
             }
@@ -207,9 +210,12 @@ namespace RSS_Stalker
             title = WebUtility.UrlDecode(title.Substring(6));
             content = WebUtility.UrlDecode(content.Substring(8));
             url = WebUtility.UrlDecode(url.Substring(4));
+            img = WebUtility.UrlDecode(img.Substring(4));
+            date = WebUtility.UrlDecode(date.Substring(5));
+            summary = WebUtility.UrlDecode(summary.Substring(8));
             if (MainPage.Current != null)
             {
-                MainPage.Current.MainFrame.Navigate(typeof(Pages.FeedDetailPage), new string[] { id, title, content,url });
+                MainPage.Current.MainFrame.Navigate(typeof(Pages.FeedDetailPage), new string[] { id, title, content,url,img,date,summary });
                 MainPage.Current.ChannelListView.SelectedIndex = -1;
             }
         }

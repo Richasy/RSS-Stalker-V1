@@ -1,7 +1,7 @@
-﻿using Microsoft.Toolkit.Parsers.Rss;
+﻿using CoreLib.Enums;
+using Microsoft.Toolkit.Parsers.Rss;
 using Newtonsoft.Json;
-using RSS_Stalker.Enums;
-using RSS_Stalker.Models;
+using CoreLib.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,8 +19,9 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using Windows.Web.Syndication;
 using static System.Net.Mime.MediaTypeNames;
+using System.Diagnostics;
 
-namespace RSS_Stalker.Tools
+namespace CoreLib.Tools
 {
     public class AppTools
     {
@@ -339,7 +340,44 @@ namespace RSS_Stalker.Tools
         /// </summary>
         /// <param name="url">地址</param>
         /// <returns></returns>
-        public static async Task<List<Feed>> GetScheamFromUrl(string url)
+        public static async Task<List<RssSchema>> GetSchemalFromUrl(string url)
+        {
+            string feed = null;
+
+            using (var client = new HttpClient())
+            {
+                try
+                {
+                    feed = await client.GetStringAsync(url);
+                }
+                catch { }
+            }
+            var list = new List<RssSchema>();
+            if (feed != null)
+            {
+                try
+                {
+                    var parser = new RssParser();
+                    var rss = parser.Parse(feed);
+                    foreach (var item in rss)
+                    {
+                        list.Add(item);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+
+            }
+            return list;
+        }
+        /// <summary>
+        /// 从URL获取解析后的Item的信息
+        /// </summary>
+        /// <param name="url">地址</param>
+        /// <returns></returns>
+        public static async Task<List<Feed>> GetFeedsFromUrl(string url)
         {
             string feed = null;
 

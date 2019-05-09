@@ -1,7 +1,7 @@
 ﻿using Microsoft.Toolkit.Parsers.Rss;
 using RSS_Stalker.Controls;
-using RSS_Stalker.Models;
-using RSS_Stalker.Tools;
+using CoreLib.Models;
+using CoreLib.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -73,7 +73,7 @@ namespace RSS_Stalker.Pages
             ChannelDescriptionTextBlock.Text = _sourceData.Description;
             ChannelNameTextBlock.Text = _sourceData.Name;
             SchemaCollection.Clear();
-            var feed = await AppTools.GetScheamFromUrl(_sourceData.Link);
+            var feed = await AppTools.GetFeedsFromUrl(_sourceData.Link);
             if (feed != null && feed.Count > 0)
             {
                 foreach (var item in feed)

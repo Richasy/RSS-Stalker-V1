@@ -5,7 +5,7 @@
     xmlns:local="using:RSS_Stalker"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="using:RSS_Stalker.Models"
+    xmlns:models="using:CoreLib.Models"
     SizeChanged="Page_SizeChanged"
     mc:Ignorable="d">
     <Page.Resources>
@@ -18,6 +18,11 @@
             <MenuFlyoutItem x:Uid="Control_MoveMenuItem" FontFamily="{StaticResource Basic}" Name="MoveChannelMenuItem" Click="MoveChannelMenuItem_Click">
                 <MenuFlyoutItem.Icon>
                     <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE9D2;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem x:Uid="Control_ToastMenuItem" FontFamily="{StaticResource Basic}" Name="ToastChannelMenuItem" Click="ToastChannelMenuItem_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE996;"/>
                 </MenuFlyoutItem.Icon>
             </MenuFlyoutItem>
             <MenuFlyoutSeparator/>

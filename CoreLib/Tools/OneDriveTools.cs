@@ -2,7 +2,7 @@
 using Microsoft.Toolkit.Services.OneDrive;
 using Microsoft.Toolkit.Services.Services.MicrosoftGraph;
 using Newtonsoft.Json;
-using RSS_Stalker.Models;
+using CoreLib.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
 
-namespace RSS_Stalker.Tools
+namespace CoreLib.Tools
 {
     public class OneDriveTools
     {
@@ -146,6 +146,43 @@ namespace RSS_Stalker.Tools
             }
         }
         /// <summary>
+        /// 获取OneDrive中存储的通知列表数据
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<Channel>> GetToastList()
+        {
+            if (_appFolder == null)
+            {
+                throw new UnauthorizedAccessException("You need to complete OneDrive authorization before you can get this file");
+            }
+            try
+            {
+                var file = await _appFolder.GetFileAsync("ToastList.json");
+                using (var stream = (await file.StorageFilePlatformService.OpenAsync()) as IRandomAccessStream)
+                {
+                    Stream st = WindowsRuntimeStreamExtensions.AsStreamForRead(stream);
+                    st.Position = 0;
+                    StreamReader sr = new StreamReader(st, Encoding.UTF8);
+                    string result = sr.ReadToEnd();
+                    result = result.Replace("\0", "");
+                    if (string.IsNullOrEmpty(result))
+                    {
+                        result = "[]";
+                    }
+                    var list = JsonConvert.DeserializeObject<List<Channel>>(result);
+                    return list;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex is ServiceException)
+                {
+                    await _appFolder.StorageFolderPlatformService.CreateFileAsync("ToastList.json", CreationCollisionOption.ReplaceExisting);
+                }
+                return new List<Channel>();
+            }
+        }
+        /// <summary>
         /// 获取OneDrive中存储的收藏列表数据
         /// </summary>
         /// <returns></returns>
@@ -253,6 +290,32 @@ namespace RSS_Stalker.Tools
                     double time = AppTools.DateToTimeStamp(DateTime.Now.ToUniversalTime());
                     AppTools.WriteRoamingSetting(Enums.AppSettings.StarUpdateTime, time.ToString());
                     AppTools.WriteLocalSetting(Enums.AppSettings.StarUpdateTime, time.ToString());
+                }
+            }
+            catch (Exception)
+            {
+                return;
+            }
+        }
+        /// <summary>
+        /// 更新OneDrive中存储的通知列表
+        /// </summary>
+        /// <param name="list">列表</param>
+        /// <returns></returns>
+        public async Task UpdateToastList(StorageFile localFile)
+        {
+            if (_appFolder == null)
+            {
+                throw new UnauthorizedAccessException("You need to complete OneDrive authorization before you can get this file");
+            }
+            try
+            {
+                using (var stream = await localFile.OpenReadAsync())
+                {
+                    await _appFolder.StorageFolderPlatformService.CreateFileAsync("ToastList.json", CreationCollisionOption.ReplaceExisting, stream);
+                    double time = AppTools.DateToTimeStamp(DateTime.Now.ToUniversalTime());
+                    AppTools.WriteRoamingSetting(Enums.AppSettings.ToastUpdateTime, time.ToString());
+                    AppTools.WriteLocalSetting(Enums.AppSettings.ToastUpdateTime, time.ToString());
                 }
             }
             catch (Exception)

@@ -1,6 +1,6 @@
 ﻿using RSS_Stalker.Controls;
-using RSS_Stalker.Models;
-using RSS_Stalker.Tools;
+using CoreLib.Models;
+using CoreLib.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,6 +23,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using CoreLib.Enums;
+using RSS_Stalker.Tools;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -55,26 +57,7 @@ namespace RSS_Stalker.Pages
                     var data = e.Parameter as Tuple<Feed, List<Feed>>;
                     _sourceFeed = data.Item1;
                     AllFeeds = data.Item2;
-                    if (MainPage.Current.TodoList.Any(p => p.Equals(_sourceFeed)))
-                    {
-                        AddTodoButton.Visibility = Visibility.Collapsed;
-                        RemoveTodoButton.Visibility = Visibility.Visible;
-                    }
-                    else
-                    {
-                        AddTodoButton.Visibility = Visibility.Visible;
-                        RemoveTodoButton.Visibility = Visibility.Collapsed;
-                    }
-                    if (MainPage.Current.StarList.Any(p => p.Equals(_sourceFeed)))
-                    {
-                        AddStarButton.Visibility = Visibility.Collapsed;
-                        RemoveStarButton.Visibility = Visibility.Visible;
-                    }
-                    else
-                    {
-                        AddStarButton.Visibility = Visibility.Visible;
-                        RemoveStarButton.Visibility = Visibility.Collapsed;
-                    }
+                    
                     foreach (var item in AllFeeds)
                     {
                         if (item.InternalID != _sourceFeed.InternalID)
@@ -93,17 +76,40 @@ namespace RSS_Stalker.Pages
                         InternalID = data[0],
                         Title = data[1],
                         Content = data[2],
-                        FeedUrl=data[3],
+                        FeedUrl = data[3],
+                        ImageUrl = data[4],
+                        Date=data[5],
+                        Summary=data[6],
+                        ImgVisibility = string.IsNullOrEmpty(data[4]) ? Visibility.Collapsed : Visibility.Visible
                     };
                     GridViewButton.Visibility = Visibility.Collapsed;
-                    ControlsContainer.Visibility = Visibility.Collapsed;
+                    SideListButton.Visibility = Visibility.Collapsed;
                     DetailSplitView.IsPaneOpen = false;
                     DetailSplitView.OpenPaneLength = 0;
                 }
-                
+                if (MainPage.Current.TodoList.Any(p => p.Equals(_sourceFeed)))
+                {
+                    AddTodoButton.Visibility = Visibility.Collapsed;
+                    RemoveTodoButton.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    AddTodoButton.Visibility = Visibility.Visible;
+                    RemoveTodoButton.Visibility = Visibility.Collapsed;
+                }
+                if (MainPage.Current.StarList.Any(p => p.Equals(_sourceFeed)))
+                {
+                    AddStarButton.Visibility = Visibility.Collapsed;
+                    RemoveStarButton.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    AddStarButton.Visibility = Visibility.Visible;
+                    RemoveStarButton.Visibility = Visibility.Collapsed;
+                }
                 TitleTextBlock.Text = _sourceFeed.Title;
                 
-                string theme = AppTools.GetRoamingSetting(Enums.AppSettings.Theme, "Light");
+                string theme = AppTools.GetRoamingSetting(AppSettings.Theme, "Light");
                 string css = await FileIO.ReadTextAsync(await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Template/{theme}.css")));
                 string html = AppTools.GetHTML(css, _sourceFeed.Content ?? "");
                 DetailWebView.NavigateToString(html);
@@ -120,7 +126,7 @@ namespace RSS_Stalker.Pages
                 userActivity.VisualElements.DisplayText = feed.Title;
                 userActivity.VisualElements.Content = AdaptiveCardBuilder.CreateAdaptiveCardFromJson(await AppTools.CreateAdaptiveJson(feed));
                 //Populate required properties
-                string url = $"richasy-rss://feed?id={feed.InternalID}&url={WebUtility.UrlDecode(feed.FeedUrl)}&title={WebUtility.UrlEncode(feed.Title)}&content={WebUtility.UrlEncode(feed.Content)}";
+                string url = $"richasy-rss://feed?id={feed.InternalID}&summary={WebUtility.UrlEncode(feed.Summary)}&date={WebUtility.UrlEncode(feed.Date)}&img={WebUtility.UrlEncode(feed.ImageUrl)}&url={WebUtility.UrlDecode(feed.FeedUrl)}&title={WebUtility.UrlEncode(feed.Title)}&content={WebUtility.UrlEncode(feed.Content)}";
                 userActivity.ActivationUri = new Uri(url);
                 await userActivity.SaveAsync(); //save the new metadata
 
@@ -153,7 +159,7 @@ namespace RSS_Stalker.Pages
                 }
             }
             TitleTextBlock.Text = _sourceFeed.Title;
-            string theme = AppTools.GetRoamingSetting(Enums.AppSettings.Theme, "Light");
+            string theme = AppTools.GetRoamingSetting(AppSettings.Theme, "Light");
             string css = await FileIO.ReadTextAsync(await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Template/{theme}.css")));
             string html = AppTools.GetHTML(css, _sourceFeed.Content ?? "");
             DetailWebView.NavigateToString(html);
@@ -200,7 +206,7 @@ namespace RSS_Stalker.Pages
 
         private async void Menu_ReInit_Click(object sender, RoutedEventArgs e)
         {
-            string theme = AppTools.GetRoamingSetting(Enums.AppSettings.Theme, "Light");
+            string theme = AppTools.GetRoamingSetting(AppSettings.Theme, "Light");
             string css = await FileIO.ReadTextAsync(await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Template/{theme}.css")));
             string html = AppTools.GetHTML(css, _sourceFeed.Content ?? "");
             DetailWebView.NavigateToString(html);

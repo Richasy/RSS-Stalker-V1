@@ -1,7 +1,8 @@
 ﻿using RSS_Stalker.Controls;
 using RSS_Stalker.Dialog;
-using RSS_Stalker.Models;
-using RSS_Stalker.Tools;
+using CoreLib.Models;
+using CoreLib.Tools;
+using CoreLib.Enums;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,6 +19,9 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using RSS_Stalker.Tools;
+using Windows.ApplicationModel.Background;
+using Microsoft.Toolkit.Uwp.Helpers;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -32,6 +36,7 @@ namespace RSS_Stalker
         public ObservableCollection<Channel> Channels = new ObservableCollection<Channel>();
         public List<Feed> TodoList = new List<Feed>();
         public List<Feed> StarList = new List<Feed>();
+        public List<Channel> ToastList = new List<Channel>();
         public static MainPage Current;
         public int _categoryListCount = -1;
         public int _channelListCount = -1;
@@ -111,9 +116,17 @@ namespace RSS_Stalker
             TimerInit();
             TodoList = await IOTools.GetLocalTodoReadList();
             StarList = await IOTools.GetLocalStarList();
+            ToastList = await IOTools.GetNeedToastChannels();
+            RegisterBackground();
             _isInit = true;
         }
-
+        private void RegisterBackground()
+        {
+            BackgroundTaskRegistration registered = BackgroundTaskHelper.Register(typeof(StalkerToast.Toast),
+                                    new TimeTrigger(15, true),
+                                    false, true,
+                                    new SystemCondition(SystemConditionType.InternetAvailable));
+        }
         private void TimerInit()
         {
             _checkUpdateTimer.Interval = new TimeSpan(0, 0, 10);
@@ -123,12 +136,14 @@ namespace RSS_Stalker
 
         private async void CheckRssListUpdate(object sender, object e)
         {
-            string localBasicTime = AppTools.GetLocalSetting(Enums.AppSettings.BasicUpdateTime, "0");
-            string roamBasicTime = AppTools.GetRoamingSetting(Enums.AppSettings.BasicUpdateTime, "1");
-            string localTodoTime = AppTools.GetLocalSetting(Enums.AppSettings.TodoUpdateTime, "0");
-            string roamTodoTime = AppTools.GetRoamingSetting(Enums.AppSettings.TodoUpdateTime, "1");
-            string localStarTime = AppTools.GetLocalSetting(Enums.AppSettings.StarUpdateTime, "0");
-            string roamStarTime = AppTools.GetRoamingSetting(Enums.AppSettings.StarUpdateTime, "1");
+            string localBasicTime = AppTools.GetLocalSetting(AppSettings.BasicUpdateTime, "0");
+            string roamBasicTime = AppTools.GetRoamingSetting(AppSettings.BasicUpdateTime, "1");
+            string localTodoTime = AppTools.GetLocalSetting(AppSettings.TodoUpdateTime, "0");
+            string roamTodoTime = AppTools.GetRoamingSetting(AppSettings.TodoUpdateTime, "1");
+            string localStarTime = AppTools.GetLocalSetting(AppSettings.StarUpdateTime, "0");
+            string roamStarTime = AppTools.GetRoamingSetting(AppSettings.StarUpdateTime, "1");
+            string localToastTime = AppTools.GetLocalSetting(AppSettings.ToastUpdateTime, "0");
+            string roamToastTime = AppTools.GetRoamingSetting(AppSettings.ToastUpdateTime, "1");
             if (localBasicTime != roamBasicTime)
             {
                 var list = await App.OneDrive.GetCategoryList();
@@ -160,10 +175,26 @@ namespace RSS_Stalker
                 // 如果正在浏览待读页，则替换
                 new PopupToast(AppTools.GetReswLanguage("Tip_Updated")).ShowPopup();
             }
+            if (localToastTime != roamToastTime)
+            {
+                var list = await App.OneDrive.GetToastList();
+                ToastList = list;
+                await IOTools.ReplaceToast(list);
+                if (MainFrame.Content is Pages.SettingPage)
+                {
+                    Pages.SettingPage.Current.ToastChannels.Clear();
+                    foreach (var item in ToastList)
+                    {
+                        Pages.SettingPage.Current.ToastChannels.Add(item);
+                    }
+                }
+                // 如果正在浏览待读页，则替换
+                new PopupToast(AppTools.GetReswLanguage("Tip_Updated")).ShowPopup();
+            }
         }
         public void ReplaceList(List<Category> list)
         {
-            string roamTime = AppTools.GetRoamingSetting(Enums.AppSettings.BasicUpdateTime, "0");
+            string roamTime = AppTools.GetRoamingSetting(AppSettings.BasicUpdateTime, "0");
             string selectCategoryId = (CategoryListView.SelectedItem as Category)?.Id;
             string selectChannelId = (ChannelListView.SelectedItem as Channel)?.Id;
             Categories.Clear();
@@ -192,7 +223,7 @@ namespace RSS_Stalker
             }
             _categoryListCount = Categories.Count;
             _channelListCount = Channels.Count;
-            AppTools.WriteLocalSetting(Enums.AppSettings.BasicUpdateTime, roamTime);
+            AppTools.WriteLocalSetting(AppSettings.BasicUpdateTime, roamTime);
         }
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
@@ -451,6 +482,20 @@ namespace RSS_Stalker
             else
             {
                 MainFrame.Navigate(typeof(Pages.FeedCollectionPage), new Tuple<List<Feed>, string>(StarList, title));
+            }
+        }
+
+        private async void ToastChannelMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (ToastList.Any(p => p.Id == _tempChannel.Id))
+            {
+                return;
+            }
+            else
+            {
+                await IOTools.AddNeedToastChannel(_tempChannel);
+                ToastList.Add(_tempChannel);
+                new PopupToast(AppTools.GetReswLanguage("Tip_Added")).ShowPopup();
             }
         }
     }

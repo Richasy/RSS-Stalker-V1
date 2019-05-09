@@ -51,6 +51,13 @@
         <uap:Extension Category="windows.protocol">
           <uap:Protocol Name="richasy-rss"/>
         </uap:Extension>
+        <Extension Category="windows.backgroundTasks" EntryPoint="StalkerToast.Toast">
+          <BackgroundTasks>
+            <Task Type="systemEvent"/>
+            <Task Type="timer"/>
+            <Task Type="pushNotification"/>
+          </BackgroundTasks>
+        </Extension>
       </Extensions>
     </Application>
   </Applications>

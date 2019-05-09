@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RSS_Stalker.Models
+namespace CoreLib.Models
 {
     public class Category:INotifyPropertyChanged
     {

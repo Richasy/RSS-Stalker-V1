@@ -1,7 +1,7 @@
 ﻿using RSS_Stalker.Controls;
 using RSS_Stalker.Dialog;
-using RSS_Stalker.Models;
-using RSS_Stalker.Tools;
+using CoreLib.Models;
+using CoreLib.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,6 +17,9 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using RSS_Stalker.Tools;
+using CoreLib.Enums;
+using System.Collections.ObjectModel;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -28,16 +31,19 @@ namespace RSS_Stalker.Pages
     public sealed partial class SettingPage : Page
     {
         private bool _isInit = false;
+        public ObservableCollection<Channel> ToastChannels = new ObservableCollection<Channel>();
+        public static SettingPage Current;
         public SettingPage()
         {
             this.InitializeComponent();
+            Current = this;
             PageInit();
         }
         public void PageInit()
         {
-            string theme = AppTools.GetRoamingSetting(Enums.AppSettings.Theme, "Light");
-            string language = AppTools.GetRoamingSetting(Enums.AppSettings.Language, "zh_CN");
-            string oneDriveUserName = AppTools.GetLocalSetting(Enums.AppSettings.UserName, "");
+            string theme = AppTools.GetRoamingSetting(AppSettings.Theme, "Light");
+            string language = AppTools.GetRoamingSetting(AppSettings.Language, "zh_CN");
+            string oneDriveUserName = AppTools.GetLocalSetting(AppSettings.UserName, "");
             if (theme == "Light")
                 ThemeComboBox.SelectedIndex = 0;
             else
@@ -47,6 +53,14 @@ namespace RSS_Stalker.Pages
             else
                 LanguageComboBox.SelectedIndex = 1;
             OneDriveNameTextBlock.Text = oneDriveUserName;
+            ToastChannels.Clear();
+            if (MainPage.Current.ToastList.Count > 0)
+            {
+                foreach (var item in MainPage.Current.ToastList)
+                {
+                    ToastChannels.Add(item);
+                }
+            }
             _isInit = true;
         }
 
@@ -55,7 +69,7 @@ namespace RSS_Stalker.Pages
             if (!_isInit)
                 return;
             var item = ThemeComboBox.SelectedItem as ComboBoxItem;
-            AppTools.WriteRoamingSetting(Enums.AppSettings.Theme, item.Name);
+            AppTools.WriteRoamingSetting(AppSettings.Theme, item.Name);
             MainPage.Current.RequestedTheme = item.Name == "Light" ? ElementTheme.Light : ElementTheme.Dark;
             new PopupToast(AppTools.GetReswLanguage("Tip_NeedRestartApp")).ShowPopup();
         }
@@ -65,7 +79,7 @@ namespace RSS_Stalker.Pages
             if (!_isInit)
                 return;
             var item = LanguageComboBox.SelectedItem as ComboBoxItem;
-            AppTools.WriteRoamingSetting(Enums.AppSettings.Language, item.Name);
+            AppTools.WriteRoamingSetting(AppSettings.Language, item.Name);
             new PopupToast(AppTools.GetReswLanguage("Tip_NeedRestartApp")).ShowPopup();
         }
 
@@ -76,9 +90,9 @@ namespace RSS_Stalker.Pages
             if (result == ContentDialogResult.Primary)
             {
                 await App.OneDrive.Logout();
-                AppTools.WriteLocalSetting(Enums.AppSettings.UserName, "");
-                AppTools.WriteLocalSetting(Enums.AppSettings.BasicUpdateTime, "0");
-                AppTools.WriteLocalSetting(Enums.AppSettings.IsBindingOneDrive, "False");
+                AppTools.WriteLocalSetting(AppSettings.UserName, "");
+                AppTools.WriteLocalSetting(AppSettings.BasicUpdateTime, "0");
+                AppTools.WriteLocalSetting(AppSettings.IsBindingOneDrive, "False");
                 var frame = Window.Current.Content as Frame;
                 frame.Navigate(typeof(OneDrivePage));
                 new PopupToast(AppTools.GetReswLanguage("Tip_RebindOneDrive")).ShowPopup();
@@ -129,7 +143,7 @@ namespace RSS_Stalker.Pages
             {
                 var opml = new Opml(allList);
                 string content = opml.ToString();
-                string fileName = AppTools.GetLocalSetting(Enums.AppSettings.UserName, "") + "_" + DateTime.Now.ToString("yyyyMMdd_HH_mm_ss") + ".opml";
+                string fileName = AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.UserName, "") + "_" + DateTime.Now.ToString("yyyyMMdd_HH_mm_ss") + ".opml";
                 var file = await IOTools.GetSaveFile(".opml", fileName, "OPML File");
                 if (file != null)
                 {
@@ -143,6 +157,18 @@ namespace RSS_Stalker.Pages
             }
             ExportOpmlButton.IsEnabled = true;
             ExportOpmlButton.Content = AppTools.GetReswLanguage("Tip_Export");
+        }
+
+        private async void RemoveToastButton_Click(object sender, RoutedEventArgs e)
+        {
+            var data = (sender as Button).DataContext as Channel;
+            if (data != null)
+            {
+                await IOTools.RemoveNeedToastChannel(data);
+                ToastChannels.Remove(data);
+                MainPage.Current.ToastList.RemoveAll(p => p.Id == data.Id);
+                new PopupToast(AppTools.GetReswLanguage("Tip_Removed")).ShowPopup();
+            }
         }
     }
 }

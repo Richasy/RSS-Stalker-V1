@@ -6,12 +6,16 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.ApplicationModel.UserActivities;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.System;
+using Windows.UI.Shell;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -33,6 +37,7 @@ namespace RSS_Stalker.Pages
         private ObservableCollection<Feed> ShowFeeds = new ObservableCollection<Feed>();
         private List<Feed> AllFeeds = new List<Feed>();
         private bool _isInit = false;
+        private UserActivitySession _currentActivity;
         public FeedDetailPage()
         {
             this.InitializeComponent();
@@ -43,47 +48,91 @@ namespace RSS_Stalker.Pages
         }
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            if(e.Parameter!=null && e.Parameter is Tuple<Feed,List<Feed>>)
+            if(e.Parameter!=null)
             {
-                var data = e.Parameter as Tuple<Feed, List<Feed>>;
-                
-                _sourceFeed = data.Item1;
-                AllFeeds = data.Item2;
-                if (MainPage.Current.TodoList.Any(p => p.Equals(_sourceFeed)))
+                if(e.Parameter is Tuple<Feed, List<Feed>>)
                 {
-                    AddTodoButton.Visibility = Visibility.Collapsed;
-                    RemoveTodoButton.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    AddTodoButton.Visibility = Visibility.Visible;
-                    RemoveTodoButton.Visibility = Visibility.Collapsed;
-                }
-                if (MainPage.Current.StarList.Any(p => p.Equals(_sourceFeed)))
-                {
-                    AddStarButton.Visibility = Visibility.Collapsed;
-                    RemoveStarButton.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    AddStarButton.Visibility = Visibility.Visible;
-                    RemoveStarButton.Visibility = Visibility.Collapsed;
-                }
-                foreach (var item in data.Item2)
-                {
-                    if (item.InternalID != _sourceFeed.InternalID)
+                    var data = e.Parameter as Tuple<Feed, List<Feed>>;
+                    _sourceFeed = data.Item1;
+                    AllFeeds = data.Item2;
+                    if (MainPage.Current.TodoList.Any(p => p.Equals(_sourceFeed)))
                     {
-                        ShowFeeds.Add(item);
+                        AddTodoButton.Visibility = Visibility.Collapsed;
+                        RemoveTodoButton.Visibility = Visibility.Visible;
                     }
+                    else
+                    {
+                        AddTodoButton.Visibility = Visibility.Visible;
+                        RemoveTodoButton.Visibility = Visibility.Collapsed;
+                    }
+                    if (MainPage.Current.StarList.Any(p => p.Equals(_sourceFeed)))
+                    {
+                        AddStarButton.Visibility = Visibility.Collapsed;
+                        RemoveStarButton.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        AddStarButton.Visibility = Visibility.Visible;
+                        RemoveStarButton.Visibility = Visibility.Collapsed;
+                    }
+                    foreach (var item in AllFeeds)
+                    {
+                        if (item.InternalID != _sourceFeed.InternalID)
+                        {
+                            ShowFeeds.Add(item);
+                        }
+                    }
+                    //LoadingRing.IsActive = true;
+                    await GenerateActivityAsync(_sourceFeed);
                 }
+                if(e.Parameter is string[])
+                {
+                    var data = e.Parameter as string[];
+                    _sourceFeed = new Feed()
+                    {
+                        InternalID = data[0],
+                        Title = data[1],
+                        Content = data[2],
+                        FeedUrl=data[3],
+                    };
+                    GridViewButton.Visibility = Visibility.Collapsed;
+                    ControlsContainer.Visibility = Visibility.Collapsed;
+                    DetailSplitView.IsPaneOpen = false;
+                    DetailSplitView.OpenPaneLength = 0;
+                }
+                
                 TitleTextBlock.Text = _sourceFeed.Title;
-                LoadingRing.IsActive = true;
+                
                 string theme = AppTools.GetRoamingSetting(Enums.AppSettings.Theme, "Light");
                 string css = await FileIO.ReadTextAsync(await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Template/{theme}.css")));
                 string html = AppTools.GetHTML(css, _sourceFeed.Content ?? "");
                 DetailWebView.NavigateToString(html);
                 _isInit = true;
             }
+        }
+
+        private async Task GenerateActivityAsync(Feed feed)
+        {
+            try
+            {
+                UserActivityChannel channel = UserActivityChannel.GetDefault();
+                UserActivity userActivity = await channel.GetOrCreateUserActivityAsync(feed.InternalID);
+                userActivity.VisualElements.DisplayText = feed.Title;
+                userActivity.VisualElements.Content = AdaptiveCardBuilder.CreateAdaptiveCardFromJson(await AppTools.CreateAdaptiveJson(feed));
+                //Populate required properties
+                string url = $"richasy-rss://feed?id={feed.InternalID}&url={WebUtility.UrlDecode(feed.FeedUrl)}&title={WebUtility.UrlEncode(feed.Title)}&content={WebUtility.UrlEncode(feed.Content)}";
+                userActivity.ActivationUri = new Uri(url);
+                await userActivity.SaveAsync(); //save the new metadata
+
+                //Dispose of any current UserActivitySession, and create a new one.
+                _currentActivity?.Dispose();
+                _currentActivity = userActivity.CreateSession();
+            }
+            catch (Exception)
+            {
+                return;
+            }
+
         }
 
         private void DetailWebView_Loaded(object sender, RoutedEventArgs e)
@@ -108,6 +157,7 @@ namespace RSS_Stalker.Pages
             string css = await FileIO.ReadTextAsync(await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Template/{theme}.css")));
             string html = AppTools.GetHTML(css, _sourceFeed.Content ?? "");
             DetailWebView.NavigateToString(html);
+            await GenerateActivityAsync(_sourceFeed);
         }
 
         private void GridViewButton_Click(object sender, RoutedEventArgs e)

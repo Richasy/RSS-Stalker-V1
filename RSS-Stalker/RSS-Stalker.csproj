@@ -183,6 +183,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="Card.json" />
     <None Include="Package.StoreAssociation.xml" />
     <Content Include="Template\Dark.css" />
     <Content Include="Template\Light.css" />

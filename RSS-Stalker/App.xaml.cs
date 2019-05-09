@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -95,6 +97,58 @@ namespace RSS_Stalker
             }
             ApplicationLanguages.PrimaryLanguageOverride = code;
         }
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            Frame rootFrame = Window.Current.Content as Frame;
+
+            // 不要在窗口已包含内容时重复应用程序初始化，
+            // 只需确保窗口处于活动状态
+            if (rootFrame == null)
+            {
+                // 创建要充当导航上下文的框架，并导航到第一页
+                rootFrame = new Frame();
+                bool isBinding = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsBindingOneDrive, "False"));
+                if (isBinding)
+                    rootFrame.Navigate(typeof(MainPage));
+                else
+                {
+                    rootFrame.Navigate(typeof(Pages.OneDrivePage));
+                    return;
+                }
+                rootFrame.NavigationFailed += OnNavigationFailed;
+                rootFrame.Loaded += (_s, _e) =>
+                {
+                    if (args.Kind == ActivationKind.Protocol)
+                    {
+                        var uriArgs = args as ProtocolActivatedEventArgs;
+                        if (uriArgs != null)
+                        {
+                            string[] query = uriArgs.Uri.Query.Split('&');
+                            OpenContentFromTimeline(query);
+                        }
+                    }
+                };
+                // 将框架放在当前窗口中
+                Window.Current.Content = rootFrame;
+                Window.Current.Activate();
+            }
+            else
+            {
+                bool isBinding = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsBindingOneDrive, "False"));
+                if (!isBinding)
+                    return;
+                if (args.Kind == ActivationKind.Protocol)
+                {
+                    var uriArgs = args as ProtocolActivatedEventArgs;
+                    if (uriArgs != null)
+                    {
+                        string[] query = uriArgs.Uri.Query.Split('&');
+                        OpenContentFromTimeline(query);
+                    }
+                }
+            }
+
+        }
         /// <summary>
         /// 在应用程序由最终用户正常启动时进行调用。
         /// 将在启动应用程序以打开特定文件等情况下使用。
@@ -139,7 +193,26 @@ namespace RSS_Stalker
                 Window.Current.Activate();
             }
         }
-
+        private void OpenContentFromTimeline(string[] query)
+        {
+            string id = query.Where(p => p.StartsWith("?id")).FirstOrDefault();
+            string title = query.Where(p => p.StartsWith("title")).FirstOrDefault();
+            string content=query.Where(p=>p.StartsWith("content")).FirstOrDefault();
+            string url = query.Where(p => p.StartsWith("url")).FirstOrDefault();
+            if(string.IsNullOrEmpty(id) || string.IsNullOrEmpty(title) || string.IsNullOrEmpty(content) || string.IsNullOrEmpty(url))
+            {
+                return;
+            }
+            id = id.Substring(4);
+            title = WebUtility.UrlDecode(title.Substring(6));
+            content = WebUtility.UrlDecode(content.Substring(8));
+            url = WebUtility.UrlDecode(url.Substring(4));
+            if (MainPage.Current != null)
+            {
+                MainPage.Current.MainFrame.Navigate(typeof(Pages.FeedDetailPage), new string[] { id, title, content,url });
+                MainPage.Current.ChannelListView.SelectedIndex = -1;
+            }
+        }
         /// <summary>
         /// 导航到特定页失败时调用
         /// </summary>

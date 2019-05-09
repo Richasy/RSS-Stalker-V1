@@ -309,6 +309,9 @@
   <data name="Tip_ImportSuccess" xml:space="preserve">
     <value>导入成功</value>
   </data>
+  <data name="Tip_LinkToOneDrive" xml:space="preserve">
+    <value>连接到OneDrive</value>
+  </data>
   <data name="Tip_LogoutWarning" xml:space="preserve">
     <value>退出提醒</value>
   </data>

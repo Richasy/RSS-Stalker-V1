@@ -125,7 +125,6 @@
                         <ListView Name="ChannelListView"
                       x:FieldModifier="Public"
                       Grid.Row="1"
-                      Margin="0,10,0,0"
                       ItemTemplate="{StaticResource ChannelItemTemplate}"
                       ItemsSource="{x:Bind Channels}"
                       IsItemClickEnabled="True"

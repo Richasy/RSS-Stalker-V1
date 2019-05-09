@@ -124,11 +124,11 @@ namespace RSS_Stalker
         private async void CheckRssListUpdate(object sender, object e)
         {
             string localBasicTime = AppTools.GetLocalSetting(Enums.AppSettings.BasicUpdateTime, "0");
-            string roamBasicTime = AppTools.GetRoamingSetting(Enums.AppSettings.BasicUpdateTime, "0");
+            string roamBasicTime = AppTools.GetRoamingSetting(Enums.AppSettings.BasicUpdateTime, "1");
             string localTodoTime = AppTools.GetLocalSetting(Enums.AppSettings.TodoUpdateTime, "0");
-            string roamTodoTime = AppTools.GetRoamingSetting(Enums.AppSettings.TodoUpdateTime, "0");
+            string roamTodoTime = AppTools.GetRoamingSetting(Enums.AppSettings.TodoUpdateTime, "1");
             string localStarTime = AppTools.GetLocalSetting(Enums.AppSettings.StarUpdateTime, "0");
-            string roamStarTime = AppTools.GetRoamingSetting(Enums.AppSettings.StarUpdateTime, "0");
+            string roamStarTime = AppTools.GetRoamingSetting(Enums.AppSettings.StarUpdateTime, "1");
             if (localBasicTime != roamBasicTime)
             {
                 var list = await App.OneDrive.GetCategoryList();

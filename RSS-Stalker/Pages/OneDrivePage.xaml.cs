@@ -27,6 +27,7 @@ namespace RSS_Stalker.Pages
         public OneDrivePage()
         {
             this.InitializeComponent();
+            AppTools.SetTitleBarColor();
         }
 
         private async void OneDirveButton_Click(object sender, RoutedEventArgs e)
@@ -36,10 +37,18 @@ namespace RSS_Stalker.Pages
             bool result=await App.OneDrive.OneDriveAuthorize();
             if (result)
             {
-                var list = await App.OneDrive.GetCategoryList();
-                await IOTools.ReplaceCategory(list);
-                string updateTime = AppTools.GetRoamingSetting(Enums.AppSettings.BasicUpdateTime, "0");
-                AppTools.WriteLocalSetting(Enums.AppSettings.BasicUpdateTime, updateTime);
+                var categoryList = await App.OneDrive.GetCategoryList();
+                await IOTools.ReplaceCategory(categoryList);
+                var TodoList = await App.OneDrive.GetTodoList();
+                await IOTools.ReplaceTodo(TodoList);
+                var StarList = await App.OneDrive.GetStarList();
+                await IOTools.ReplaceStar(StarList);
+                string basicUpdateTime = AppTools.GetRoamingSetting(Enums.AppSettings.BasicUpdateTime, "1");
+                string todoUpdateTime = AppTools.GetRoamingSetting(Enums.AppSettings.TodoUpdateTime, "1");
+                string starUpdateTime = AppTools.GetRoamingSetting(Enums.AppSettings.StarUpdateTime, "1");
+                AppTools.WriteLocalSetting(Enums.AppSettings.BasicUpdateTime, basicUpdateTime);
+                AppTools.WriteLocalSetting(Enums.AppSettings.TodoUpdateTime, todoUpdateTime);
+                AppTools.WriteLocalSetting(Enums.AppSettings.StarUpdateTime, starUpdateTime);
                 AppTools.WriteLocalSetting(Enums.AppSettings.IsBindingOneDrive, "True");
                 var frame = Window.Current.Content as Frame;
                 frame.Navigate(typeof(MainPage));
@@ -47,7 +56,7 @@ namespace RSS_Stalker.Pages
             else
             {
                 OneDirveButton.IsEnabled = true;
-                OneDirveButton.Content = AppTools.GetReswLanguage("Control_OneDriveButton.Content");
+                OneDirveButton.Content = AppTools.GetReswLanguage("Tip_LinkToOneDrive");
                 new PopupToast(AppTools.GetReswLanguage("Tip_BindingOneDriveFailed")).ShowPopup();
             }
         }

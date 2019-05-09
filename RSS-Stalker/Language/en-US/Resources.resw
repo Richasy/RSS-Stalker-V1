@@ -303,6 +303,9 @@
   <data name="Tip_ImportSuccess" xml:space="preserve">
     <value>Imported!</value>
   </data>
+  <data name="Tip_LinkToOneDrive" xml:space="preserve">
+    <value>Link to OneDrive</value>
+  </data>
   <data name="Tip_LogoutWarning" xml:space="preserve">
     <value>Logout</value>
   </data>

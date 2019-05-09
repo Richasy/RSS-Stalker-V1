@@ -160,6 +160,23 @@ namespace RSS_Stalker.Tools
         }
 
         /// <summary>
+        /// 创建动态卡片所需的布局
+        /// </summary>
+        /// <param name="name">笔记名</param>
+        /// <param name="markdown">笔记内容</param>
+        /// <returns></returns>
+        public async static Task<string> CreateAdaptiveJson(Feed feed)
+        {
+            var jsonFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Card.json"));
+            string json = await FileIO.ReadTextAsync(jsonFile);
+            string imageLink = feed.ImageUrl;
+            json = json.Replace("$IMAGE$", imageLink);
+            json = json.Replace("$TITLE$", feed.Title);
+            json = json.Replace("$CONTENT$", feed.Summary);
+            return json;
+        }
+
+        /// <summary>
         /// 获取当前指定的父控件
         /// </summary>
         /// <typeparam name="T">转换类型</typeparam>

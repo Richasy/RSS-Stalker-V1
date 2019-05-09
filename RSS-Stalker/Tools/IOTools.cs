@@ -415,6 +415,7 @@ namespace RSS_Stalker.Tools
             list.Add(channel);
             text = JsonConvert.SerializeObject(list);
             await FileIO.WriteTextAsync(file, text);
+            await App.OneDrive.UpdateToastList(file);
         }
         /// <summary>
         /// 移除需要通知的频道
@@ -433,6 +434,7 @@ namespace RSS_Stalker.Tools
             list.RemoveAll(p=>p.Id==channel.Id);
             text = JsonConvert.SerializeObject(list);
             await FileIO.WriteTextAsync(file, text);
+            await App.OneDrive.UpdateToastList(file);
         }
     }
 }

@@ -139,7 +139,7 @@
     <value>Channel description</value>
   </data>
   <data name="Control_ChannelLinkTipBlock.Text" xml:space="preserve">
-    <value>Channel RSS link</value>
+    <value>RSS Link/Keyword</value>
   </data>
   <data name="Control_ChannelNameTipBlock.Text" xml:space="preserve">
     <value>Channel name</value>
@@ -389,5 +389,11 @@
   </data>
   <data name="Control_ToastListTipBlock.Text" xml:space="preserve">
     <value>Notify List</value>
+  </data>
+  <data name="DisplayName" xml:space="preserve">
+    <value>RSS Stalker</value>
+  </data>
+  <data name="Tip_ToastRepeat" xml:space="preserve">
+    <value>The feed notification already exists</value>
   </data>
 </root>

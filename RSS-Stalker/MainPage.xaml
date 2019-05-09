@@ -84,7 +84,7 @@
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Horizontal" Margin="0,30" HorizontalAlignment="Center">
                             <TextBlock FontFamily="{StaticResource Icon}" Text="&#xEA14;" Foreground="{ThemeResource PrimaryColor}" FontSize="22" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                            <TextBlock Text="RSS Stalker" Foreground="{ThemeResource ImportantTextColor}" FontFamily="{ThemeResource English}" VerticalAlignment="Center" FontSize="15"/>
+                            <TextBlock Name="AppTitleBlock" Foreground="{ThemeResource ImportantTextColor}" FontFamily="{ThemeResource English}" VerticalAlignment="Center" FontSize="15"/>
                         </StackPanel>
                         <Button Style="{StaticResource PrimaryButtonStyle}" Name="AddCategoryButton" Margin="20,0" Click="AddCategoryButton_Click" x:Uid="Control_AddCategoryButton" Grid.Row="1" HorizontalAlignment="Stretch" Height="40">
                             <ContentControl.ContentTransitions>

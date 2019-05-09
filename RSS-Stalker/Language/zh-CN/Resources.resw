@@ -139,7 +139,7 @@
     <value>频道说明</value>
   </data>
   <data name="Control_ChannelLinkTipBlock.Text" xml:space="preserve">
-    <value>频道RSS链接</value>
+    <value>RSS链接/关键词</value>
   </data>
   <data name="Control_ChannelNameTipBlock.Text" xml:space="preserve">
     <value>频道名称</value>
@@ -389,5 +389,11 @@
   </data>
   <data name="Control_ToastListTipBlock.Text" xml:space="preserve">
     <value>订阅通知列表</value>
+  </data>
+  <data name="DisplayName" xml:space="preserve">
+    <value>RSS 追踪</value>
+  </data>
+  <data name="Tip_ToastRepeat" xml:space="preserve">
+    <value>已存在该订阅源通知</value>
   </data>
 </root>

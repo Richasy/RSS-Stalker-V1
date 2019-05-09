@@ -13,7 +13,22 @@ body {
     padding-top: 30px;
     padding-bottom: 30px;
 }
-
+button {
+    background-color: #208CF7;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-size: 13px;
+    transition: all .2s;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+    button:hover {
+        background-color: #1D81E3;
+    }
 figcaption {
     display: block;
     margin: 0 auto;

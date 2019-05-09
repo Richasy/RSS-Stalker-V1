@@ -11,7 +11,7 @@
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock Text="&#xEA14;" Foreground="{ThemeResource NormalTextColor}" FontFamily="{StaticResource Icon}" HorizontalAlignment="Center" TextAlignment="Center" FontSize="120"/>
             <TextBlock Name="WelcomeTextBlock" x:FieldModifier="Public" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource TipTextColor}" TextWrapping="Wrap" MaxWidth="400" TextAlignment="Center" Margin="0,20,0,0" FontSize="30"/>
-            <HyperlinkButton x:Uid="Control_TutorialButton" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource PrimaryColor}" Name="TutorialButton" FontSize="14" Margin="0,20,0,0" HorizontalAlignment="Center"/>
+            <HyperlinkButton x:Uid="Control_TutorialButton" Click="TutorialButton_Click" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource PrimaryColor}" Name="TutorialButton" FontSize="14" Margin="0,20,0,0" HorizontalAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Page>

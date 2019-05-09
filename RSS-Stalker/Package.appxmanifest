@@ -14,7 +14,7 @@
   <mp:PhoneIdentity PhoneProductId="7a0da50b-a63f-49ac-b507-4ef2cc9f1714" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>RSS Stalker</DisplayName>
+    <DisplayName>ms-resource:DisplayName</DisplayName>
     <PublisherDisplayName>云之幻</PublisherDisplayName>
     <Logo>Assets\Logo\StoreLogo.png</Logo>
   </Properties>
@@ -33,12 +33,12 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="RSS_Stalker.App">
       <uap:VisualElements
-        DisplayName="RSS Stalker"
+        DisplayName="ms-resource:DisplayName"
         Square150x150Logo="Assets\Logo\Square150x150Logo.png"
         Square44x44Logo="Assets\Logo\Square44x44Logo.png"
         Description="RSS-Stalker"
         BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Logo\Wide310x150Logo.png" ShortName="RSS Stalker" Square71x71Logo="Assets\Logo\SmallTile.png" Square310x310Logo="Assets\Logo\LargeTile.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Logo\Wide310x150Logo.png" ShortName="ms-resource:DisplayName" Square71x71Logo="Assets\Logo\SmallTile.png" Square310x310Logo="Assets\Logo\LargeTile.png">
           <uap:ShowNameOnTiles>
             <uap:ShowOn Tile="square150x150Logo"/>
             <uap:ShowOn Tile="wide310x150Logo"/>

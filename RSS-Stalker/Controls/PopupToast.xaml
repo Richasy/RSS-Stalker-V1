@@ -62,6 +62,7 @@
     <Grid>
 
         <StackPanel Background="{ThemeResource PrimaryColor}"
+                    CornerRadius="3"
                     Padding="10"
                     MaxWidth="300"
                     HorizontalAlignment="Center"

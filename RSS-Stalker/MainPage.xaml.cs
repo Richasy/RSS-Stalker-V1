@@ -50,6 +50,7 @@ namespace RSS_Stalker
             this.InitializeComponent();
             Current = this;
             Window.Current.SetTitleBar(TitleBarControl);
+            
             PageInit();
         }
 
@@ -86,6 +87,7 @@ namespace RSS_Stalker
         private async void PageInit()
         {
             AppTools.SetTitleBarColor();
+            AppTitleBlock.Text = AppTools.GetReswLanguage("DisplayName");
             Categories.CollectionChanged += CategoryCollectionReordered;
             Channels.CollectionChanged += ChannelCollectionReordered;
             var categories = await IOTools.GetLocalCategories();
@@ -489,7 +491,7 @@ namespace RSS_Stalker
         {
             if (ToastList.Any(p => p.Id == _tempChannel.Id))
             {
-                return;
+                new PopupToast(AppTools.GetReswLanguage("Tip_ToastRepeat")).ShowPopup();
             }
             else
             {

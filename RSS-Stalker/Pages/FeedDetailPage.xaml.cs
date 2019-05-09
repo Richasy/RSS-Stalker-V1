@@ -46,7 +46,7 @@ namespace RSS_Stalker.Pages
             ToolTipService.SetToolTip(AddTodoButton, AppTools.GetReswLanguage("Tip_AddTodoList"));
             ToolTipService.SetToolTip(RemoveTodoButton, AppTools.GetReswLanguage("Tip_DeleteTodoList"));
             ToolTipService.SetToolTip(AddStarButton, AppTools.GetReswLanguage("Tip_AddStarList"));
-            ToolTipService.SetToolTip(RemoveStarButton, AppTools.GetReswLanguage("Tip_RemoveStarList"));
+            ToolTipService.SetToolTip(RemoveStarButton, AppTools.GetReswLanguage("Tip_DeleteStarList"));
         }
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {

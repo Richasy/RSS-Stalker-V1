@@ -22,6 +22,7 @@ using Windows.UI.Xaml.Navigation;
 using RSS_Stalker.Tools;
 using Windows.ApplicationModel.Background;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Windows.UI.Core;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -50,7 +51,6 @@ namespace RSS_Stalker
             this.InitializeComponent();
             Current = this;
             Window.Current.SetTitleBar(TitleBarControl);
-            
             PageInit();
         }
 
@@ -120,8 +120,25 @@ namespace RSS_Stalker
             StarList = await IOTools.GetLocalStarList();
             ToastList = await IOTools.GetNeedToastChannels();
             RegisterBackground();
+            Window.Current.Dispatcher.AcceleratorKeyActivated += AccelertorKeyActivedHandle;
             _isInit = true;
         }
+
+        private void AccelertorKeyActivedHandle(CoreDispatcher sender, AcceleratorKeyEventArgs args)
+        {
+            if (args.EventType.ToString().Contains("Down"))
+            {
+                var esc = Window.Current.CoreWindow.GetKeyState(Windows.System.VirtualKey.Escape);
+                if (esc.HasFlag(CoreVirtualKeyStates.Down))
+                {
+                    if (MainFrame.Content is Pages.FeedDetailPage)
+                    {
+                        Pages.FeedDetailPage.Current.CheckBack();
+                    }
+                }
+            }
+        }
+
         private void RegisterBackground()
         {
             BackgroundTaskRegistration registered = BackgroundTaskHelper.Register(typeof(StalkerToast.Toast),
@@ -502,7 +519,7 @@ namespace RSS_Stalker
 
         private async void ToastChannelMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (ToastList.Any(p => p.Id == _tempChannel.Id))
+            if (ToastList.Any(p => p.Link == _tempChannel.Link || p.Id==_tempChannel.Id))
             {
                 new PopupToast(AppTools.GetReswLanguage("Tip_ToastRepeat")).ShowPopup();
             }

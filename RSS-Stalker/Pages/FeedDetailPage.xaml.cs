@@ -40,9 +40,11 @@ namespace RSS_Stalker.Pages
         private List<Feed> AllFeeds = new List<Feed>();
         private bool _isInit = false;
         private UserActivitySession _currentActivity;
+        public static FeedDetailPage Current;
         public FeedDetailPage()
         {
             this.InitializeComponent();
+            Current = this;
             ToolTipService.SetToolTip(AddTodoButton, AppTools.GetReswLanguage("Tip_AddTodoList"));
             ToolTipService.SetToolTip(RemoveTodoButton, AppTools.GetReswLanguage("Tip_DeleteTodoList"));
             ToolTipService.SetToolTip(AddStarButton, AppTools.GetReswLanguage("Tip_AddStarList"));
@@ -143,7 +145,13 @@ namespace RSS_Stalker.Pages
             }
 
         }
-
+        public void CheckBack()
+        {
+            if (GridViewButton.Visibility == Visibility.Visible)
+            {
+                MainPage.Current.MainFrame.Navigate(typeof(ChannelDetailPage), AllFeeds);
+            }
+        }
         private void DetailWebView_Loaded(object sender, RoutedEventArgs e)
         {
             LoadingRing.IsActive = false;

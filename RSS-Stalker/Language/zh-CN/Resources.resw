@@ -408,4 +408,22 @@
   <data name="Tip_SyncSuccess" xml:space="preserve">
     <value>已完成数据同步</value>
   </data>
+  <data name="Control_BaiduAILinkButton.Content" xml:space="preserve">
+    <value>百度翻译平台</value>
+  </data>
+  <data name="Control_BaiduTranslateSettingTipBlock.Text" xml:space="preserve">
+    <value>百度翻译令牌</value>
+  </data>
+  <data name="Control_ManagerButton.Content" xml:space="preserve">
+    <value>管理</value>
+  </data>
+  <data name="Control_TranslateMenuItem.Text" xml:space="preserve">
+    <value>文章翻译</value>
+  </data>
+  <data name="Tip_BaiduTranslateDialog" xml:space="preserve">
+    <value>百度翻译通行证</value>
+  </data>
+  <data name="Tip_TranslateFailed" xml:space="preserve">
+    <value>翻译失败</value>
+  </data>
 </root>

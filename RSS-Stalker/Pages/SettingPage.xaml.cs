@@ -40,7 +40,7 @@ namespace RSS_Stalker.Pages
             Current = this;
             PageInit();
         }
-        public void PageInit()
+        public async void PageInit()
         {
             string theme = AppTools.GetRoamingSetting(AppSettings.Theme, "Light");
             string language = AppTools.GetRoamingSetting(AppSettings.Language, "zh_CN");
@@ -55,9 +55,10 @@ namespace RSS_Stalker.Pages
                 LanguageComboBox.SelectedIndex = 1;
             OneDriveNameTextBlock.Text = oneDriveUserName;
             ToastChannels.Clear();
-            if (MainPage.Current.ToastList.Count > 0)
+            var toastList = await IOTools.GetNeedToastChannels();
+            if (toastList.Count > 0)
             {
-                foreach (var item in MainPage.Current.ToastList)
+                foreach (var item in toastList)
                 {
                     ToastChannels.Add(item);
                 }
@@ -227,6 +228,12 @@ namespace RSS_Stalker.Pages
             btn.IsEnabled = true;
             btn.Content = AppTools.GetReswLanguage("Tip_ForceSync");
             new PopupToast(AppTools.GetReswLanguage("Tip_SyncSuccess")).ShowPopup();
+        }
+
+        private async void BaiduTranslateAccountButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new BaiduTranslateDialog();
+            await dialog.ShowAsync();
         }
     }
 }

@@ -21,7 +21,7 @@
     <PackageCertificateThumbprint>99B45ABA0CF05A6B62BC563342390299397CAF65</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-    <AppxPackageDir>E:\Package\RSS Stalker\</AppxPackageDir>
+    <AppxPackageDir>D:\Package\RSS Stalker\</AppxPackageDir>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm|arm64</AppxBundlePlatforms>
     <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
@@ -133,6 +133,9 @@
     <Compile Include="Controls\PopupToast.xaml.cs">
       <DependentUpon>PopupToast.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialog\BaiduTranslateDialog.xaml.cs">
+      <DependentUpon>BaiduTranslateDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialog\AddCategoryDialog.xaml.cs">
       <DependentUpon>AddCategoryDialog.xaml</DependentUpon>
     </Compile>
@@ -174,6 +177,7 @@
       <DependentUpon>WelcomePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools\TranslateTools.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -262,6 +266,10 @@
     <Page Include="Controls\PopupToast.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialog\BaiduTranslateDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialog\AddCategoryDialog.xaml">
       <SubType>Designer</SubType>

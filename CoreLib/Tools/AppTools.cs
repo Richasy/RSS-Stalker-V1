@@ -20,6 +20,7 @@ using Windows.UI.Xaml.Media;
 using Windows.Web.Syndication;
 using static System.Net.Mime.MediaTypeNames;
 using System.Diagnostics;
+using System.Net;
 
 namespace CoreLib.Tools
 {
@@ -445,7 +446,11 @@ namespace CoreLib.Tools
             string container = $"<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"referrer\" content=\"no-referrer\" /><meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=0; \"><style>{css}</style></head><body>{body}</body></html>";
             return container;
         }
-
+        /// <summary>
+        /// 从OPML文件中获取分类列表
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         public async static Task<List<Category>> GetRssListFromFile(StorageFile file)
         {
             string content = await FileIO.ReadTextAsync(file);
@@ -471,6 +476,53 @@ namespace CoreLib.Tools
                 list.Add(defaultCategory);
             }
             return list;
+        }
+
+        /// <summary>
+        /// 异步POST指定类型的数据
+        /// </summary>
+        /// <typeparam name="T">实体类</typeparam>
+        /// <param name="url">地址</param>
+        /// <param name="data">数据</param>
+        /// <param name="ts">过期时间</param>
+        /// <returns>处理结果</returns>
+        public async static Task<string> PostAsyncData(string url, string paramData, Dictionary<string, string> headerDic = null)
+        {
+            string result = string.Empty;
+            try
+            {
+                HttpWebRequest wbRequest = (HttpWebRequest)WebRequest.Create(url);
+                wbRequest.Method = "POST";
+                wbRequest.ContentType = "application/x-www-form-urlencoded";
+                wbRequest.Accept = "application/json";
+                wbRequest.ContentLength = Encoding.UTF8.GetByteCount(paramData);
+                if (headerDic != null && headerDic.Count > 0)
+                {
+                    foreach (var item in headerDic)
+                    {
+                        wbRequest.Headers.Add(item.Key, item.Value);
+                    }
+                }
+                using (Stream requestStream = wbRequest.GetRequestStream())
+                {
+                    using (StreamWriter swrite = new StreamWriter(requestStream))
+                    {
+                        swrite.Write(paramData);
+                    }
+                }
+                HttpWebResponse wbResponse = (await wbRequest.GetResponseAsync()) as HttpWebResponse;
+                using (Stream responseStream = wbResponse.GetResponseStream())
+                {
+                    using (StreamReader sread = new StreamReader(responseStream))
+                    {
+                        result = sread.ReadToEnd();
+                    }
+                }
+            }
+            catch (Exception)
+            { }
+
+            return result;
         }
     }
 }

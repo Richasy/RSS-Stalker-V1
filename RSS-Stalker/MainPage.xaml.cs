@@ -241,6 +241,9 @@ namespace RSS_Stalker
         private void CategoryListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as Category;
+            TodoButton.IsChecked = false;
+            StarButton.IsChecked = false;
+            SettingButton.IsChecked = false;
             CategoryNameTextBlock.Text = item.Name;
             ChannelListView.SelectedIndex = -1;
             SideChannelGrid.Visibility = Visibility.Visible;
@@ -321,6 +324,8 @@ namespace RSS_Stalker
             SideChannelGrid.Visibility = Visibility.Collapsed;
             AppSplitView.OpenPaneLength = 250;
             CategoryListView.SelectedIndex = -1;
+            TodoButton.IsChecked = false;
+            StarButton.IsChecked = false;
             MainFrame.Navigate(typeof(Pages.SettingPage));
         }
 
@@ -460,6 +465,8 @@ namespace RSS_Stalker
         private void TodoButton_Click(object sender, RoutedEventArgs e)
         {
             _isTodoButtonClick = true;
+            SettingButton.IsChecked = false;
+            StarButton.IsChecked = false;
             SideChannelGrid.Visibility = Visibility.Collapsed;
             AppSplitView.OpenPaneLength = 250;
             CategoryListView.SelectedIndex = -1;
@@ -477,6 +484,8 @@ namespace RSS_Stalker
         private void StarButton_Click(object sender, RoutedEventArgs e)
         {
             _isTodoButtonClick = false;
+            TodoButton.IsChecked = false;
+            SettingButton.IsChecked = false;
             SideChannelGrid.Visibility = Visibility.Collapsed;
             AppSplitView.OpenPaneLength = 250;
             CategoryListView.SelectedIndex = -1;

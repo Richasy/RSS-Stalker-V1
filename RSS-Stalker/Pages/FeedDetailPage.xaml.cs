@@ -108,15 +108,18 @@ namespace RSS_Stalker.Pages
                     RemoveStarButton.Visibility = Visibility.Collapsed;
                 }
                 TitleTextBlock.Text = _sourceFeed.Title;
-                
-                string theme = AppTools.GetRoamingSetting(AppSettings.Theme, "Light");
-                string css = await FileIO.ReadTextAsync(await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Template/{theme}.css")));
-                string html = AppTools.GetHTML(css, _sourceFeed.Content ?? "");
+                string html = await PackageHTML(_sourceFeed.Content);
                 DetailWebView.NavigateToString(html);
                 _isInit = true;
             }
         }
-
+        private async Task<string> PackageHTML(string content)
+        {
+            string theme = AppTools.GetRoamingSetting(AppSettings.Theme, "Light");
+            string css = await FileIO.ReadTextAsync(await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Template/{theme}.css")));
+            string html = AppTools.GetHTML(css, content ?? "");
+            return html;
+        }
         private async Task GenerateActivityAsync(Feed feed)
         {
             try
@@ -159,9 +162,7 @@ namespace RSS_Stalker.Pages
                 }
             }
             TitleTextBlock.Text = _sourceFeed.Title;
-            string theme = AppTools.GetRoamingSetting(AppSettings.Theme, "Light");
-            string css = await FileIO.ReadTextAsync(await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Template/{theme}.css")));
-            string html = AppTools.GetHTML(css, _sourceFeed.Content ?? "");
+            string html = await PackageHTML(_sourceFeed.Content);
             DetailWebView.NavigateToString(html);
             await GenerateActivityAsync(_sourceFeed);
         }
@@ -206,9 +207,7 @@ namespace RSS_Stalker.Pages
 
         private async void Menu_ReInit_Click(object sender, RoutedEventArgs e)
         {
-            string theme = AppTools.GetRoamingSetting(AppSettings.Theme, "Light");
-            string css = await FileIO.ReadTextAsync(await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Template/{theme}.css")));
-            string html = AppTools.GetHTML(css, _sourceFeed.Content ?? "");
+            string html = await PackageHTML(_sourceFeed.Content);
             DetailWebView.NavigateToString(html);
         }
 
@@ -297,6 +296,38 @@ namespace RSS_Stalker.Pages
                 new PopupToast(ex.Message).ShowPopup();
             }
             (sender as Button).IsEnabled = true;
+        }
+
+        private async void Menu_Translate_Click(object sender, RoutedEventArgs e)
+        {
+            string language = (sender as MenuFlyoutItem).Name.Replace("Menu_Translate_", "");
+            string appId = AppTools.GetLocalSetting(AppSettings.Translate_BaiduAppId, "");
+            if (string.IsNullOrEmpty(appId))
+            {
+                var dialog = new Dialog.BaiduTranslateDialog();
+                await dialog.ShowAsync();
+            }
+            appId = AppTools.GetLocalSetting(AppSettings.Translate_BaiduAppId, "");
+            string appKey = AppTools.GetLocalSetting(AppSettings.Translate_BaiduKey, "");
+            if (string.IsNullOrEmpty(appId) || string.IsNullOrEmpty(appKey))
+            {
+                return;
+            }
+            else
+            {
+                LoadingRing.IsActive = true;
+                string output=await TranslateTools.Translate(_sourceFeed.Content, appId, appKey, "auto", language.ToLower());
+                if (!string.IsNullOrEmpty(output))
+                {
+                    string html = await PackageHTML(output);
+                    DetailWebView.NavigateToString(html);
+                }
+                else
+                {
+                    new PopupToast(AppTools.GetReswLanguage("Tip_TranslateFailed")).ShowPopup();
+                }
+                LoadingRing.IsActive = false;
+            }
         }
     }
 }

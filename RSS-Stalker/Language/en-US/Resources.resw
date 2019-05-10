@@ -408,4 +408,22 @@
   <data name="Tip_SyncSuccess" xml:space="preserve">
     <value>Sync Completed</value>
   </data>
+  <data name="Control_BaiduAILinkButton.Content" xml:space="preserve">
+    <value>Baidu Translate Platform</value>
+  </data>
+  <data name="Control_BaiduTranslateSettingTipBlock.Text" xml:space="preserve">
+    <value>Baidu Translate Token</value>
+  </data>
+  <data name="Control_ManagerButton.Content" xml:space="preserve">
+    <value>Manager</value>
+  </data>
+  <data name="Control_TranslateMenuItem.Text" xml:space="preserve">
+    <value>Translate</value>
+  </data>
+  <data name="Tip_BaiduTranslateDialog" xml:space="preserve">
+    <value>Baidu Translate Token</value>
+  </data>
+  <data name="Tip_TranslateFailed" xml:space="preserve">
+    <value>Translate failed</value>
+  </data>
 </root>

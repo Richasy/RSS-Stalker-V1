@@ -108,9 +108,9 @@
                       ItemClick="CategoryListView_ItemClick"
                       />
                         <StackPanel Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Center" Margin="0,15">
-                            <Button Style="{StaticResource GhostCircleButtonStyle}" Name="TodoButton" Click="TodoButton_Click" FontFamily="{StaticResource Icon}" Content="&#xE924;"/>
-                            <Button Style="{StaticResource GhostCircleButtonStyle}" Margin="15,0" Name="StarButton" Click="StarButton_Click" FontFamily="{StaticResource Icon}" Content="&#xE9DD;"/>
-                            <Button Style="{StaticResource GhostCircleButtonStyle}" Content="&#xE9CB;" FontFamily="{StaticResource Icon}" Name="SettingButton" Click="SettingButton_Click"/>
+                            <ToggleButton Style="{StaticResource CircleToggleButtonStyle}"  Name="TodoButton" Click="TodoButton_Click" Content="&#xE924;"/>
+                            <ToggleButton Style="{StaticResource CircleToggleButtonStyle}" Margin="15,0" Name="StarButton" Click="StarButton_Click" Content="&#xE9DD;"/>
+                            <ToggleButton Style="{StaticResource CircleToggleButtonStyle}" Content="&#xE9CB;" Name="SettingButton" Click="SettingButton_Click"/>
                         </StackPanel>
                         
                     </Grid>

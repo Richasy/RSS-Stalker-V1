@@ -40,6 +40,13 @@
                     <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE9C3;"/>
                 </MenuFlyoutItem.Icon>
             </MenuFlyoutItem>
+            <MenuFlyoutSubItem x:Uid="Control_TranslateMenuItem">
+                <MenuFlyoutSubItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE9C1;"/>
+                </MenuFlyoutSubItem.Icon>
+                <MenuFlyoutItem Text="中文" Name="Menu_Translate_Zh" Click="Menu_Translate_Click"/>
+                <MenuFlyoutItem Text="English" Name="Menu_Translate_En" Click="Menu_Translate_Click"/>
+            </MenuFlyoutSubItem>
         </MenuFlyout>
     </Page.Resources>
     <Grid>
@@ -48,10 +55,14 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <StackPanel BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,0,1" Padding="30,0" Height="66" Orientation="Horizontal">
+        <Grid BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,0,1" Padding="30,0" Height="66">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
             <Button Style="{StaticResource GhostCircleButtonStyle}" Margin="0,0,10,0" Content="&#xE976;" FontFamily="{StaticResource Icon}" VerticalAlignment="Center" Name="GridViewButton" Click="GridViewButton_Click"/>
-            <TextBlock Margin="0,6,0,0" Name="TitleTextBlock" VerticalAlignment="Center" FontFamily="{StaticResource Title}" TextWrapping="Wrap" FontSize="19" HorizontalAlignment="Left"/>
-        </StackPanel>
+            <TextBlock Grid.Column="1" Margin="0,6,0,0" Name="TitleTextBlock" VerticalAlignment="Center" FontFamily="{StaticResource Title}" TextTrimming="CharacterEllipsis" FontSize="19" HorizontalAlignment="Left"/>
+        </Grid>
         <Grid Grid.Row="1">
             <SplitView Name="DetailSplitView"
                        PaneBackground="{ThemeResource PageBackground}"
@@ -94,12 +105,12 @@
                             </Grid>
                         </Button>
                     </StackPanel>
-                    
-                    <Button Style="{StaticResource PrimaryCircleButtonStyle}" FlyoutBase.AttachedFlyout="{StaticResource MoreMenuFlyout}" Name="MoreButton" Click="MoreButton_Click" Width="40" Height="40" FontFamily="{StaticResource Icon}" Content="&#xE9C5;" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,30,20" Opacity="0.8"/>
+                    <ProgressRing Name="LoadingRing" Style="{StaticResource BasicProgressRingStyle}"/>
+                    <Button Style="{StaticResource PrimaryCircleButtonStyle}" FlyoutBase.AttachedFlyout="{StaticResource MoreMenuFlyout}" Name="MoreButton" Click="MoreButton_Click" Width="40" Height="40" FontFamily="{StaticResource Icon}" Content="&#xE9A1;" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,30,20" Opacity="0.8"/>
                 </Grid>
              </SplitView>
         </Grid>
         
-        <ProgressRing Name="LoadingRing" Style="{StaticResource BasicProgressRingStyle}" Grid.Row="1"/>
+        
     </Grid>
 </Page>

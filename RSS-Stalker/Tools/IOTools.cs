@@ -129,15 +129,23 @@ namespace RSS_Stalker.Tools
         /// <returns></returns>
         public async static Task<List<Category>> GetLocalCategories()
         {
-            var localFolder = ApplicationData.Current.LocalFolder;
-            var file = await localFolder.CreateFileAsync("Channels.json", CreationCollisionOption.OpenIfExists);
-            string text = await FileIO.ReadTextAsync(file);
-            if (string.IsNullOrEmpty(text))
+            try
             {
-                text = "[]";
+                var localFolder = ApplicationData.Current.LocalFolder;
+                var file = await localFolder.CreateFileAsync("Channels.json", CreationCollisionOption.OpenIfExists);
+                string text = await FileIO.ReadTextAsync(file);
+                if (string.IsNullOrEmpty(text))
+                {
+                    text = "[]";
+                }
+                var list = JsonConvert.DeserializeObject<List<Category>>(text);
+                return list;
             }
-            var list = JsonConvert.DeserializeObject<List<Category>>(text);
-            return list;
+            catch (Exception)
+            {
+                return new List<Category>();
+            }
+            
         }
         /// <summary>
         /// 添加新标签
@@ -212,12 +220,19 @@ namespace RSS_Stalker.Tools
         /// <returns></returns>
         public async static Task ReplaceCategory(List<Category> categories, bool isUpdate = false)
         {
-            var localFolder = ApplicationData.Current.LocalFolder;
-            var file = await localFolder.CreateFileAsync("Channels.json", CreationCollisionOption.OpenIfExists);
-            string text = JsonConvert.SerializeObject(categories);
-            await FileIO.WriteTextAsync(file, text);
-            if (isUpdate)
-                await App.OneDrive.UpdateCategoryList(file);
+            try
+            {
+                var localFolder = ApplicationData.Current.LocalFolder;
+                var file = await localFolder.CreateFileAsync("Channels.json", CreationCollisionOption.OpenIfExists);
+                string text = JsonConvert.SerializeObject(categories);
+                await FileIO.WriteTextAsync(file, text);
+                if (isUpdate)
+                    await App.OneDrive.UpdateCategoryList(file);
+            }
+            catch (Exception)
+            {
+                return;
+            }
         }
         /// <summary>
         /// 完全替换待读列表
@@ -226,12 +241,19 @@ namespace RSS_Stalker.Tools
         /// <returns></returns>
         public async static Task ReplaceTodo(List<Feed> feeds, bool isUpdate = false)
         {
-            var localFolder = ApplicationData.Current.LocalFolder;
-            var file = await localFolder.CreateFileAsync("TodoRead.json", CreationCollisionOption.OpenIfExists);
-            string text = JsonConvert.SerializeObject(feeds);
-            await FileIO.WriteTextAsync(file, text);
-            if (isUpdate)
-                await App.OneDrive.UpdateTodoList(file);
+            try
+            {
+                var localFolder = ApplicationData.Current.LocalFolder;
+                var file = await localFolder.CreateFileAsync("TodoRead.json", CreationCollisionOption.OpenIfExists);
+                string text = JsonConvert.SerializeObject(feeds);
+                await FileIO.WriteTextAsync(file, text);
+                if (isUpdate)
+                    await App.OneDrive.UpdateTodoList(file);
+            }
+            catch (Exception)
+            {
+                return;
+            }
         }
         /// <summary>
         /// 完全替换收藏列表
@@ -240,12 +262,20 @@ namespace RSS_Stalker.Tools
         /// <returns></returns>
         public async static Task ReplaceStar(List<Feed> feeds, bool isUpdate = false)
         {
-            var localFolder = ApplicationData.Current.LocalFolder;
-            var file = await localFolder.CreateFileAsync("Star.json", CreationCollisionOption.OpenIfExists);
-            string text = JsonConvert.SerializeObject(feeds);
-            await FileIO.WriteTextAsync(file, text);
-            if (isUpdate)
-                await App.OneDrive.UpdateStarList(file);
+            try
+            {
+                var localFolder = ApplicationData.Current.LocalFolder;
+                var file = await localFolder.CreateFileAsync("Star.json", CreationCollisionOption.OpenIfExists);
+                string text = JsonConvert.SerializeObject(feeds);
+                await FileIO.WriteTextAsync(file, text);
+                if (isUpdate)
+                    await App.OneDrive.UpdateStarList(file);
+            }
+            catch (Exception)
+            {
+                return;
+            }
+            
         }
         /// <summary>
         /// 完全替换通知列表
@@ -254,12 +284,19 @@ namespace RSS_Stalker.Tools
         /// <returns></returns>
         public async static Task ReplaceToast(List<Channel> channels, bool isUpdate = false)
         {
-            var localFolder = ApplicationData.Current.LocalFolder;
-            var file = await localFolder.CreateFileAsync("ToastChannels.json", CreationCollisionOption.OpenIfExists);
-            string text = JsonConvert.SerializeObject(channels);
-            await FileIO.WriteTextAsync(file, text);
-            if (isUpdate)
-                await App.OneDrive.UpdateStarList(file);
+            try
+            {
+                var localFolder = ApplicationData.Current.LocalFolder;
+                var file = await localFolder.CreateFileAsync("ToastChannels.json", CreationCollisionOption.OpenIfExists);
+                string text = JsonConvert.SerializeObject(channels);
+                await FileIO.WriteTextAsync(file, text);
+                if (isUpdate)
+                    await App.OneDrive.UpdateStarList(file);
+            }
+            catch (Exception)
+            {
+                return;
+            }
         }
         /// <summary>
         /// 获取本地保存的待阅读信息
@@ -267,15 +304,23 @@ namespace RSS_Stalker.Tools
         /// <returns></returns>
         public async static Task<List<Feed>> GetLocalTodoReadList()
         {
-            var localFolder = ApplicationData.Current.LocalFolder;
-            var file = await localFolder.CreateFileAsync("TodoRead.json", CreationCollisionOption.OpenIfExists);
-            string text = await FileIO.ReadTextAsync(file);
-            if (string.IsNullOrEmpty(text))
+            try
             {
-                text = "[]";
+                var localFolder = ApplicationData.Current.LocalFolder;
+                var file = await localFolder.CreateFileAsync("TodoRead.json", CreationCollisionOption.OpenIfExists);
+                string text = await FileIO.ReadTextAsync(file);
+                if (string.IsNullOrEmpty(text))
+                {
+                    text = "[]";
+                }
+                var list = JsonConvert.DeserializeObject<List<Feed>>(text);
+                return list;
             }
-            var list = JsonConvert.DeserializeObject<List<Feed>>(text);
-            return list;
+            catch (Exception)
+            {
+                return new List<Feed>();
+            }
+            
         }
         /// <summary>
         /// 添加新待读文章
@@ -300,6 +345,7 @@ namespace RSS_Stalker.Tools
             text = JsonConvert.SerializeObject(list);
             await FileIO.WriteTextAsync(file, text);
             await App.OneDrive.UpdateTodoList(file);
+
         }
         /// <summary>
         /// 删除待读文章
@@ -328,15 +374,23 @@ namespace RSS_Stalker.Tools
         /// <returns></returns>
         public async static Task<List<Feed>> GetLocalStarList()
         {
-            var localFolder = ApplicationData.Current.LocalFolder;
-            var file = await localFolder.CreateFileAsync("Star.json", CreationCollisionOption.OpenIfExists);
-            string text = await FileIO.ReadTextAsync(file);
-            if (string.IsNullOrEmpty(text))
+            try
             {
-                text = "[]";
+                var localFolder = ApplicationData.Current.LocalFolder;
+                var file = await localFolder.CreateFileAsync("Star.json", CreationCollisionOption.OpenIfExists);
+                string text = await FileIO.ReadTextAsync(file);
+                if (string.IsNullOrEmpty(text))
+                {
+                    text = "[]";
+                }
+                var list = JsonConvert.DeserializeObject<List<Feed>>(text);
+                return list;
             }
-            var list = JsonConvert.DeserializeObject<List<Feed>>(text);
-            return list;
+            catch (Exception)
+            {
+                return new List<Feed>();
+            }
+            
         }
         /// <summary>
         /// 收藏新文章
@@ -369,18 +423,26 @@ namespace RSS_Stalker.Tools
         /// <returns></returns>
         public async static Task DeleteStar(Feed feed)
         {
-            var localFolder = ApplicationData.Current.LocalFolder;
-            var file = await localFolder.CreateFileAsync("Star.json", CreationCollisionOption.OpenIfExists);
-            string text = await FileIO.ReadTextAsync(file);
-            if (string.IsNullOrEmpty(text))
+            try
             {
-                text = "[]";
+                var localFolder = ApplicationData.Current.LocalFolder;
+                var file = await localFolder.CreateFileAsync("Star.json", CreationCollisionOption.OpenIfExists);
+                string text = await FileIO.ReadTextAsync(file);
+                if (string.IsNullOrEmpty(text))
+                {
+                    text = "[]";
+                }
+                var list = JsonConvert.DeserializeObject<List<Feed>>(text);
+                list.RemoveAll(p => p.Equals(feed));
+                text = JsonConvert.SerializeObject(list);
+                await FileIO.WriteTextAsync(file, text);
+                await App.OneDrive.UpdateStarList(file);
             }
-            var list = JsonConvert.DeserializeObject<List<Feed>>(text);
-            list.RemoveAll(p => p.Equals(feed));
-            text = JsonConvert.SerializeObject(list);
-            await FileIO.WriteTextAsync(file, text);
-            await App.OneDrive.UpdateStarList(file);
+            catch (Exception)
+            {
+                return;
+            }
+            
         }
         /// <summary>
         /// 获取需要通知的频道列表
@@ -435,6 +497,29 @@ namespace RSS_Stalker.Tools
             text = JsonConvert.SerializeObject(list);
             await FileIO.WriteTextAsync(file, text);
             await App.OneDrive.UpdateToastList(file);
+        }
+        /// <summary>
+        /// 添加已读文章
+        /// </summary>
+        /// <returns></returns>
+        public static async Task AddAlreadyReadFeed(Feed feed)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("AlreadyReadList.json", CreationCollisionOption.OpenIfExists);
+            string text = await FileIO.ReadTextAsync(file);
+            if (string.IsNullOrEmpty(text))
+            {
+                text = "[]";
+            }
+            var list = JsonConvert.DeserializeObject<List<Feed>>(text);
+            var time = AppTools.DateToTimeStamp(DateTime.Now.ToLocalTime());
+            list.RemoveAll(p => AppTools.DateToTimeStamp(DateTime.Parse(p.Date)) < time - 604800);
+            if (!list.Any(p => p.InternalID == feed.InternalID))
+            {
+                list.Add(feed);
+                text = JsonConvert.SerializeObject(list);
+                await FileIO.WriteTextAsync(file, text);
+            }
         }
     }
 }

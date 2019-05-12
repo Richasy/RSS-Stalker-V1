@@ -26,15 +26,14 @@ namespace RSS_Stalker.Dialog
         public BaiduTranslateDialog()
         {
             this.InitializeComponent();
-            string oldAppId = AppTools.GetLocalSetting(AppSettings.Translate_BaiduAppId, "");
-            string oldKey = AppTools.GetLocalSetting(AppSettings.Translate_BaiduKey, "");
+            string oldAppId = AppTools.GetRoamingSetting(AppSettings.Translate_BaiduAppId,"");
+            string oldKey = AppTools.GetRoamingSetting(AppSettings.Translate_BaiduKey,"");
             AppIdTextBox.Text = oldAppId;
             KeyTextBox.Text = oldKey;
             Title = AppTools.GetReswLanguage("Tip_BaiduTranslateDialog");
             PrimaryButtonText = AppTools.GetReswLanguage("Tip_Confirm");
             SecondaryButtonText = AppTools.GetReswLanguage("Tip_Cancel");
         }
-
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             args.Cancel = true;
@@ -44,15 +43,15 @@ namespace RSS_Stalker.Dialog
             string key = KeyTextBox.Text;
             if (!string.IsNullOrEmpty(appId) && !string.IsNullOrEmpty(key))
             {
-                AppTools.WriteLocalSetting(AppSettings.Translate_BaiduAppId, appId);
-                AppTools.WriteLocalSetting(AppSettings.Translate_BaiduKey, key);
+                AppTools.WriteRoamingSetting(AppSettings.Translate_BaiduAppId, appId);
+                AppTools.WriteRoamingSetting(AppSettings.Translate_BaiduKey, key);
                 Hide();
             }
             else
             {
                 IsPrimaryButtonEnabled = true;
                 PrimaryButtonText = AppTools.GetReswLanguage("Tip_Confirm");
-                new PopupToast(AppTools.GetReswLanguage("Tip_FieldEmpty")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_FieldEmpty"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
             }
         }
 

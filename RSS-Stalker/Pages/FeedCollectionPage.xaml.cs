@@ -91,7 +91,7 @@ namespace RSS_Stalker.Pages
             }
             else
             {
-                new PopupToast(AppTools.GetReswLanguage("App_InvalidUrl")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("App_InvalidUrl"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
             }
         }
 

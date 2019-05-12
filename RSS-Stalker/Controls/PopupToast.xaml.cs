@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoreLib.Tools;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,6 +23,18 @@ namespace RSS_Stalker.Controls
     {
         //存放弹出框中的信息
         private string _popupContent;
+        private bool _isPointIn=false;
+
+        public Brush FlyoutBackground
+        {
+            get { return (Brush)GetValue(FlyoutBackgroundProperty); }
+            set { SetValue(FlyoutBackgroundProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for FlyoutBackground.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FlyoutBackgroundProperty =
+            DependencyProperty.Register("FlyoutBackground", typeof(Brush), typeof(PopupToast), new PropertyMetadata(AppTools.GetThemeSolidColorBrush("PrimaryColor")));
+
 
         //创建一个popup对象
         private Popup _popup = null;
@@ -43,8 +56,12 @@ namespace RSS_Stalker.Controls
         /// 重载
         /// </summary>
         /// <param name="popupContentString">弹出框中的内容</param>
-        public PopupToast(string popupContentString) : this()
+        public PopupToast(string popupContentString,SolidColorBrush brush=null) : this()
         {
+            if (brush != null)
+            {
+                FlyoutBackground = brush;
+            }
             _popupContent = popupContentString;
         }
 
@@ -82,12 +99,14 @@ namespace RSS_Stalker.Controls
         public async void PopupInCompleted(object sender, object e)
         {
             //在原地续一秒
-            await Task.Delay(1500);
-
-            //将消失动画打开
-            this.PopupOut.Begin();
-            //popout 动画完成后 触发
-            this.PopupOut.Completed += PopupOutCompleted;
+            await Task.Delay(2000);
+            if (!_isPointIn)
+            {
+                //将消失动画打开
+                this.PopupOut.Begin();
+                //popout 动画完成后 触发
+                this.PopupOut.Completed += PopupOutCompleted;
+            }
         }
 
 
@@ -95,6 +114,20 @@ namespace RSS_Stalker.Controls
         public void PopupOutCompleted(object sender, object e)
         {
             _popup.IsOpen = false;
+        }
+
+        private void PopupContainer_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            _isPointIn = true;
+        }
+
+        private void PopupContainer_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            _isPointIn = false;
+            //将消失动画打开
+            this.PopupOut.Begin();
+            //popout 动画完成后 触发
+            this.PopupOut.Completed += PopupOutCompleted;
         }
     }
 }

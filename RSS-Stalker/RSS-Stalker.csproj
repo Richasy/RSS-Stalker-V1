@@ -21,7 +21,7 @@
     <PackageCertificateThumbprint>99B45ABA0CF05A6B62BC563342390299397CAF65</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-    <AppxPackageDir>D:\Package\RSS Stalker\</AppxPackageDir>
+    <AppxPackageDir>E:\Package\RSS Stalker\</AppxPackageDir>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm|arm64</AppxBundlePlatforms>
     <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
@@ -145,6 +145,9 @@
     <Compile Include="Dialog\ConfirmDialog.xaml.cs">
       <DependentUpon>ConfirmDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialog\ImageDialog.xaml.cs">
+      <DependentUpon>ImageDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialog\ModifyCategoryDialog.xaml.cs">
       <DependentUpon>ModifyCategoryDialog.xaml</DependentUpon>
     </Compile>
@@ -153,6 +156,9 @@
     </Compile>
     <Compile Include="Dialog\MoveChannelDialog.xaml.cs">
       <DependentUpon>MoveChannelDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SplashPage.xaml.cs">
+      <DependentUpon>SplashPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tools\IOTools.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -184,9 +190,14 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <Content Include="Card.json" />
+    <Content Include="en_US.txt" />
+    <Content Include="Template\ShowPage.html" />
+    <Content Include="zh_CN.txt" />
+    <Content Include="Assets\Fonts\PingFang.otf" />
     <None Include="Package.StoreAssociation.xml" />
     <Content Include="Template\Dark.css" />
     <Content Include="Template\Light.css" />
+    <None Include="SyncConfig.json" />
     <PRIResource Include="Language\zh-CN\Resources.resw" />
     <PRIResource Include="Language\en-US\Resources.resw" />
     <Content Include="Assets\Fonts\NotoSansSC.otf" />
@@ -283,6 +294,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialog\ImageDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialog\ModifyCategoryDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -316,6 +331,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\SettingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SplashPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -376,6 +395,10 @@
     <ProjectReference Include="..\CoreLib\CoreLib.csproj">
       <Project>{17597ec3-55fa-40db-a312-7c4f488492ea}</Project>
       <Name>CoreLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rss\Rss.csproj">
+      <Project>{BB559A76-7471-486F-8E58-88C55ED2E466}</Project>
+      <Name>Rss</Name>
     </ProjectReference>
     <ProjectReference Include="..\Stalker-Toast\StalkerToast.csproj">
       <Project>{428f0369-9bbb-4ac3-9079-9ab222c17506}</Project>

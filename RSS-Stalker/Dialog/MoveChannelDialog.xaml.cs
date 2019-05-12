@@ -39,7 +39,7 @@ namespace RSS_Stalker.Dialog
             var selectCategory = CategoryListView.SelectedItem as Category;
             if (selectCategory == null)
             {
-                new PopupToast(AppTools.GetReswLanguage("Tip_NoCategorySelected")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_NoCategorySelected"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
                 return;
             }
             else
@@ -48,7 +48,7 @@ namespace RSS_Stalker.Dialog
                 
                 if (sourceCategory == null)
                 {
-                    new PopupToast(AppTools.GetReswLanguage("Tip_NoCategorySelected")).ShowPopup();
+                    new PopupToast(AppTools.GetReswLanguage("Tip_NoCategorySelected"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
                     return;
                 }
                 else

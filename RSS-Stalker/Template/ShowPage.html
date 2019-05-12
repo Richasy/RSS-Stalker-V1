@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>RSS Stalker</title>
+    <meta http-equiv="X-UA-Compatible" content="IE =edge">
+    <meta name="referrer" content="no-referrer" />
+    <meta name="viewport" content="width =device-width,initial-scale =1.0, maximum-scale=1.0, user-scalable=0; ">
+    <link href="https://cdn.bootcss.com/highlight.js/9.15.6/styles/atom-one-$theme$.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/highlight.js/9.15.6/highlight.min.js"></script>
+    <script src="http://cdn.jsdelivr.net/npm/highlightjs-line-numbers.js@2.6.0/dist/highlightjs-line-numbers.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+        hljs.initLineNumbersOnLoad();
+    </script>
+    <script>
+        var $sinaMiniBlogShare = function (eleContainer) {
+            var eleTitle = document.getElementsByTagName("title")[0];
+            eleContainer = eleContainer || document;
+            var funGetSelectTxt = function () {
+                var txt = "";
+                if (document.selection) {
+                    txt = document.selection.createRange().text;    // IE
+                } else {
+                    txt = document.getSelection();
+                }
+                return txt.toString();
+            };
+            eleContainer.onmouseup = function (e) {
+                e = e || window.event;
+                var txt = funGetSelectTxt(), sh = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+                if (txt) {
+                    var data = {
+                        Key: 'SelectText',
+                        Value: txt
+                    };
+                    window.external.notify(JSON.stringify(data));
+                }
+            };
+
+        };
+    </script>
+    <style>
+        $style$
+    </style>
+</head>
+<body>
+    $body$
+    
+    <script>
+        $sinaMiniBlogShare();
+        var links = document.getElementsByTagName('a');
+        var imgs = document.getElementsByTagName('img');
+        if (links.length > 0) {
+            for (var i = 0; i < links.length; i++) {
+                links[i].addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                })
+            }
+        }
+        if (imgs.length > 0) {
+            for (var i = 0; i < imgs.length; i++) {
+                imgs[i].addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    let target = e.currentTarget;
+                    let src = target.getAttribute('src');
+                    var obj = {
+                        Key: 'ImageClick',
+                        Value: src
+                    };
+                    window.external.notify(JSON.stringify(obj));
+                })
+            }
+        }
+    </script>
+    
+</body>
+
+</html>

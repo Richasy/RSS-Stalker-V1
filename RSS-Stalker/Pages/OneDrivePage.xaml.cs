@@ -65,15 +65,15 @@ namespace RSS_Stalker.Pages
                 tasks.Add(todo);
                 tasks.Add(star);
                 tasks.Add(toast);
-                Task.WaitAll(tasks.ToArray());
+                await Task.WhenAll(tasks.ToArray());
                 string basicUpdateTime = AppTools.GetRoamingSetting(AppSettings.BasicUpdateTime, "1");
                 string todoUpdateTime = AppTools.GetRoamingSetting(AppSettings.TodoUpdateTime, "1");
                 string starUpdateTime = AppTools.GetRoamingSetting(AppSettings.StarUpdateTime, "1");
-                string toastUpdateTime = AppTools.GetRoamingSetting(AppSettings.ToastUpdateTime, "1");
-                AppTools.WriteLocalSetting(AppSettings.BasicUpdateTime, basicUpdateTime);
-                AppTools.WriteLocalSetting(AppSettings.TodoUpdateTime, todoUpdateTime);
-                AppTools.WriteLocalSetting(AppSettings.StarUpdateTime, starUpdateTime);
+                string toastUpdateTime = AppTools.GetRoamingSetting(AppSettings.ToastUpdateTime,"1");
                 AppTools.WriteLocalSetting(AppSettings.ToastUpdateTime, toastUpdateTime);
+                AppTools.WriteLocalSetting(AppSettings.StarUpdateTime, starUpdateTime);
+                AppTools.WriteLocalSetting(AppSettings.TodoUpdateTime, todoUpdateTime);
+                AppTools.WriteLocalSetting(AppSettings.BasicUpdateTime, basicUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.IsBindingOneDrive, "True");
                 var frame = Window.Current.Content as Frame;
                 frame.Navigate(typeof(MainPage));
@@ -82,7 +82,7 @@ namespace RSS_Stalker.Pages
             {
                 OneDirveButton.IsEnabled = true;
                 OneDirveButton.Content = AppTools.GetReswLanguage("Tip_LinkToOneDrive");
-                new PopupToast(AppTools.GetReswLanguage("Tip_BindingOneDriveFailed")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_BindingOneDriveFailed"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
             }
         }
     }

@@ -1,5 +1,4 @@
 ﻿using CoreLib.Enums;
-using Microsoft.Toolkit.Parsers.Rss;
 using Newtonsoft.Json;
 using CoreLib.Models;
 using System;
@@ -21,6 +20,8 @@ using Windows.Web.Syndication;
 using static System.Net.Mime.MediaTypeNames;
 using System.Diagnostics;
 using System.Net;
+using Newtonsoft.Json.Linq;
+using Rss.Parsers.Rss;
 
 namespace CoreLib.Tools
 {
@@ -64,23 +65,23 @@ namespace CoreLib.Tools
         /// <param name="value">设置值</param>
         public static void WriteRoamingSetting(AppSettings key, string value)
         {
-            var roamSetting = ApplicationData.Current.RoamingSettings;
-            var roamContainer = roamSetting.CreateContainer("RSS", ApplicationDataCreateDisposition.Always);
-            roamContainer.Values[key.ToString()] = value;
+            var roamingSetting = ApplicationData.Current.RoamingSettings;
+            var roamingcontainer = roamingSetting.CreateContainer("RSS", ApplicationDataCreateDisposition.Always);
+            roamingcontainer.Values[key.ToString()] = value;
         }
         /// <summary>
         /// 读取漫游设置
         /// </summary>
         /// <param name="key">设置名</param>
         /// <returns></returns>
-        public static string GetRoamingSetting(AppSettings key, string defaultValue)
+        public static string GetRoamingSetting(AppSettings key,string defaultValue)
         {
-            var roamSetting = ApplicationData.Current.RoamingSettings;
-            var roamContainer = roamSetting.CreateContainer("RSS", ApplicationDataCreateDisposition.Always);
-            bool isKeyExist = roamContainer.Values.ContainsKey(key.ToString());
+            var roamingSetting = ApplicationData.Current.RoamingSettings;
+            var roamingcontainer = roamingSetting.CreateContainer("RSS", ApplicationDataCreateDisposition.Always);
+            bool isKeyExist = roamingcontainer.Values.ContainsKey(key.ToString());
             if (isKeyExist)
             {
-                return roamContainer.Values[key.ToString()].ToString();
+                return roamingcontainer.Values[key.ToString()].ToString();
             }
             else
             {
@@ -88,6 +89,7 @@ namespace CoreLib.Tools
                 return defaultValue;
             }
         }
+
         /// <summary>
         /// 获取Unix时间戳
         /// </summary>
@@ -441,11 +443,6 @@ namespace CoreLib.Tools
             return list;
         }
 
-        public static string GetHTML(string css,string body)
-        {
-            string container = $"<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"referrer\" content=\"no-referrer\" /><meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=0; \"><style>{css}</style></head><body>{body}</body></html>";
-            return container;
-        }
         /// <summary>
         /// 从OPML文件中获取分类列表
         /// </summary>
@@ -467,7 +464,11 @@ namespace CoreLib.Tools
                     }
                     else
                     {
-                        defaultCategory.Channels.Add(new Channel(outline));
+                        var c = new Channel(outline);
+                        if(c!=null && !string.IsNullOrEmpty(c.Name))
+                        {
+                            defaultCategory.Channels.Add(c);
+                        }
                     }
                 }
             }
@@ -524,5 +525,6 @@ namespace CoreLib.Tools
 
             return result;
         }
+
     }
 }

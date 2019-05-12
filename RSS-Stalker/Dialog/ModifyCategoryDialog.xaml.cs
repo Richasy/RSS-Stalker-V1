@@ -69,7 +69,7 @@ namespace RSS_Stalker.Dialog
             }
             else
             {
-                new PopupToast(AppTools.GetReswLanguage("Tip_FieldEmpty")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_FieldEmpty"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
             }
         }
 
@@ -85,6 +85,7 @@ namespace RSS_Stalker.Dialog
         private void IconGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var str = e.ClickedItem as string;
+            IconFlyout.Hide();
             IconTextBlock.Text = str;
         }
     }

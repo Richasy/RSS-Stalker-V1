@@ -46,12 +46,12 @@ namespace RSS_Stalker.Dialog
             var reg = new Regex(@"(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]");
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(des) || string.IsNullOrEmpty(link))
             {
-                new PopupToast(AppTools.GetReswLanguage("Tip_FieldEmpty")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_FieldEmpty"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
                 return;
             }
             else if (!reg.IsMatch(link))
             {
-                new PopupToast(AppTools.GetReswLanguage("Tip_FieldFormatError")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_FieldFormatError"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
                 return;
             }
             else
@@ -90,7 +90,7 @@ namespace RSS_Stalker.Dialog
                 }
                 else
                 {
-                    new PopupToast(AppTools.GetReswLanguage("Tip_NoCategorySelected")).ShowPopup();
+                    new PopupToast(AppTools.GetReswLanguage("Tip_NoCategorySelected"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
                     return;
                 }
             }

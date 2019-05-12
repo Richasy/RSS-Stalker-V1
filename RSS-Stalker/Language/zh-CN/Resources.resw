@@ -418,12 +418,60 @@
     <value>管理</value>
   </data>
   <data name="Control_TranslateMenuItem.Text" xml:space="preserve">
-    <value>文章翻译</value>
+    <value>翻译</value>
   </data>
   <data name="Tip_BaiduTranslateDialog" xml:space="preserve">
     <value>百度翻译通行证</value>
   </data>
   <data name="Tip_TranslateFailed" xml:space="preserve">
     <value>翻译失败</value>
+  </data>
+  <data name="Tip_UpdateTip" xml:space="preserve">
+    <value>更新说明</value>
+  </data>
+  <data name="Control_CardMenuItem.Text" xml:space="preserve">
+    <value>卡片式</value>
+  </data>
+  <data name="Control_ForceSyncTipBlock.Text" xml:space="preserve">
+    <value>强制同步</value>
+  </data>
+  <data name="Control_ListMenuItem.Text" xml:space="preserve">
+    <value>列表式</value>
+  </data>
+  <data name="Control_SyncWithStartTipBlock.Text" xml:space="preserve">
+    <value>软件启动时进行同步</value>
+  </data>
+  <data name="Control_WaterfallMenuItem.Text" xml:space="preserve">
+    <value>瀑布流</value>
+  </data>
+  <data name="Tip_Copied" xml:space="preserve">
+    <value>已复制</value>
+  </data>
+  <data name="Tip_Copy" xml:space="preserve">
+    <value>复制</value>
+  </data>
+  <data name="Tip_ImageView" xml:space="preserve">
+    <value>查看图片</value>
+  </data>
+  <data name="Tip_Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="Tip_Saved" xml:space="preserve">
+    <value>已保存</value>
+  </data>
+  <data name="Tip_NeedLinkTranslateService" xml:space="preserve">
+    <value>你需要创建翻译配置</value>
+  </data>
+  <data name="Control_CustomComboItem.Content" xml:space="preserve">
+    <value>自定义</value>
+  </data>
+  <data name="Control_DefaultComboItem.Content" xml:space="preserve">
+    <value>默认</value>
+  </data>
+  <data name="Control_HomeChannelMenuItem.Text" xml:space="preserve">
+    <value>设为首页</value>
+  </data>
+  <data name="Control_ScreenChannelSettingTipBlock.Text" xml:space="preserve">
+    <value>首页频道</value>
   </data>
 </root>

@@ -42,9 +42,11 @@ namespace RSS_Stalker.Pages
         }
         public async void PageInit()
         {
-            string theme = AppTools.GetRoamingSetting(AppSettings.Theme, "Light");
-            string language = AppTools.GetRoamingSetting(AppSettings.Language, "zh_CN");
+            string theme = AppTools.GetRoamingSetting(AppSettings.Theme,"Light");
+            string language = AppTools.GetRoamingSetting(AppSettings.Language,"en_US");
             string oneDriveUserName = AppTools.GetLocalSetting(AppSettings.UserName, "");
+            bool isSyncWithStart = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.SyncWithStart, "False"));
+            bool isScreenChannel = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsScreenChannelCustom, "False"));
             if (theme == "Light")
                 ThemeComboBox.SelectedIndex = 0;
             else
@@ -53,6 +55,7 @@ namespace RSS_Stalker.Pages
                 LanguageComboBox.SelectedIndex = 0;
             else
                 LanguageComboBox.SelectedIndex = 1;
+            SyncWithStartSwitch.IsOn = isSyncWithStart;
             OneDriveNameTextBlock.Text = oneDriveUserName;
             ToastChannels.Clear();
             var toastList = await IOTools.GetNeedToastChannels();
@@ -63,6 +66,11 @@ namespace RSS_Stalker.Pages
                     ToastChannels.Add(item);
                 }
             }
+            if (isScreenChannel)
+                ScreenChannelComboBox.SelectedIndex = 1;
+            else
+                ScreenChannelComboBox.SelectedIndex = 0;
+            //TestRoamingTimeBlock.Text = AppTools.GetRoamingSetting(AppSettings.BasicUpdateTime, "1");
             _isInit = true;
         }
 
@@ -94,6 +102,9 @@ namespace RSS_Stalker.Pages
                 await App.OneDrive.Logout();
                 AppTools.WriteLocalSetting(AppSettings.UserName, "");
                 AppTools.WriteLocalSetting(AppSettings.BasicUpdateTime, "0");
+                AppTools.WriteLocalSetting(AppSettings.TodoUpdateTime, "0");
+                AppTools.WriteLocalSetting(AppSettings.StarUpdateTime, "0");
+                AppTools.WriteLocalSetting(AppSettings.ToastUpdateTime, "0");
                 AppTools.WriteLocalSetting(AppSettings.IsBindingOneDrive, "False");
                 var frame = Window.Current.Content as Frame;
                 frame.Navigate(typeof(OneDrivePage));
@@ -124,12 +135,12 @@ namespace RSS_Stalker.Pages
                     }
                     else
                     {
-                        new PopupToast(AppTools.GetReswLanguage("Tip_ImportError")).ShowPopup();
+                        new PopupToast(AppTools.GetReswLanguage("Tip_ImportError"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
                     }
                 }
                 catch (Exception ex)
                 {
-                    new PopupToast(ex.Message).ShowPopup();
+                    new PopupToast(ex.Message, AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
                 }
             }
             ImportOpmlButton.IsEnabled = true;
@@ -145,7 +156,7 @@ namespace RSS_Stalker.Pages
             {
                 var opml = new Opml(allList);
                 string content = opml.ToString();
-                string fileName = AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.UserName, "") + "_" + DateTime.Now.ToString("yyyyMMdd_HH_mm_ss") + ".opml";
+                string fileName = AppTools.GetLocalSetting(AppSettings.UserName, "") + "_" + DateTime.Now.ToString("yyyyMMdd_HH_mm_ss") + ".opml";
                 var file = await IOTools.GetSaveFile(".opml", fileName, "OPML File");
                 if (file != null)
                 {
@@ -155,7 +166,7 @@ namespace RSS_Stalker.Pages
             }
             catch (Exception)
             {
-                new PopupToast(AppTools.GetReswLanguage("Tip_ImportError")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_ImportError"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
             }
             ExportOpmlButton.IsEnabled = true;
             ExportOpmlButton.Content = AppTools.GetReswLanguage("Tip_Export");
@@ -211,7 +222,7 @@ namespace RSS_Stalker.Pages
             tasks.Add(star);
             tasks.Add(toast);
             await Task.WhenAll(tasks.ToArray());
-            string basicUpdateTime = AppTools.GetRoamingSetting(AppSettings.BasicUpdateTime, "1");
+            string basicUpdateTime = AppTools.GetRoamingSetting(AppSettings.BasicUpdateTime,"1");
             string todoUpdateTime = AppTools.GetRoamingSetting(AppSettings.TodoUpdateTime, "1");
             string starUpdateTime = AppTools.GetRoamingSetting(AppSettings.StarUpdateTime, "1");
             string toastUpdateTime = AppTools.GetRoamingSetting(AppSettings.ToastUpdateTime, "1");
@@ -234,6 +245,23 @@ namespace RSS_Stalker.Pages
         {
             var dialog = new BaiduTranslateDialog();
             await dialog.ShowAsync();
+        }
+
+        private void SyncWithStartSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (!_isInit)
+                return;
+            AppTools.WriteLocalSetting(AppSettings.SyncWithStart, SyncWithStartSwitch.IsOn.ToString());
+        }
+
+        private void ScreenChannelComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!_isInit)
+                return;
+            if (ScreenChannelComboBox.SelectedIndex == 0)
+                AppTools.WriteLocalSetting(AppSettings.IsScreenChannelCustom, "False");
+            else
+                AppTools.WriteLocalSetting(AppSettings.IsScreenChannelCustom, "True");
         }
     }
 }

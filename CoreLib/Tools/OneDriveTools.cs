@@ -6,7 +6,6 @@ using CoreLib.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -235,7 +234,7 @@ namespace CoreLib.Tools
                 using (var stream = await localFile.OpenReadAsync())
                 {
                     await _appFolder.StorageFolderPlatformService.CreateFileAsync("RssList.json", CreationCollisionOption.ReplaceExisting,stream);
-                    double time = AppTools.DateToTimeStamp(DateTime.Now.ToUniversalTime());
+                    double time = AppTools.DateToTimeStamp(DateTime.Now.ToLocalTime());
                     AppTools.WriteRoamingSetting(Enums.AppSettings.BasicUpdateTime, time.ToString());
                     AppTools.WriteLocalSetting(Enums.AppSettings.BasicUpdateTime, time.ToString());
                 }
@@ -261,7 +260,7 @@ namespace CoreLib.Tools
                 using (var stream = await localFile.OpenReadAsync())
                 {
                     await _appFolder.StorageFolderPlatformService.CreateFileAsync("TodoList.json", CreationCollisionOption.ReplaceExisting, stream);
-                    double time = AppTools.DateToTimeStamp(DateTime.Now.ToUniversalTime());
+                    double time = AppTools.DateToTimeStamp(DateTime.Now.ToLocalTime());
                     AppTools.WriteRoamingSetting(Enums.AppSettings.TodoUpdateTime, time.ToString());
                     AppTools.WriteLocalSetting(Enums.AppSettings.TodoUpdateTime, time.ToString());
                 }
@@ -287,7 +286,7 @@ namespace CoreLib.Tools
                 using (var stream = await localFile.OpenReadAsync())
                 {
                     await _appFolder.StorageFolderPlatformService.CreateFileAsync("StarList.json", CreationCollisionOption.ReplaceExisting, stream);
-                    double time = AppTools.DateToTimeStamp(DateTime.Now.ToUniversalTime());
+                    double time = AppTools.DateToTimeStamp(DateTime.Now.ToLocalTime());
                     AppTools.WriteRoamingSetting(Enums.AppSettings.StarUpdateTime, time.ToString());
                     AppTools.WriteLocalSetting(Enums.AppSettings.StarUpdateTime, time.ToString());
                 }
@@ -313,7 +312,7 @@ namespace CoreLib.Tools
                 using (var stream = await localFile.OpenReadAsync())
                 {
                     await _appFolder.StorageFolderPlatformService.CreateFileAsync("ToastList.json", CreationCollisionOption.ReplaceExisting, stream);
-                    double time = AppTools.DateToTimeStamp(DateTime.Now.ToUniversalTime());
+                    double time = AppTools.DateToTimeStamp(DateTime.Now.ToLocalTime());
                     AppTools.WriteRoamingSetting(Enums.AppSettings.ToastUpdateTime, time.ToString());
                     AppTools.WriteLocalSetting(Enums.AppSettings.ToastUpdateTime, time.ToString());
                 }

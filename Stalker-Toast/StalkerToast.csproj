@@ -141,6 +141,10 @@
       <Project>{17597ec3-55fa-40db-a312-7c4f488492ea}</Project>
       <Name>CoreLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rss\Rss.csproj">
+      <Project>{BB559A76-7471-486F-8E58-88C55ED2E466}</Project>
+      <Name>Rss</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

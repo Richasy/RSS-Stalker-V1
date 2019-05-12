@@ -14,8 +14,9 @@
     <SolidColorBrush x:Key="PrimaryColor" Color="#208CF7"/>
     <SolidColorBrush x:Key="PrimaryInsideColor" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="PrimaryColorOver" Color="#1D81E3"/>
-    <SolidColorBrush x:Key="SpecialColor" Color="#DF253B"/>
-    <SolidColorBrush x:Key="SpecialColorOver" Color="#C92135"/>
+    <SolidColorBrush x:Key="SpecialColor" Color="#EE791C"/>
+    <SolidColorBrush x:Key="SpecialColorOver" Color="#EE731D"/>
+    <SolidColorBrush x:Key="ErrorColor" Color="#DE1651"/>
     <SolidColorBrush x:Key="LineColor" Color="#2E2E2E"/>
     <SolidColorBrush x:Key="LineColorOver" Color="#4A4A4A"/>
     <SolidColorBrush x:Key="PrimaryMenuOverBackground" Color="#404040" Opacity="0.6"/>

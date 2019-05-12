@@ -21,15 +21,15 @@
                 <TextBlock Text="{Binding}" FontFamily="{StaticResource Icon}" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             </Border>
         </DataTemplate>
-        <Flyout FlyoutPresenterStyle="{StaticResource BasicFlyoutStyle}" x:Key="IconFlyout">
+        <Flyout FlyoutPresenterStyle="{StaticResource BasicFlyoutStyle}" x:Key="IconFlyout" x:Name="IconFlyout">
             <GridView x:Name="IconGridView"
-                      ItemContainerStyle="{StaticResource BasicGridViewItemContainerStyle}"
+                      ItemContainerStyle="{StaticResource ThinGridViewItemContainerStyle}"
                       Style="{StaticResource BasicGridView}"
                       ItemTemplate="{StaticResource IconItemTemplate}"
                       MaxWidth="300"
                       Margin="5,0,0,0"
                       MaxHeight="200"
-                      ItemsSource="{x:Bind local:AddCategoryDialog.Current.IconCollection}"
+                      ItemsSource="{x:Bind local:ModifyCategoryDialog.Current.IconCollection}"
                       IsItemClickEnabled="True"
                       ItemClick="IconGridView_ItemClick"
                       HorizontalAlignment="Center"

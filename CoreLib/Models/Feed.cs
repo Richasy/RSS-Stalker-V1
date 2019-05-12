@@ -1,5 +1,5 @@
-﻿using Microsoft.Toolkit.Parsers.Rss;
-using CoreLib.Tools;
+﻿using CoreLib.Tools;
+using Rss.Parsers.Rss;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

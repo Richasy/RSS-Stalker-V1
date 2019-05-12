@@ -121,6 +121,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Enums\AppSettings.cs" />
+    <Compile Include="Models\SyncConfig.cs" />
+    <Compile Include="Models\SyncModel.cs" />
     <Compile Include="Models\Body.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Channel.cs" />
@@ -129,6 +131,7 @@
     <Compile Include="Models\Head.cs" />
     <Compile Include="Models\Opml.cs" />
     <Compile Include="Models\Outline.cs" />
+    <Compile Include="Models\WebNotify.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\AppTools.cs" />
     <Compile Include="Tools\OneDriveTools.cs" />
@@ -150,6 +153,12 @@
     <PackageReference Include="System.Net.Http">
       <Version>4.3.4</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rss\Rss.csproj">
+      <Project>{BB559A76-7471-486F-8E58-88C55ED2E466}</Project>
+      <Name>Rss</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

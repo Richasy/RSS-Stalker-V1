@@ -1,0 +1,12 @@
+﻿You have updated to the new version.
+
+The new version has been revised as follows:
+
+1. Provide translation of the word in the article, and people who read the other language article can be cool.
+2. You can set your favorite channel as the home page, and the entry is in the channel's right-click menu.
+3. Fixed the performance of the <pre> tag. Now the code block can be displayed normally. If the <pre> tag identifies the language, it can also be highlighted by syntax.
+4. Adjusted the visual performance of other article lists in the article details page to avoid button occlusion articles
+
+---
+
+That's all, good luck.

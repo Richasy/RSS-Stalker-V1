@@ -19,13 +19,13 @@
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
     <ContentDialog.Resources>
         <DataTemplate x:DataType="models:Category" x:Key="CategoryItemTemplate">
-            <Grid Padding="5,5,0,5">
+            <Grid Padding="15,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="{x:Bind Icon}" FontFamily="{StaticResource Icon}" FontSize="15" VerticalAlignment="Center"/>
-                <TextBlock Text="{x:Bind Name}" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource PrimaryMenuTextColor}" FontSize="12" VerticalAlignment="Center" Grid.Column="1" Margin="10,0" TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{x:Bind Icon}" FontFamily="{StaticResource Icon}" FontSize="16" VerticalAlignment="Center"/>
+                <TextBlock Text="{x:Bind Name}" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource PrimaryMenuTextColor}" FontSize="13" VerticalAlignment="Center" Grid.Column="1" Margin="10,0" TextTrimming="CharacterEllipsis" />
             </Grid>
         </DataTemplate>
     </ContentDialog.Resources>

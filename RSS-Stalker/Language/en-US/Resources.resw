@@ -426,4 +426,52 @@
   <data name="Tip_TranslateFailed" xml:space="preserve">
     <value>Translate failed</value>
   </data>
+  <data name="Tip_UpdateTip" xml:space="preserve">
+    <value>Update Description</value>
+  </data>
+  <data name="Control_CardMenuItem.Text" xml:space="preserve">
+    <value>Card</value>
+  </data>
+  <data name="Control_ForceSyncTipBlock.Text" xml:space="preserve">
+    <value>Force Sync</value>
+  </data>
+  <data name="Control_ListMenuItem.Text" xml:space="preserve">
+    <value>List</value>
+  </data>
+  <data name="Control_SyncWithStartTipBlock.Text" xml:space="preserve">
+    <value>Sync on Start</value>
+  </data>
+  <data name="Control_WaterfallMenuItem.Text" xml:space="preserve">
+    <value>Waterfall</value>
+  </data>
+  <data name="Tip_Copied" xml:space="preserve">
+    <value>Copied</value>
+  </data>
+  <data name="Tip_Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="Tip_ImageView" xml:space="preserve">
+    <value>Image View</value>
+  </data>
+  <data name="Tip_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Tip_Saved" xml:space="preserve">
+    <value>Saved</value>
+  </data>
+  <data name="Tip_NeedLinkTranslateService" xml:space="preserve">
+    <value>You need build translate config first.</value>
+  </data>
+  <data name="Control_CustomComboItem.Content" xml:space="preserve">
+    <value>Custom</value>
+  </data>
+  <data name="Control_DefaultComboItem.Content" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="Control_HomeChannelMenuItem.Text" xml:space="preserve">
+    <value>Home Channel</value>
+  </data>
+  <data name="Control_ScreenChannelSettingTipBlock.Text" xml:space="preserve">
+    <value>Home page</value>
+  </data>
 </root>

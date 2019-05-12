@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using RSS_Stalker.Tools;
+using System.Threading.Tasks;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 
@@ -51,15 +52,26 @@ namespace RSS_Stalker.Dialog
                 IsPrimaryButtonEnabled = false;
                 PrimaryButtonText = AppTools.GetReswLanguage("Tip_Waiting");
                 var cate = new Category(name, icon);
-                await IOTools.AddCategory(cate);
-                new PopupToast(AppTools.GetReswLanguage("Tip_AddCategorySuccess")).ShowPopup();
-                MainPage.Current.Categories.Add(cate);
-                MainPage.Current._categoryListCount += 1;
-                Hide();
+                try
+                {
+                    await IOTools.AddCategory(cate);
+                }
+                catch (Exception)
+                {
+                    await Task.Delay(1000);
+                    await IOTools.AddCategory(cate);
+                }
+                finally
+                {
+                    new PopupToast(AppTools.GetReswLanguage("Tip_AddCategorySuccess")).ShowPopup();
+                    MainPage.Current.Categories.Add(cate);
+                    MainPage.Current._categoryListCount += 1;
+                    Hide();
+                }
             }
             else
             {
-                new PopupToast(AppTools.GetReswLanguage("Tip_FieldEmpty")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_FieldEmpty"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
             }
         }
 

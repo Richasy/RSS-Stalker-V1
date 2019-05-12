@@ -25,6 +25,11 @@
                     <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE996;"/>
                 </MenuFlyoutItem.Icon>
             </MenuFlyoutItem>
+            <MenuFlyoutItem x:Uid="Control_HomeChannelMenuItem" FontFamily="{StaticResource Basic}" Name="HomeChannelMenuItem" Click="HomeChannelMenuItem_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE97C;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="Control_DeleteMenuItem" FontFamily="{StaticResource Basic}" Name="DeleteChannelMenuItem" Click="DeleteChannelMenuItem_Click">
                 <MenuFlyoutItem.Icon>
@@ -66,7 +71,7 @@
             </Grid>
         </DataTemplate>
     </Page.Resources>
-    <Grid>
+    <Grid Name="RootGrid" x:FieldModifier="Public">
         <SplitView Style="{StaticResource BasicSplitViewStyle}" Name="AppSplitView" DisplayMode="CompactInline" IsPaneOpen="True" OpenPaneLength="550" CompactPaneLength="50">
             <SplitView.Pane>
                 <Grid>
@@ -149,7 +154,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" Name="MinsizeHeaderContainer" Padding="30,0" Height="60" BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,0,1">
-                    <Button Style="{StaticResource GhostCircleButtonStyle}" Name="MenuButton" Click="MenuButton_Click" Content="&#xE994;" VerticalAlignment="Center" FontFamily="{StaticResource Icon}" Width="35" Height="35" FontSize="18"/>
+                    <Button Style="{StaticResource GhostCircleButtonStyle}" Name="MenuButton" x:FieldModifier="Public" Click="MenuButton_Click" Content="&#xE994;" VerticalAlignment="Center" FontFamily="{StaticResource Icon}" Width="35" Height="35" FontSize="18"/>
                     <TextBlock TextTrimming="CharacterEllipsis" FontFamily="{StaticResource Basic}" Name="CategoryNameTextBlock" VerticalAlignment="Center" FontSize="15" Margin="15,0,0,0"/>
                 </StackPanel>
                 <Frame Name="MainFrame" x:FieldModifier="Public" Grid.Row="1"/>

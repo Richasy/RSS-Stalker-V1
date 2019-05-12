@@ -23,7 +23,7 @@
         </DataTemplate>
         <Flyout FlyoutPresenterStyle="{StaticResource BasicFlyoutStyle}" x:Key="IconFlyout" x:Name="IconFlyout">
             <GridView x:Name="IconGridView"
-                      ItemContainerStyle="{StaticResource BasicGridViewItemContainerStyle}"
+                      ItemContainerStyle="{StaticResource ThinGridViewItemContainerStyle}"
                       Style="{StaticResource BasicGridView}"
                       ItemTemplate="{StaticResource IconItemTemplate}"
                       MaxWidth="300"

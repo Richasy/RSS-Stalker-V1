@@ -17,6 +17,12 @@ namespace CoreLib.Enums
         IsBindingOneDrive,
         UserName,
         Translate_BaiduAppId,
-        Translate_BaiduKey
+        Translate_BaiduKey,
+        AppVersion,
+        FeedLayoutType,
+        SyncWithStart,
+        LastSyncTime,
+        IsScreenChannelCustom,
+        ScreenChannel,
     }
 }

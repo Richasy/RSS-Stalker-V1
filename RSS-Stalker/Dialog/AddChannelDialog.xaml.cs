@@ -52,7 +52,7 @@ namespace RSS_Stalker.Dialog
                 {
                     if (selectCategory.Channels.Any(c => c.Link.ToLower() == _sourceChannel.Link))
                     {
-                        new PopupToast(AppTools.GetReswLanguage("Tip_ChannelRepeat")).ShowPopup();
+                        new PopupToast(AppTools.GetReswLanguage("Tip_ChannelRepeat"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
                         return;
                     }
                     else
@@ -60,22 +60,33 @@ namespace RSS_Stalker.Dialog
                         IsPrimaryButtonEnabled = false;
                         PrimaryButtonText = AppTools.GetReswLanguage("Tip_Waiting");
                         selectCategory.Channels.Add(_sourceChannel);
-                        await IOTools.UpdateCategory(selectCategory);
-                        MainPage.Current.Channels.Add(_sourceChannel);
-                        MainPage.Current._channelListCount += 1;
-                        new PopupToast(AppTools.GetReswLanguage("Tip_AddChannelSuccess")).ShowPopup();
-                        Hide();
+                        try
+                        {
+                            await IOTools.UpdateCategory(selectCategory);
+                        }
+                        catch (Exception)
+                        {
+                            await Task.Delay(1000);
+                            await IOTools.UpdateCategory(selectCategory);
+                        }
+                        finally
+                        {
+                            MainPage.Current.Channels.Add(_sourceChannel);
+                            MainPage.Current._channelListCount += 1;
+                            new PopupToast(AppTools.GetReswLanguage("Tip_AddChannelSuccess")).ShowPopup();
+                            Hide();
+                        }
                     }
                 }
                 else
                 {
-                    new PopupToast(AppTools.GetReswLanguage("Tip_NoCategorySelected")).ShowPopup();
+                    new PopupToast(AppTools.GetReswLanguage("Tip_NoCategorySelected"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
                     return;
                 }
             }
             else
             {
-                new PopupToast(AppTools.GetReswLanguage("Tip_TryLinkFirst")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_TryLinkFirst"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
             }
         }
 
@@ -93,7 +104,7 @@ namespace RSS_Stalker.Dialog
             string link = ChannelLinkTextBox.Text.Trim();
             if (string.IsNullOrEmpty(link))
             {
-                new PopupToast(AppTools.GetReswLanguage("Tip_FieldEmpty")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_FieldEmpty"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
             }
             else
             {
@@ -117,7 +128,7 @@ namespace RSS_Stalker.Dialog
                     {
                         SearchResultContainer.Visibility = Visibility.Collapsed;
                         FeedlyResults.Clear();
-                        new PopupToast(AppTools.GetReswLanguage("Tip_NoData")).ShowPopup();
+                        new PopupToast(AppTools.GetReswLanguage("Tip_NoData"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
                     }
                 }
                 else
@@ -139,7 +150,7 @@ namespace RSS_Stalker.Dialog
                     {
                         LoadingRing.IsActive = false;
                         TryLinkButton.IsEnabled = true;
-                        new PopupToast(AppTools.GetReswLanguage("App_InvalidUrl")).ShowPopup();
+                        new PopupToast(AppTools.GetReswLanguage("App_InvalidUrl"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
                     }
                 }
             }

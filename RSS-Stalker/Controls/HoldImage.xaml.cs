@@ -31,6 +31,19 @@ namespace RSS_Stalker.Controls
             get => _imageLink;
             set { _imageLink = value; OnPropertyChanged(); }
         }
+
+
+        public Stretch Stretch
+        {
+            get { return (Stretch)GetValue(StretchProperty); }
+            set { SetValue(StretchProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Stretch.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty StretchProperty =
+            DependencyProperty.Register("Stretch", typeof(Stretch), typeof(HoldImage), new PropertyMetadata(Stretch.UniformToFill));
+
+
         private BitmapImage _holderImage;
         /// <summary>
         /// 占位图片

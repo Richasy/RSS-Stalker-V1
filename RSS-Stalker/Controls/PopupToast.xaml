@@ -61,13 +61,15 @@
 
     <Grid>
 
-        <StackPanel Background="{ThemeResource PrimaryColor}"
+        <StackPanel Background="{x:Bind FlyoutBackground,Mode=OneWay}"
                     CornerRadius="3"
                     Padding="10"
                     MaxWidth="300"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Bottom"
                     Name="PopupContainer"
+                    PointerEntered="PopupContainer_PointerEntered"
+                    PointerExited="PopupContainer_PointerExited"
                     Opacity="0">
 
             <!--改变Y轴和透明底-->

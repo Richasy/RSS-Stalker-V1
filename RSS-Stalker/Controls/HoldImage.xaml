@@ -13,7 +13,7 @@
     <Grid>
         <controls:ImageEx x:Name="ImageBlock"
                           IsCacheEnabled="True"
-                          Stretch="UniformToFill"
+                          Stretch="{x:Bind Stretch,Mode=OneWay}"
                           Source="{x:Bind ImageLink,Mode=OneWay}"
                           PlaceholderSource="{x:Bind HolderImage,Mode=OneWay}"
                           PlaceholderStretch="Fill"

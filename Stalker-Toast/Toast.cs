@@ -22,6 +22,7 @@ namespace StalkerToast
             var toastList = await GetNeedToastChannels();
             var historyList = await GetToastHistory();
             var tasks = new List<Task>();
+            var readList = await GetAlreadyReadFeed();
             foreach (var t in toastList)
             {
 
@@ -35,17 +36,24 @@ namespace StalkerToast
                             string title = t.Name;
                             string content = string.Empty;
                             var history = historyList.Where(h => h.ChannelId == t.Id).FirstOrDefault();
+                            var first = items.First();
                             if (history == null)
                             {
-                                historyList.Add(new ChannelTarget() { ChannelId = t.Id, LastArticleId = items.First().InternalID });
-                                content = items.First().Title;
+                                historyList.Add(new ChannelTarget() { ChannelId = t.Id, LastArticleId = first.InternalID });
+                                if (!readList.Any(p => p.InternalID == first.InternalID))
+                                {
+                                    content = first.Title;
+                                }
                             }
                             else
                             {
-                                if (items.First().InternalID != history.LastArticleId)
+                                if (first.InternalID != history.LastArticleId)
                                 {
-                                    content = items.First().Title;
-                                    history.LastArticleId = items.First().InternalID;
+                                    if (!readList.Any(p => p.InternalID == first.InternalID))
+                                    {
+                                        content = first.Title;
+                                        history.LastArticleId = first.InternalID;
+                                    }
                                 }
                             }
                             if (!string.IsNullOrEmpty(content))
@@ -75,6 +83,22 @@ namespace StalkerToast
                 ToastNotification notification = new ToastNotification(toastXml);
                 ToastNotificationManager.CreateToastNotifier().Show(notification);
             }
+        }
+        /// <summary>
+        /// 获取已读文章
+        /// </summary>
+        /// <returns></returns>
+        private async Task<List<Feed>> GetAlreadyReadFeed()
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("AlreadyReadList.json", CreationCollisionOption.OpenIfExists);
+            string text = await FileIO.ReadTextAsync(file);
+            if (string.IsNullOrEmpty(text))
+            {
+                text = "[]";
+            }
+            var list = JsonConvert.DeserializeObject<List<Feed>>(text);
+            return list;
         }
         private async Task<List<Channel>> GetNeedToastChannels()
         {

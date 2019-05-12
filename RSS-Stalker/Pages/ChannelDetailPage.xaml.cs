@@ -1,5 +1,4 @@
-﻿using Microsoft.Toolkit.Parsers.Rss;
-using RSS_Stalker.Controls;
+﻿using RSS_Stalker.Controls;
 using CoreLib.Models;
 using CoreLib.Tools;
 using System;
@@ -39,6 +38,7 @@ namespace RSS_Stalker.Pages
         {
             this.InitializeComponent();
             Current = this;
+            
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -47,6 +47,7 @@ namespace RSS_Stalker.Pages
                 if(e.Parameter is Channel)
                 {
                     await UpdateLayout(e.Parameter as Channel);
+                    ChangeLayout();
                 }
                 else if(e.Parameter is List<Feed>)
                 {
@@ -61,10 +62,10 @@ namespace RSS_Stalker.Pages
                             SchemaCollection.Add(item);
                         }
                     }
+                    ChangeLayout();
                 }
             }
         }
-
         public async Task UpdateLayout(Channel channel)
         {
             LoadingRing.IsActive = true;
@@ -102,7 +103,7 @@ namespace RSS_Stalker.Pages
             }
             else
             {
-                new PopupToast(AppTools.GetReswLanguage("App_InvalidUrl")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("App_InvalidUrl"),AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
             }
         }
 
@@ -115,7 +116,7 @@ namespace RSS_Stalker.Pages
             }
             else
             {
-                new PopupToast(AppTools.GetReswLanguage("App_InvalidUrl")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("App_InvalidUrl"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
             }
         }
 
@@ -147,6 +148,65 @@ namespace RSS_Stalker.Pages
         private async void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
             await UpdateLayout(_sourceData);
+        }
+
+        private void SwitchLayoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            //FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+        }
+        private void ChangeLayout()
+        {
+            string name = AppTools.GetRoamingSetting(CoreLib.Enums.AppSettings.FeedLayoutType, "All");
+            if (name == "All")
+            {
+                FeedGridView.Visibility = Visibility.Visible;
+                FeedListView.Visibility = Visibility.Collapsed;
+                FeedGridView.ItemTemplate = FeedWaterfallItemTemplate;
+                Waterfall.IsChecked = true;
+            }
+            else if (name == "Card")
+            {
+                FeedGridView.Visibility = Visibility.Visible;
+                FeedListView.Visibility = Visibility.Collapsed;
+                FeedGridView.ItemTemplate = FeedCardItemTemplate;
+                Card.IsChecked = true;
+            }
+            else
+            {
+                FeedGridView.Visibility = Visibility.Collapsed;
+                FeedListView.Visibility = Visibility.Visible;
+                List.IsChecked = true;
+            }
+        }
+        private void LayoutMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            string name = (sender as ToggleMenuFlyoutItem).Name;
+            switch (name)
+            {
+                case "Waterfall":
+                    name = "All";
+                    Card.IsChecked = false;
+                    List.IsChecked = false;
+                    break;
+                case "Card":
+                    Waterfall.IsChecked = false;
+                    List.IsChecked = false;
+                    break;
+                case "List":
+                    Card.IsChecked = false;
+                    Waterfall.IsChecked = false;
+                    break;
+                default:
+                    name = "All";
+                    break;
+            }
+            string oldLayout = AppTools.GetRoamingSetting(CoreLib.Enums.AppSettings.FeedLayoutType, "All");
+            if (oldLayout != name)
+            {
+                AppTools.WriteRoamingSetting(CoreLib.Enums.AppSettings.FeedLayoutType, name);
+                ChangeLayout();
+            }
+            
         }
     }
 }

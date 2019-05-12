@@ -20,6 +20,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using RSS_Stalker.Pages;
 
 namespace RSS_Stalker
 {
@@ -39,7 +40,7 @@ namespace RSS_Stalker
             ChangeLanguage();
             this.InitializeComponent();
             this.Suspending += OnSuspending;
-            RequestedTheme = AppTools.GetRoamingSetting(AppSettings.Theme, "Light") == "Light" ? ApplicationTheme.Light : ApplicationTheme.Dark;
+            RequestedTheme = AppTools.GetRoamingSetting(AppSettings.Theme,"Light") == "Light" ? ApplicationTheme.Light : ApplicationTheme.Dark;
             UnhandledException += UnhandleExceptionHandle;
         }
 
@@ -47,11 +48,11 @@ namespace RSS_Stalker
         {
             e.Handled = true;
             string msg = e.Exception.Message;
-            new PopupToast(msg).ShowPopup();
+            new PopupToast(msg, AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
         }
         private void ChangeLanguage()
         {
-            string lan = AppTools.GetRoamingSetting(AppSettings.Language, "");
+            string lan = AppTools.GetRoamingSetting(AppSettings.Language,"en_US");
 
             if (lan == "")
             {
@@ -81,7 +82,7 @@ namespace RSS_Stalker
                     AppTools.WriteRoamingSetting(AppSettings.Language, "en_US");
                 }
             }
-            lan = AppTools.GetRoamingSetting(AppSettings.Language, "zh_CN");
+            lan = AppTools.GetRoamingSetting(AppSettings.Language,"en_US");
             string code = "";
             switch (lan)
             {
@@ -156,8 +157,8 @@ namespace RSS_Stalker
         /// <param name="e">有关启动请求和过程的详细信息。</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            
             Frame rootFrame = Window.Current.Content as Frame;
-
             // 不要在窗口已包含内容时重复应用程序初始化，
             // 只需确保窗口处于活动状态
             if (rootFrame == null)
@@ -175,7 +176,7 @@ namespace RSS_Stalker
                 // 将框架放在当前窗口中
                 Window.Current.Content = rootFrame;
             }
-
+            
             if (e.PrelaunchActivated == false)
             {
                 if (rootFrame.Content == null)
@@ -184,10 +185,23 @@ namespace RSS_Stalker
                     // 并通过将所需信息作为导航参数传入来配置
                     // 参数
                     bool isBinding = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsBindingOneDrive, "False"));
+                    bool isSyncOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.SyncWithStart, "False"));
                     if (isBinding)
-                        rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    {
+                        if (isSyncOneDrive)
+                        {
+                            double lastTime = Convert.ToDouble(AppTools.GetLocalSetting(AppSettings.LastSyncTime, "0"));
+                            double now = AppTools.DateToTimeStamp(DateTime.Now.ToLocalTime());
+                            if (now - 10800 > lastTime)
+                                rootFrame.Navigate(typeof(SplashPage));
+                            else
+                                rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                        }  
+                        else
+                            rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    }
                     else
-                        rootFrame.Navigate(typeof(Pages.OneDrivePage));
+                        rootFrame.Navigate(typeof(OneDrivePage));
                 }
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();

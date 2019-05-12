@@ -17,6 +17,7 @@
     <SolidColorBrush x:Key="PrimaryColorOver" Color="#2940B0"/>
     <SolidColorBrush x:Key="SpecialColor" Color="#594AAD"/>
     <SolidColorBrush x:Key="SpecialColorOver" Color="#413296"/>
+    <SolidColorBrush x:Key="ErrorColor" Color="#F6525D"/>
     <SolidColorBrush x:Key="LineColor" Color="#E4E4E4"/>
     <SolidColorBrush x:Key="LineColorOver" Color="#C4C4C4"/>
     <SolidColorBrush x:Key="PrimaryMenuOverBackground" Color="#FFFFFF" Opacity="0.6"/>

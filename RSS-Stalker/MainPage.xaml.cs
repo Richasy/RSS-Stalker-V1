@@ -41,11 +41,27 @@ namespace RSS_Stalker
         public List<Feed> TodoList = new List<Feed>();
         public List<Feed> StarList = new List<Feed>();
         public List<Channel> ToastList = new List<Channel>();
+        public bool _isFromTimeline = false;
         public static MainPage Current;
+        /// <summary>
+        /// 分类列表数量标识，在进行数据替换和拖放排序时作为参照。在清空列表前，一定要将该标识设为-1
+        /// </summary>
         public int _categoryListCount = -1;
+        /// <summary>
+        /// 频道列表数量标识，在进行数据替换和拖放排序时作为参照。在清空列表前，一定要将该标识设为-1
+        /// </summary>
         public int _channelListCount = -1;
+        /// <summary>
+        /// 呼出右键菜单时记录的目标频道
+        /// </summary>
         private Channel _tempChannel;
+        /// <summary>
+        /// 呼出右键菜单时记录的目标分类
+        /// </summary>
         private Category _tempCategory;
+        /// <summary>
+        /// 检测同步的计时器（由于RoamingSettings的不即时性，当前已弃用该功能）
+        /// </summary>
         private DispatcherTimer _checkUpdateTimer=new DispatcherTimer();
         private bool _isInit = false;
         private bool _isTodoButtonClick = false;
@@ -56,7 +72,13 @@ namespace RSS_Stalker
             Window.Current.SetTitleBar(TitleBarControl);
             PageInit();
         }
-
+        /// <summary>
+        /// 分类排序时的检测
+        /// 基本原理就是，若当前数据源的数量发生变化时（拖放排序本质上是先删除后插入），进行数据跟踪，若数据集合的数目
+        /// 最终与标识符一致时，判定为排序完成，此时记录当前列表的顺序，并进行数据同步
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void CategoryCollectionReordered(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (!_isInit)
@@ -86,14 +108,28 @@ namespace RSS_Stalker
                 await IOTools.ReplaceCategory(Categories.ToList(), true);
             }
         }
-
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if(e.Parameter !=null && e.Parameter is string)
+            {
+                string type = e.Parameter as string;
+                if(type=="Timeline")
+                    _isFromTimeline = true;
+            }
+        }
+        /// <summary>
+        /// 页面准备
+        /// </summary>
         private async void PageInit()
         {
             AppTools.SetTitleBarColor();
             AppTitleBlock.Text = AppTools.GetReswLanguage("DisplayName");
+            // 监听集合变化
             Categories.CollectionChanged += CategoryCollectionReordered;
             Channels.CollectionChanged += ChannelCollectionReordered;
+            // 获取本地保存的订阅源副本
             var categories = await IOTools.GetLocalCategories();
+            // 清空列表前将标识符设置为-1
             _categoryListCount = -1;
             _channelListCount = -1;
             Channels.Clear();
@@ -109,21 +145,40 @@ namespace RSS_Stalker
             }
             else
             {
-                SelectChannelByCustom();
+                if(!_isFromTimeline)
+                    SelectChannelByCustom();
+                else
+                {
+                    var cat= Categories.First();
+                    CategoryListView.SelectedItem = cat;
+                    foreach (var item in cat.Channels)
+                    {
+                        Channels.Add(item);
+                    }
+                }
             }
+            // 在完成列表装载后，将列表的数量重新赋值给标识符
             _categoryListCount = Categories.Count;
             _channelListCount = Channels.Count;
+            // 完成OneDrive的数据链接
             await App.OneDrive.OneDriveAuthorize();
-            TimerInit();
+            // TimerInit();
             TodoList = await IOTools.GetLocalTodoReadList();
             StarList = await IOTools.GetLocalStarList();
             ToastList = await IOTools.GetNeedToastChannels();
+            // 注册后台
             RegisterBackground();
+            // 检查版本更新
             await CheckVersion();
+            // 注册快捷键
             Window.Current.Dispatcher.AcceleratorKeyActivated += AccelertorKeyActivedHandle;
             _isInit = true;
         }
-
+        /// <summary>
+        /// 快捷键注册
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void AccelertorKeyActivedHandle(CoreDispatcher sender, AcceleratorKeyEventArgs args)
         {
             if (args.EventType.ToString().Contains("Down"))
@@ -138,21 +193,30 @@ namespace RSS_Stalker
                 }
             }
         }
-
+        /// <summary>
+        /// 后台注册
+        /// </summary>
         private void RegisterBackground()
         {
-            BackgroundTaskRegistration registered = BackgroundTaskHelper.Register(typeof(StalkerToast.Toast),
+            BackgroundTaskHelper.Register(typeof(StalkerToast.Toast),
                                     new TimeTrigger(15, true),
                                     false, true,
                                     new SystemCondition(SystemConditionType.InternetAvailable));
         }
+        /// <summary>
+        /// 暂时弃用
+        /// </summary>
         private void TimerInit()
         {
             _checkUpdateTimer.Interval = new TimeSpan(0, 0, 30);
             _checkUpdateTimer.Tick += CheckRssListUpdate;
             _checkUpdateTimer.Start();
         }
-
+        /// <summary>
+        /// 检查同步，暂时弃用
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void CheckRssListUpdate(object sender, object e)
         {
             string localBasicTime = AppTools.GetLocalSetting(AppSettings.BasicUpdateTime, "0");
@@ -215,6 +279,10 @@ namespace RSS_Stalker
                 new PopupToast(AppTools.GetReswLanguage("Tip_Updated")).ShowPopup();
             }
         }
+        /// <summary>
+        /// 替换整个分类及频道列表，替换完成后，恢复之前的状态
+        /// </summary>
+        /// <param name="list">分类列表</param>
         public void ReplaceList(List<Category> list)
         {
             string roamTime = AppTools.GetRoamingSetting(AppSettings.BasicUpdateTime, "1");
@@ -250,12 +318,20 @@ namespace RSS_Stalker
             _channelListCount = Channels.Count;
             AppTools.WriteLocalSetting(AppSettings.BasicUpdateTime, roamTime);
         }
+        /// <summary>
+        /// 离开页面前注销计时器
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            _checkUpdateTimer.Stop();
+            //_checkUpdateTimer.Stop();
             _checkUpdateTimer = null;
             base.OnNavigatedFrom(e);
         }
+        /// <summary>
+        /// 检查版本更新，并弹出更新通告
+        /// </summary>
+        /// <returns></returns>
         private async Task CheckVersion()
         {
             try
@@ -382,7 +458,11 @@ namespace RSS_Stalker
             var dialog = new ModifyChannelDialog(_tempChannel);
             await dialog.ShowAsync();
         }
-
+        /// <summary>
+        /// 删除当前频道
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void DeleteChannelMenuItem_Click(object sender, RoutedEventArgs e)
         {
             var confirmDialog = new ConfirmDialog(AppTools.GetReswLanguage("Tip_DeleteWarning"), AppTools.GetReswLanguage("Tip_DeleteChannelWarning"));
@@ -409,7 +489,7 @@ namespace RSS_Stalker
                 }
                 else
                 {
-                    new PopupToast(AppTools.GetReswLanguage("Tip_NoCategorySelected"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                    new PopupToast(AppTools.GetReswLanguage("Tip_NoCategorySelected"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
                 }
             };
             await confirmDialog.ShowAsync();
@@ -468,7 +548,7 @@ namespace RSS_Stalker
                 }
                 else
                 {
-                    new PopupToast(AppTools.GetReswLanguage("Tip_NoCategorySelected"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                    new PopupToast(AppTools.GetReswLanguage("Tip_NoCategorySelected"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
                 }
             };
             await confirmDialog.ShowAsync();
@@ -562,7 +642,7 @@ namespace RSS_Stalker
         {
             if (ToastList.Any(p => p.Link == _tempChannel.Link || p.Id==_tempChannel.Id))
             {
-                new PopupToast(AppTools.GetReswLanguage("Tip_ToastRepeat"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_ToastRepeat"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
             else
             {
@@ -571,6 +651,9 @@ namespace RSS_Stalker
                 new PopupToast(AppTools.GetReswLanguage("Tip_Added")).ShowPopup();
             }
         }
+        /// <summary>
+        /// 在应用启动时导航到指定频道
+        /// </summary>
         public void SelectChannelByCustom()
         {
             bool IsCustomHome = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsScreenChannelCustom, "False"));

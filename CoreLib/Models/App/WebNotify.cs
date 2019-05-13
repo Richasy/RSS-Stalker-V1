@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Models
 {
+    /// <summary>
+    /// 与网页交互的数据结构
+    /// </summary>
     public class WebNotify
     {
         public string Key { get; set; }

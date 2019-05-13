@@ -20,6 +20,9 @@ namespace RSS_Stalker.Dialog
 {
     public sealed partial class ConfirmDialog : ContentDialog
     {
+        /// <summary>
+        /// 带确认按钮的对话框
+        /// </summary>
         public ConfirmDialog()
         {
             this.InitializeComponent();
@@ -30,6 +33,14 @@ namespace RSS_Stalker.Dialog
         {
             Title = title;
             ConfirmTextBlock.Text = content;
+        }
+        public ConfirmDialog(string title, string content,string primaryButtonText="",string secondaryButtonText="",string closeButtonText="") : this()
+        {
+            Title = title;
+            ConfirmTextBlock.Text = content;
+            PrimaryButtonText = primaryButtonText;
+            SecondaryButtonText = secondaryButtonText;
+            CloseButtonText = closeButtonText;
         }
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)

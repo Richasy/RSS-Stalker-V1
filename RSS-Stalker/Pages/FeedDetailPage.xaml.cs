@@ -38,6 +38,9 @@ namespace RSS_Stalker.Pages
         private UserActivitySession _currentActivity;
         public static FeedDetailPage Current;
         private string _selectText;
+        /// <summary>
+        /// 文章详情页面，主体是WebView
+        /// </summary>
         public FeedDetailPage()
         {
             this.InitializeComponent();
@@ -51,6 +54,7 @@ namespace RSS_Stalker.Pages
         {
             if(e.Parameter!=null)
             {
+                // 这种情况表明入口点为频道
                 if(e.Parameter is Tuple<Feed, List<Feed>>)
                 {
                     var data = e.Parameter as Tuple<Feed, List<Feed>>;
@@ -64,11 +68,12 @@ namespace RSS_Stalker.Pages
                             ShowFeeds.Add(item);
                         }
                     }
+                    LoadingRing.IsActive = true;
                     await IOTools.AddAlreadyReadFeed(_sourceFeed);
-                    //LoadingRing.IsActive = true;
                     await GenerateActivityAsync(_sourceFeed);
                 }
-                if(e.Parameter is string[])
+                // 这种情况表明入口点是动态卡片
+                else if(e.Parameter is string[])
                 {
                     var data = e.Parameter as string[];
                     _sourceFeed = new Feed()
@@ -82,10 +87,14 @@ namespace RSS_Stalker.Pages
                         Summary=data[6],
                         ImgVisibility = string.IsNullOrEmpty(data[4]) ? Visibility.Collapsed : Visibility.Visible
                     };
+                    LoadingRing.IsActive = true;
                     GridViewButton.Visibility = Visibility.Collapsed;
                     SideListButton.Visibility = Visibility.Collapsed;
+                    FeedListView.Visibility = Visibility.Collapsed;
+                    Grid.SetColumn(SideControlContainer, 1);
+                    SideControlContainer.HorizontalAlignment = HorizontalAlignment.Right;
+                    SideControlContainer.Margin = new Thickness(0, 0, 10, 0);
                     DetailSplitView.IsPaneOpen = false;
-                    DetailSplitView.OpenPaneLength = 0;
                 }
                 ButtonStatusCheck();
                 TitleTextBlock.Text = _sourceFeed.Title;
@@ -94,6 +103,9 @@ namespace RSS_Stalker.Pages
                 _isInit = true;
             }
         }
+        /// <summary>
+        /// 检查TodoButton和StarButton的状态，根据不同情况切换不同按钮
+        /// </summary>
         private void ButtonStatusCheck()
         {
             if (MainPage.Current.TodoList.Any(p => p.Equals(_sourceFeed)))
@@ -117,6 +129,11 @@ namespace RSS_Stalker.Pages
                 RemoveStarButton.Visibility = Visibility.Collapsed;
             }
         }
+        /// <summary>
+        /// 包装HTML页面
+        /// </summary>
+        /// <param name="content">文章主题</param>
+        /// <returns></returns>
         private async Task<string> PackageHTML(string content)
         {
             string html = await FileIO.ReadTextAsync(await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Template/ShowPage.html")));
@@ -125,6 +142,11 @@ namespace RSS_Stalker.Pages
             string result = html.Replace("$theme$", theme.ToLower()).Replace("$style$", css).Replace("$body$", content);
             return result;
         }
+        /// <summary>
+        /// 生成时间线卡片
+        /// </summary>
+        /// <param name="feed"></param>
+        /// <returns></returns>
         private async Task GenerateActivityAsync(Feed feed)
         {
             try
@@ -148,6 +170,9 @@ namespace RSS_Stalker.Pages
             }
 
         }
+        /// <summary>
+        /// 检查返回频道按钮状态，正常则将当前页面的文章列表再送回去
+        /// </summary>
         public void CheckBack()
         {
             if (GridViewButton.Visibility == Visibility.Visible)
@@ -265,7 +290,7 @@ namespace RSS_Stalker.Pages
             }
             catch (Exception ex)
             {
-                new PopupToast(ex.Message, AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                new PopupToast(ex.Message, AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
             (sender as Button).IsEnabled = true;
         }
@@ -283,7 +308,7 @@ namespace RSS_Stalker.Pages
             }
             catch (Exception ex)
             {
-                new PopupToast(ex.Message, AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                new PopupToast(ex.Message, AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
             (sender as Button).IsEnabled = true;
         }
@@ -301,7 +326,7 @@ namespace RSS_Stalker.Pages
             }
             catch (Exception ex)
             {
-                new PopupToast(ex.Message, AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                new PopupToast(ex.Message, AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
             (sender as Button).IsEnabled = true;
         }
@@ -319,7 +344,7 @@ namespace RSS_Stalker.Pages
             }
             catch (Exception ex)
             {
-                new PopupToast(ex.Message, AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                new PopupToast(ex.Message, AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
             (sender as Button).IsEnabled = true;
         }
@@ -350,7 +375,7 @@ namespace RSS_Stalker.Pages
                 }
                 else
                 {
-                    new PopupToast(AppTools.GetReswLanguage("Tip_TranslateFailed"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                    new PopupToast(AppTools.GetReswLanguage("Tip_TranslateFailed"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
                 }
                 LoadingRing.IsActive = false;
             }
@@ -366,11 +391,13 @@ namespace RSS_Stalker.Pages
             try
             {
                 var data = JsonConvert.DeserializeObject<WebNotify>(e.Value);
+                // 图片点击事件，弹出图片对话框
                 if (data.Key == "ImageClick" && !string.IsNullOrEmpty(data.Value))
                 {
                     var imageDialog = new ImageDialog(data.Value);
                     await imageDialog.ShowAsync();
                 }
+                // 文本选中事件，弹出对应菜单
                 else if(data.Key=="SelectText" && !string.IsNullOrEmpty(data.Value))
                 {
                     var pos = Window.Current.CoreWindow.PointerPosition;
@@ -386,7 +413,6 @@ namespace RSS_Stalker.Pages
             }
             
         }
-
         private void DetailSplitView_PaneClosing(SplitView sender, SplitViewPaneClosingEventArgs args)
         {
             FeedListView.Visibility = Visibility.Collapsed;
@@ -402,7 +428,11 @@ namespace RSS_Stalker.Pages
             SideControlContainer.HorizontalAlignment = HorizontalAlignment.Center;
             SideControlContainer.Margin = new Thickness(0);
         }
-
+        /// <summary>
+        /// 选中文本翻译
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void TextMenu_Translate_Click(object sender, RoutedEventArgs e)
         {
             string language = (sender as MenuFlyoutItem).Name.Replace("SelectMenu_Translate_", "");
@@ -410,7 +440,7 @@ namespace RSS_Stalker.Pages
             string appKey = AppTools.GetRoamingSetting(AppSettings.Translate_BaiduKey, "");
             if (string.IsNullOrEmpty(appId))
             {
-                new PopupToast(AppTools.GetReswLanguage("Tip_NeedLinkTranslateService"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_NeedLinkTranslateService"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
                 return;
             }
             else
@@ -419,11 +449,11 @@ namespace RSS_Stalker.Pages
                 string output = await TranslateTools.Translate(_selectText, appId, appKey, "auto", language.ToLower());
                 if (!string.IsNullOrEmpty(output))
                 {
-                    new PopupToast(output,AppTools.GetThemeSolidColorBrush("SpecialColor")).ShowPopup();
+                    new PopupToast(output,AppTools.GetThemeSolidColorBrush(ColorType.SpecialColor)).ShowPopup();
                 }
                 else
                 {
-                    new PopupToast(AppTools.GetReswLanguage("Tip_TranslateFailed"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                    new PopupToast(AppTools.GetReswLanguage("Tip_TranslateFailed"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
                 }
                 LoadingRing.IsActive = false;
             }

@@ -82,7 +82,7 @@ namespace RSS_Stalker.Pages
             {
                 OneDirveButton.IsEnabled = true;
                 OneDirveButton.Content = AppTools.GetReswLanguage("Tip_LinkToOneDrive");
-                new PopupToast(AppTools.GetReswLanguage("Tip_BindingOneDriveFailed"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_BindingOneDriveFailed"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
         }
     }

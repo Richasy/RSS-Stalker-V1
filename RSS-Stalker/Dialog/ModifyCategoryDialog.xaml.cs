@@ -17,11 +17,15 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using RSS_Stalker.Tools;
+using CoreLib.Enums;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 
 namespace RSS_Stalker.Dialog
 {
+    /// <summary>
+    /// 修改分类对话框
+    /// </summary>
     public sealed partial class ModifyCategoryDialog : ContentDialog
     {
         private Category _sourceCategory;
@@ -69,7 +73,7 @@ namespace RSS_Stalker.Dialog
             }
             else
             {
-                new PopupToast(AppTools.GetReswLanguage("Tip_FieldEmpty"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_FieldEmpty"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
         }
 

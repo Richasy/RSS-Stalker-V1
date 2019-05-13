@@ -23,6 +23,9 @@ namespace RSS_Stalker.Dialog
 {
     public sealed partial class BaiduTranslateDialog : ContentDialog
     {
+        /// <summary>
+        /// 百度翻译令牌对话框
+        /// </summary>
         public BaiduTranslateDialog()
         {
             this.InitializeComponent();
@@ -51,7 +54,7 @@ namespace RSS_Stalker.Dialog
             {
                 IsPrimaryButtonEnabled = true;
                 PrimaryButtonText = AppTools.GetReswLanguage("Tip_Confirm");
-                new PopupToast(AppTools.GetReswLanguage("Tip_FieldEmpty"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_FieldEmpty"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
         }
 

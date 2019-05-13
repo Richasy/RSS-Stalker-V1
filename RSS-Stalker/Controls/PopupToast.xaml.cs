@@ -1,4 +1,5 @@
-﻿using CoreLib.Tools;
+﻿using CoreLib.Enums;
+using CoreLib.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,7 +25,9 @@ namespace RSS_Stalker.Controls
         //存放弹出框中的信息
         private string _popupContent;
         private bool _isPointIn=false;
-
+        /// <summary>
+        /// 消息背景色，默认是PrimaryColor
+        /// </summary>
         public Brush FlyoutBackground
         {
             get { return (Brush)GetValue(FlyoutBackgroundProperty); }
@@ -33,7 +36,7 @@ namespace RSS_Stalker.Controls
 
         // Using a DependencyProperty as the backing store for FlyoutBackground.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty FlyoutBackgroundProperty =
-            DependencyProperty.Register("FlyoutBackground", typeof(Brush), typeof(PopupToast), new PropertyMetadata(AppTools.GetThemeSolidColorBrush("PrimaryColor")));
+            DependencyProperty.Register("FlyoutBackground", typeof(Brush), typeof(PopupToast), new PropertyMetadata(AppTools.GetThemeSolidColorBrush(ColorType.PrimaryColor)));
 
 
         //创建一个popup对象
@@ -92,7 +95,7 @@ namespace RSS_Stalker.Controls
 
 
         /// <summary>
-        /// 当进入动画完成后 到此
+        /// 当进入动画完成后 到此，如果鼠标指针在消息上，则不消失
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -124,9 +127,7 @@ namespace RSS_Stalker.Controls
         private void PopupContainer_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             _isPointIn = false;
-            //将消失动画打开
             this.PopupOut.Begin();
-            //popout 动画完成后 触发
             this.PopupOut.Completed += PopupOutCompleted;
         }
     }

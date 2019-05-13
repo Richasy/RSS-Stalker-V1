@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using RSS_Stalker.Tools;
+using CoreLib.Enums;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 
@@ -24,6 +25,10 @@ namespace RSS_Stalker.Dialog
     public sealed partial class MoveChannelDialog : ContentDialog
     {
         private Channel _sourceChannel;
+        /// <summary>
+        /// 移动频道对话框
+        /// </summary>
+        /// <param name="data">数据</param>
         public MoveChannelDialog(Channel data)
         {
             this.InitializeComponent();
@@ -39,7 +44,7 @@ namespace RSS_Stalker.Dialog
             var selectCategory = CategoryListView.SelectedItem as Category;
             if (selectCategory == null)
             {
-                new PopupToast(AppTools.GetReswLanguage("Tip_NoCategorySelected"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_NoCategorySelected"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
                 return;
             }
             else
@@ -48,7 +53,7 @@ namespace RSS_Stalker.Dialog
                 
                 if (sourceCategory == null)
                 {
-                    new PopupToast(AppTools.GetReswLanguage("Tip_NoCategorySelected"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                    new PopupToast(AppTools.GetReswLanguage("Tip_NoCategorySelected"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
                     return;
                 }
                 else

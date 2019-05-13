@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Models
 {
+    /// <summary>
+    /// 软件的分类Model
+    /// </summary>
     public class Category:INotifyPropertyChanged
     {
         private string _name;

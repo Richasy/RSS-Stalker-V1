@@ -111,7 +111,7 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,0,30,0" Grid.Column="1">
                 <Button Style="{StaticResource GhostCircleButtonStyle}" Name="RefreshButton" Click="RefreshButton_Click"  Content="&#xE9C4;" VerticalAlignment="Center"/>
-                <Button Style="{StaticResource GhostCircleButtonStyle}" Margin="15,0,0,0" Name="SwitchLayoutButton" Click="SwitchLayoutButton_Click" Content="&#xE95E;" VerticalAlignment="Center">
+                <Button Style="{StaticResource GhostCircleButtonStyle}" Margin="15,0,0,0" Name="SwitchLayoutButton" Content="&#xE95E;" VerticalAlignment="Center">
                     <Button.Flyout>
                         <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource BasicMenuFlyoutStyle}">
                             <ToggleMenuFlyoutItem x:Name="Waterfall" x:Uid="Control_WaterfallMenuItem" Click="LayoutMenuItem_Click">
@@ -141,7 +141,7 @@
                   Padding="30,20,0,0"
                   Name="FeedGridView"
                   ItemTemplate="{StaticResource FeddItemTemplate}"
-                  ItemsSource="{x:Bind SchemaCollection}"
+                  ItemsSource="{x:Bind FeedCollection}"
                   IsItemClickEnabled="True"
                   ItemContainerStyle="{StaticResource BasicGridViewItemContainerStyle}"
                   Style="{StaticResource BasicGridView}"
@@ -159,7 +159,7 @@
                   Padding="0,20,0,0"
                   Name="FeedListView"
                   ItemTemplate="{StaticResource FeedListItemTemplate}"
-                  ItemsSource="{x:Bind SchemaCollection}"
+                  ItemsSource="{x:Bind FeedCollection}"
                   IsItemClickEnabled="True"
                   ItemContainerStyle="{StaticResource BasicListItemContainer}"
                   Style="{StaticResource BasicListView}"

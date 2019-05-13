@@ -16,6 +16,13 @@ namespace StalkerToast
 {
     public sealed class Toast:IBackgroundTask
     {
+        /// <summary>
+        /// 从文件中获取需要通知的源，利用Task的并行，最大限度地获取选取源的更新信息
+        /// 以获取源的第一篇文章为参照，若该文章已读，说明用户已经打开频道看过了，此时没有通知的必要
+        /// 若第一篇文章已经出现在已推送列表中，表面该源没有更新文章，同样不推送
+        /// 若以上条件均不满足，则推送第一篇文章进行简单提醒即可。
+        /// </summary>
+        /// <param name="taskInstance"></param>
         async void IBackgroundTask.Run(IBackgroundTaskInstance taskInstance)
         {
             var def=taskInstance.GetDeferral();

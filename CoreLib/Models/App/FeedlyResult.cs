@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Models
 {
+    /// <summary>
+    /// Feedly接口的搜索结果
+    /// </summary>
     public class FeedlyResult
     {
         public string Id { get; set; }
@@ -49,6 +52,7 @@ namespace CoreLib.Models
             {
                 foreach (var item in data.results)
                 {
+                    // 过滤掉废弃的源
                     if(item.state!= "dormant")
                         results.Add(new FeedlyResult(item));
                 }
@@ -56,7 +60,9 @@ namespace CoreLib.Models
             return results;
         }
     }
-
+    /// <summary>
+    /// 网页源
+    /// </summary>
     public class WebFeedlyResult
     {
         public WebFeedlyResultItem[] results { get; set; }

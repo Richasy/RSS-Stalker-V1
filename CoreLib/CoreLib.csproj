@@ -121,17 +121,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Enums\AppSettings.cs" />
-    <Compile Include="Models\SyncConfig.cs" />
-    <Compile Include="Models\SyncModel.cs" />
-    <Compile Include="Models\Body.cs" />
-    <Compile Include="Models\Category.cs" />
-    <Compile Include="Models\Channel.cs" />
-    <Compile Include="Models\Feed.cs" />
-    <Compile Include="Models\FeedlyResult.cs" />
-    <Compile Include="Models\Head.cs" />
-    <Compile Include="Models\Opml.cs" />
-    <Compile Include="Models\Outline.cs" />
-    <Compile Include="Models\WebNotify.cs" />
+    <Compile Include="Enums\ColorType.cs" />
+    <Compile Include="Models\OPML\Body.cs" />
+    <Compile Include="Models\App\Category.cs" />
+    <Compile Include="Models\App\Channel.cs" />
+    <Compile Include="Models\App\Feed.cs" />
+    <Compile Include="Models\App\FeedlyResult.cs" />
+    <Compile Include="Models\OPML\Head.cs" />
+    <Compile Include="Models\OPML\Opml.cs" />
+    <Compile Include="Models\OPML\Outline.cs" />
+    <Compile Include="Models\App\WebNotify.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\AppTools.cs" />
     <Compile Include="Tools\OneDriveTools.cs" />
@@ -160,6 +159,7 @@
       <Name>Rss</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

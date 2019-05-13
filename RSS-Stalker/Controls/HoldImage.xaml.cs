@@ -53,6 +53,9 @@ namespace RSS_Stalker.Controls
             get => _holderImage;
             set { _holderImage = value; OnPropertyChanged(); }
         }
+        /// <summary>
+        /// ImageEx的二次封装
+        /// </summary>
         public HoldImage()
         {
             this.InitializeComponent();

@@ -2,10 +2,10 @@
 
 The new version has been revised as follows:
 
-1. Provide translation of the word in the article, and people who read the other language article can be cool.
-2. You can set your favorite channel as the home page, and the entry is in the channel's right-click menu.
-3. Fixed the performance of the <pre> tag. Now the code block can be displayed normally. If the <pre> tag identifies the language, it can also be highlighted by syntax.
-4. Adjusted the visual performance of other article lists in the article details page to avoid button occlusion articles
+1. Unblocked links, but all links will open with the default browser when clicked
+2. Select the text pop-up menu to add two new options 'Search in web' and 'Share', and you can set the default search engine in the settings.
+3. Move the Open Web Page button to the sidebar resident button list
+4. Fixed an issue where the sidebar could not be loaded correctly when opening an article from the timeline
 
 ---
 

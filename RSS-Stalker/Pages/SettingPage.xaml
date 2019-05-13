@@ -62,6 +62,18 @@
                         <ComboBoxItem x:Uid="Control_CustomComboItem" Name="Custom"/>
                     </ComboBox>
                 </StackPanel>
+                <StackPanel Margin="0,10,0,0">
+                    <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_SearchEngineSettingTipBlock" Margin="0,0,0,5"/>
+                    <ComboBox Style="{StaticResource BasicComboBoxStyle}"
+                      ItemContainerStyle="{StaticResource BasicComboBoxItemContainerStyle}"
+                      Name="SearchEngineComboBox"
+                      SelectionChanged="SearchEngineComboBox_SelectionChanged"
+                      >
+                        <ComboBoxItem Name="Google" x:Uid="Control_GoogleComboItem"/>
+                        <ComboBoxItem Name="Baidu" x:Uid="Control_BaiduComboItem"/>
+                        <ComboBoxItem Name="Bing" x:Uid="Control_BingComboItem"/>
+                    </ComboBox>
+                </StackPanel>
                 <TextBlock x:Uid="Control_DataSettingTipBlock" FontFamily="{StaticResource Title}" FontWeight="Bold" Margin="0,25,0,0" Foreground="{ThemeResource ImportantTextColor}" FontSize="15"/>
                 <StackPanel Margin="0,10,0,0">
                     <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_OneDriveSettingTipBlock" Margin="0,0,0,5"/>

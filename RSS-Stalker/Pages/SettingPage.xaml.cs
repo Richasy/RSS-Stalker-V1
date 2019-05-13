@@ -45,6 +45,7 @@ namespace RSS_Stalker.Pages
             string theme = AppTools.GetRoamingSetting(AppSettings.Theme,"Light");
             string language = AppTools.GetRoamingSetting(AppSettings.Language,"en_US");
             string oneDriveUserName = AppTools.GetLocalSetting(AppSettings.UserName, "");
+            string searchEngine = AppTools.GetRoamingSetting(AppSettings.SearchEngine, "Bing");
             bool isSyncWithStart = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.SyncWithStart, "False"));
             bool isScreenChannel = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsScreenChannelCustom, "False"));
             if (theme == "Light")
@@ -55,6 +56,20 @@ namespace RSS_Stalker.Pages
                 LanguageComboBox.SelectedIndex = 0;
             else
                 LanguageComboBox.SelectedIndex = 1;
+            switch (searchEngine)
+            {
+                case "Google":
+                    SearchEngineComboBox.SelectedIndex = 0;
+                    break;
+                case "Baidu":
+                    SearchEngineComboBox.SelectedIndex = 1;
+                    break;
+                case "Bing":
+                    SearchEngineComboBox.SelectedIndex = 2;
+                    break;
+                default:
+                    break;
+            }
             SyncWithStartSwitch.IsOn = isSyncWithStart;
             OneDriveNameTextBlock.Text = oneDriveUserName;
             ToastChannels.Clear();
@@ -262,6 +277,14 @@ namespace RSS_Stalker.Pages
                 AppTools.WriteLocalSetting(AppSettings.IsScreenChannelCustom, "False");
             else
                 AppTools.WriteLocalSetting(AppSettings.IsScreenChannelCustom, "True");
+        }
+
+        private void SearchEngineComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!_isInit)
+                return;
+            var item = SearchEngineComboBox.SelectedItem as ComboBoxItem;
+            AppTools.WriteRoamingSetting(AppSettings.SearchEngine, item?.Name??"Bing");
         }
     }
 }

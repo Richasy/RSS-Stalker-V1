@@ -480,4 +480,16 @@
   <data name="Tip_LaunchUriError.Text" xml:space="preserve">
     <value>Failed to load link</value>
   </data>
+  <data name="Control_BaiduComboItem.Content" xml:space="preserve">
+    <value>Baidu</value>
+  </data>
+  <data name="Control_BingComboItem.Content" xml:space="preserve">
+    <value>Bing</value>
+  </data>
+  <data name="Control_GoogleComboItem.Content" xml:space="preserve">
+    <value>Google</value>
+  </data>
+  <data name="Control_SearchEngineSettingTipBlock.Text" xml:space="preserve">
+    <value>Serach Engine</value>
+  </data>
 </root>

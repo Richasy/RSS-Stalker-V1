@@ -480,4 +480,16 @@
   <data name="Tip_LaunchUriError.Text" xml:space="preserve">
     <value>加载链接失败</value>
   </data>
+  <data name="Control_BaiduComboItem.Content" xml:space="preserve">
+    <value>百度</value>
+  </data>
+  <data name="Control_BingComboItem.Content" xml:space="preserve">
+    <value>必应</value>
+  </data>
+  <data name="Control_GoogleComboItem.Content" xml:space="preserve">
+    <value>谷歌</value>
+  </data>
+  <data name="Control_SearchEngineSettingTipBlock.Text" xml:space="preserve">
+    <value>搜索引擎</value>
+  </data>
 </root>

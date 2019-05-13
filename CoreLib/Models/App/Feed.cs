@@ -14,16 +14,28 @@ using Windows.Web.Syndication;
 
 namespace CoreLib.Models
 {
+    /// <summary>
+    /// 订阅源下的文章Model
+    /// </summary>
     public class Feed:RssSchema,INotifyPropertyChanged
     {
+        /// <summary>
+        /// 标准化日期输出
+        /// </summary>
         public string Date { get; set; }
         private Visibility _imgVisibility;
+        /// <summary>
+        /// 用于控制图片的显示
+        /// </summary>
         public Visibility ImgVisibility
         {
             get { return _imgVisibility; }
             set { _imgVisibility = value;OnPropertyChanged(); }
         }
         private Visibility _tagVisibility;
+        /// <summary>
+        /// 用于控制标签的显示
+        /// </summary>
         public Visibility TagVisibility
         {
             get { return _tagVisibility; }

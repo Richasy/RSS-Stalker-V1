@@ -9,6 +9,9 @@ using Windows.Web.Syndication;
 
 namespace CoreLib.Models
 {
+    /// <summary>
+    /// 软件的频道Model，即订阅源
+    /// </summary>
     public class Channel:INotifyPropertyChanged
     {
         private string _name;
@@ -34,7 +37,7 @@ namespace CoreLib.Models
             set { _description = value; OnPropertyChanged(); }
         }
         /// <summary>
-        /// 频道原始链接
+        /// 频道对应的网页链接
         /// </summary>
         public string SourceUrl { get; set; }
         public string Id { get; set; }

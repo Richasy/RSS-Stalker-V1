@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using CoreLib.Enums;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -29,10 +30,13 @@ namespace RSS_Stalker.Pages
     /// </summary>
     public sealed partial class FeedCollectionPage : Page
     {
-        private ObservableCollection<Feed> SchemaCollection = new ObservableCollection<Feed>();
+        private ObservableCollection<Feed> FeedCollection = new ObservableCollection<Feed>();
         private Feed _shareData = null;
         private List<Feed> AllFeed = new List<Feed>();
         public static FeedCollectionPage Current;
+        /// <summary>
+        /// 用于处理待读列表和收藏列表的简易文章集合页面
+        /// </summary>
         public FeedCollectionPage()
         {
             this.InitializeComponent();
@@ -50,7 +54,7 @@ namespace RSS_Stalker.Pages
                     TitleTextBlock.Text = data.Item2;
                     foreach (var item in feed)
                     {
-                        SchemaCollection.Add(item);
+                        FeedCollection.Add(item);
                     }
                 }
             }
@@ -60,13 +64,13 @@ namespace RSS_Stalker.Pages
             LoadingRing.IsActive = true;
             NoDataTipContainer.Visibility = Visibility.Collapsed;
             TitleTextBlock.Text = title;
-            SchemaCollection.Clear();
+            FeedCollection.Clear();
             AllFeed = feed;
             if (feed != null && feed.Count > 0)
             {
                 foreach (var item in feed)
                 {
-                    SchemaCollection.Add(item);
+                    FeedCollection.Add(item);
                 }
             }
             else
@@ -78,7 +82,7 @@ namespace RSS_Stalker.Pages
         private void FeedGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as Feed;
-            var t = new Tuple<Feed, List<Feed>>(item, SchemaCollection.ToList());
+            var t = new Tuple<Feed, List<Feed>>(item, FeedCollection.ToList());
             MainPage.Current.MainFrame.Navigate(typeof(FeedDetailPage), t);
         }
 
@@ -91,7 +95,7 @@ namespace RSS_Stalker.Pages
             }
             else
             {
-                new PopupToast(AppTools.GetReswLanguage("App_InvalidUrl"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("App_InvalidUrl"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
         }
 
@@ -123,12 +127,12 @@ namespace RSS_Stalker.Pages
         private void FeedSearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             string text = FeedSearchBox.Text?.Trim();
-            SchemaCollection.Clear();
+            FeedCollection.Clear();
             if (string.IsNullOrEmpty(text))
             {
                 foreach (var item in AllFeed)
                 {
-                    SchemaCollection.Add(item);
+                    FeedCollection.Add(item);
                 }
             }
             else
@@ -136,7 +140,7 @@ namespace RSS_Stalker.Pages
                 var list = AllFeed.Where(p => p.Title.IndexOf(text, StringComparison.CurrentCultureIgnoreCase) != -1);
                 foreach (var item in list)
                 {
-                    SchemaCollection.Add(item);
+                    FeedCollection.Add(item);
                 }
             }
         }

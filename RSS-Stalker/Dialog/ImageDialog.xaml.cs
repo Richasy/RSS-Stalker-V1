@@ -24,6 +24,9 @@ using Windows.UI.Xaml.Navigation;
 
 namespace RSS_Stalker.Dialog
 {
+    /// <summary>
+    /// 图片显示对话框
+    /// </summary>
     public sealed partial class ImageDialog : ContentDialog
     {
         private string ImageUrl = "";

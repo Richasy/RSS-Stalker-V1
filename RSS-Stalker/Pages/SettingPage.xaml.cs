@@ -135,12 +135,12 @@ namespace RSS_Stalker.Pages
                     }
                     else
                     {
-                        new PopupToast(AppTools.GetReswLanguage("Tip_ImportError"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                        new PopupToast(AppTools.GetReswLanguage("Tip_ImportError"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
                     }
                 }
                 catch (Exception ex)
                 {
-                    new PopupToast(ex.Message, AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                    new PopupToast(ex.Message, AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
                 }
             }
             ImportOpmlButton.IsEnabled = true;
@@ -166,7 +166,7 @@ namespace RSS_Stalker.Pages
             }
             catch (Exception)
             {
-                new PopupToast(AppTools.GetReswLanguage("Tip_ImportError"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_ImportError"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
             ExportOpmlButton.IsEnabled = true;
             ExportOpmlButton.Content = AppTools.GetReswLanguage("Tip_Export");

@@ -28,6 +28,9 @@ namespace RSS_Stalker.Pages
     /// </summary>
     public sealed partial class SplashPage : Page
     {
+        /// <summary>
+        /// 伪装的启动页，用以进行OneDrive数据同步
+        /// </summary>
         public SplashPage()
         {
             this.InitializeComponent();

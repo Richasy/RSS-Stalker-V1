@@ -110,7 +110,7 @@ namespace CoreLib.Tools
             return date;
         }
         /// <summary>
-        /// 初始化标题栏颜色
+        /// 初始化标题栏
         /// </summary>
         public static void SetTitleBarColor()
         {
@@ -253,9 +253,9 @@ namespace CoreLib.Tools
         /// </summary>
         /// <param name="key">键</param>
         /// <returns></returns>
-        public static SolidColorBrush GetThemeSolidColorBrush(string key)
+        public static SolidColorBrush GetThemeSolidColorBrush(ColorType key)
         {
-            return (SolidColorBrush)Windows.UI.Xaml.Application.Current.Resources[key];
+            return (SolidColorBrush)Windows.UI.Xaml.Application.Current.Resources[key.ToString()];
         }
 
         /// <summary>
@@ -377,7 +377,7 @@ namespace CoreLib.Tools
             return list;
         }
         /// <summary>
-        /// 从URL获取解析后的Item的信息
+        /// 从URL获取解析后的文章的信息
         /// </summary>
         /// <param name="url">地址</param>
         /// <returns></returns>
@@ -426,7 +426,10 @@ namespace CoreLib.Tools
             language = language.Replace("\\n", "\n");
             return language;
         }
-
+        /// <summary>
+        /// 图标列表装载
+        /// </summary>
+        /// <returns></returns>
         public static List<string> GetIcons()
         {
             var list = new List<string>

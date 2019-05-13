@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using RSS_Stalker.Tools;
+using CoreLib.Enums;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
 
@@ -28,6 +29,9 @@ namespace RSS_Stalker.Dialog
     {
         private Channel _sourceChannel = null;
         private ObservableCollection<FeedlyResult> FeedlyResults = new ObservableCollection<FeedlyResult>();
+        /// <summary>
+        /// 添加频道对话框
+        /// </summary>
         public AddChannelDialog()
         {
             this.InitializeComponent();
@@ -52,7 +56,7 @@ namespace RSS_Stalker.Dialog
                 {
                     if (selectCategory.Channels.Any(c => c.Link.ToLower() == _sourceChannel.Link))
                     {
-                        new PopupToast(AppTools.GetReswLanguage("Tip_ChannelRepeat"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                        new PopupToast(AppTools.GetReswLanguage("Tip_ChannelRepeat"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
                         return;
                     }
                     else
@@ -80,13 +84,13 @@ namespace RSS_Stalker.Dialog
                 }
                 else
                 {
-                    new PopupToast(AppTools.GetReswLanguage("Tip_NoCategorySelected"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                    new PopupToast(AppTools.GetReswLanguage("Tip_NoCategorySelected"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
                     return;
                 }
             }
             else
             {
-                new PopupToast(AppTools.GetReswLanguage("Tip_TryLinkFirst"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_TryLinkFirst"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
         }
 
@@ -104,7 +108,7 @@ namespace RSS_Stalker.Dialog
             string link = ChannelLinkTextBox.Text.Trim();
             if (string.IsNullOrEmpty(link))
             {
-                new PopupToast(AppTools.GetReswLanguage("Tip_FieldEmpty"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_FieldEmpty"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
             else
             {
@@ -128,7 +132,7 @@ namespace RSS_Stalker.Dialog
                     {
                         SearchResultContainer.Visibility = Visibility.Collapsed;
                         FeedlyResults.Clear();
-                        new PopupToast(AppTools.GetReswLanguage("Tip_NoData"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                        new PopupToast(AppTools.GetReswLanguage("Tip_NoData"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
                     }
                 }
                 else
@@ -150,7 +154,7 @@ namespace RSS_Stalker.Dialog
                     {
                         LoadingRing.IsActive = false;
                         TryLinkButton.IsEnabled = true;
-                        new PopupToast(AppTools.GetReswLanguage("App_InvalidUrl"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                        new PopupToast(AppTools.GetReswLanguage("App_InvalidUrl"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
                     }
                 }
             }

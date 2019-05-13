@@ -80,7 +80,7 @@
                   Padding="30,30,0,0"
                   Name="FeedGridView"
                   ItemTemplate="{StaticResource FeddItemTemplate}"
-                  ItemsSource="{x:Bind SchemaCollection}"
+                  ItemsSource="{x:Bind FeedCollection}"
                   IsItemClickEnabled="True"
                   ItemContainerStyle="{StaticResource BasicGridViewItemContainerStyle}"
                   Style="{StaticResource BasicGridView}"

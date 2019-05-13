@@ -7,6 +7,9 @@ using System.Xml;
 
 namespace CoreLib.Models
 {
+    /// <summary>
+    /// OPML下的Body标签
+    /// </summary>
     public class Body
     {
         ///<summary>

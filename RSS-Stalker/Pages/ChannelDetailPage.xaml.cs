@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using CoreLib.Enums;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -30,7 +31,7 @@ namespace RSS_Stalker.Pages
     public sealed partial class ChannelDetailPage : Page
     {
         public Channel _sourceData = null;
-        private ObservableCollection<Feed> SchemaCollection = new ObservableCollection<Feed>();
+        private ObservableCollection<Feed> FeedCollection = new ObservableCollection<Feed>();
         private Feed _shareData = null;
         public static ChannelDetailPage Current;
         
@@ -43,11 +44,13 @@ namespace RSS_Stalker.Pages
         {
             if(e.Parameter!=null)
             {
+                // 当传入源为频道数据时（获取当前频道最新资讯）
                 if(e.Parameter is Channel)
                 {
                     await UpdateLayout(e.Parameter as Channel);
                     ChangeLayout();
                 }
+                // 当传入源为文章列表时（说明是上一级返回，不获取最新资讯）
                 else if(e.Parameter is List<Feed>)
                 {
                     var feed = e.Parameter as List<Feed>;
@@ -58,13 +61,18 @@ namespace RSS_Stalker.Pages
                         ChannelNameTextBlock.Text = _sourceData.Name;
                         foreach (var item in feed)
                         {
-                            SchemaCollection.Add(item);
+                            FeedCollection.Add(item);
                         }
                     }
                     ChangeLayout();
                 }
             }
         }
+        /// <summary>
+        /// 更新布局，获取最新资讯
+        /// </summary>
+        /// <param name="channel">频道数据</param>
+        /// <returns></returns>
         public async Task UpdateLayout(Channel channel)
         {
             LoadingRing.IsActive = true;
@@ -72,13 +80,13 @@ namespace RSS_Stalker.Pages
             _sourceData = channel;
             ChannelDescriptionTextBlock.Text = _sourceData.Description;
             ChannelNameTextBlock.Text = _sourceData.Name;
-            SchemaCollection.Clear();
+            FeedCollection.Clear();
             var feed = await AppTools.GetFeedsFromUrl(_sourceData.Link);
             if (feed != null && feed.Count > 0)
             {
                 foreach (var item in feed)
                 {
-                    SchemaCollection.Add(item);
+                    FeedCollection.Add(item);
                 }
             }
             else
@@ -90,7 +98,7 @@ namespace RSS_Stalker.Pages
         private void FeedGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as Feed;
-            var t = new Tuple<Feed, List<Feed>>(item, SchemaCollection.ToList());
+            var t = new Tuple<Feed, List<Feed>>(item, FeedCollection.ToList());
             MainPage.Current.MainFrame.Navigate(typeof(FeedDetailPage), t);
         }
 
@@ -102,7 +110,7 @@ namespace RSS_Stalker.Pages
             }
             else
             {
-                new PopupToast(AppTools.GetReswLanguage("App_InvalidUrl"),AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("App_InvalidUrl"),AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
         }
 
@@ -115,7 +123,7 @@ namespace RSS_Stalker.Pages
             }
             else
             {
-                new PopupToast(AppTools.GetReswLanguage("App_InvalidUrl"), AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("App_InvalidUrl"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
         }
 
@@ -148,14 +156,9 @@ namespace RSS_Stalker.Pages
         {
             await UpdateLayout(_sourceData);
         }
-
-        private void SwitchLayoutButton_Click(object sender, RoutedEventArgs e)
-        {
-            //FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
-        }
         private void ChangeLayout()
         {
-            string name = AppTools.GetRoamingSetting(CoreLib.Enums.AppSettings.FeedLayoutType, "All");
+            string name = AppTools.GetRoamingSetting(AppSettings.FeedLayoutType, "All");
             if (name == "All")
             {
                 FeedGridView.Visibility = Visibility.Visible;
@@ -183,6 +186,7 @@ namespace RSS_Stalker.Pages
             switch (name)
             {
                 case "Waterfall":
+                    // 由于迭代的问题，这里不好修改，就定为All了
                     name = "All";
                     Card.IsChecked = false;
                     List.IsChecked = false;

@@ -25,6 +25,9 @@ namespace RSS_Stalker.Pages
     public sealed partial class WelcomePage : Page
     {
         public static WelcomePage Current;
+        /// <summary>
+        /// 欢迎页
+        /// </summary>
         public WelcomePage()
         {
             this.InitializeComponent();

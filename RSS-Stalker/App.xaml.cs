@@ -48,8 +48,11 @@ namespace RSS_Stalker
         {
             e.Handled = true;
             string msg = e.Exception.Message;
-            new PopupToast(msg, AppTools.GetThemeSolidColorBrush("ErrorColor")).ShowPopup();
+            new PopupToast(msg, AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
         }
+        /// <summary>
+        /// 更改语言首选项
+        /// </summary>
         private void ChangeLanguage()
         {
             string lan = AppTools.GetRoamingSetting(AppSettings.Language,"en_US");
@@ -110,7 +113,7 @@ namespace RSS_Stalker
                 rootFrame = new Frame();
                 bool isBinding = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsBindingOneDrive, "False"));
                 if (isBinding)
-                    rootFrame.Navigate(typeof(MainPage));
+                    rootFrame.Navigate(typeof(MainPage),"Timeline");
                 else
                 {
                     rootFrame.Navigate(typeof(Pages.OneDrivePage));
@@ -207,6 +210,10 @@ namespace RSS_Stalker
                 Window.Current.Activate();
             }
         }
+        /// <summary>
+        /// 解析Timeline卡片的链接
+        /// </summary>
+        /// <param name="query"></param>
         private void OpenContentFromTimeline(string[] query)
         {
             string id = query.Where(p => p.StartsWith("?id")).FirstOrDefault();
@@ -229,7 +236,7 @@ namespace RSS_Stalker
             summary = WebUtility.UrlDecode(summary.Substring(8));
             if (MainPage.Current != null)
             {
-                MainPage.Current.MainFrame.Navigate(typeof(Pages.FeedDetailPage), new string[] { id, title, content,url,img,date,summary });
+                MainPage.Current.MainFrame.Navigate(typeof(FeedDetailPage), new string[] { id, title, content,url,img,date,summary });
                 MainPage.Current.ChannelListView.SelectedIndex = -1;
             }
         }

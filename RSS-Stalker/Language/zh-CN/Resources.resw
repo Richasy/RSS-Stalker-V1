@@ -474,4 +474,10 @@
   <data name="Control_ScreenChannelSettingTipBlock.Text" xml:space="preserve">
     <value>首页频道</value>
   </data>
+  <data name="Control_SearchTextInWebMenuItem.Text" xml:space="preserve">
+    <value>在网页中搜索</value>
+  </data>
+  <data name="Tip_LaunchUriError.Text" xml:space="preserve">
+    <value>加载链接失败</value>
+  </data>
 </root>

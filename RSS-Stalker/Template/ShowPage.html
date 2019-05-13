@@ -57,6 +57,13 @@
                 links[i].addEventListener('click', function (e) {
                     e.stopPropagation();
                     e.preventDefault();
+                    let target = e.currentTarget;
+                    let link = target.getAttribute('href');
+                    let data = {
+                        Key: 'LinkClick',
+                        Value:link
+                    }
+                    window.external.notify(JSON.stringify(data));
                 })
             }
         }

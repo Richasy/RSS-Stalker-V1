@@ -32,6 +32,16 @@
                 <MenuFlyoutItem Text="中文" Name="SelectMenu_Translate_Zh" Click="TextMenu_Translate_Click"/>
                 <MenuFlyoutItem Text="English" Name="SelectMenu_Translate_En" Click="TextMenu_Translate_Click"/>
             </MenuFlyoutSubItem>
+            <MenuFlyoutItem x:Uid="Control_SearchTextInWebMenuItem" Name="SelectMenu_SearchText" Click="SelectMenu_SearchText_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE9C8;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem x:Uid="Control_ShareMenuItem" Name="SelectMenu_Share" Click="SelectMenu_Share_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE9CC;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
         </MenuFlyout>
         <MenuFlyout x:Key="MoreMenuFlyout" Placement="Top" MenuFlyoutPresenterStyle="{StaticResource BasicMenuFlyoutStyle}">
             <MenuFlyoutItem Name="Menu_Web" x:Uid="Control_WebMenuItem" Click="Menu_Web_Click">

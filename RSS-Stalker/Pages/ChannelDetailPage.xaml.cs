@@ -38,7 +38,6 @@ namespace RSS_Stalker.Pages
         {
             this.InitializeComponent();
             Current = this;
-            
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {

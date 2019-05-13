@@ -379,6 +379,17 @@ namespace RSS_Stalker.Pages
                     _selectText = data.Value;
                     SelectTextFlyout.ShowAt(MainPage.Current.RootGrid, new Windows.Foundation.Point(x,y));
                 }
+                else if(data.Key=="LinkClick" && !string.IsNullOrEmpty(data.Value))
+                {
+                    try
+                    {
+                        await Launcher.LaunchUriAsync(new Uri(data.Value));
+                    }
+                    catch (Exception)
+                    {
+                        new PopupToast(AppTools.GetReswLanguage("Tip_LaunchUriError")).ShowPopup();
+                    }
+                }
             }
             catch (Exception)
             {
@@ -427,6 +438,16 @@ namespace RSS_Stalker.Pages
                 }
                 LoadingRing.IsActive = false;
             }
+        }
+
+        private void SelectMenu_SearchText_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SelectMenu_Share_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

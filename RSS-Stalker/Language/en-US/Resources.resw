@@ -474,4 +474,10 @@
   <data name="Control_ScreenChannelSettingTipBlock.Text" xml:space="preserve">
     <value>Home page</value>
   </data>
+  <data name="Control_SearchTextInWebMenuItem.Text" xml:space="preserve">
+    <value>Search in web</value>
+  </data>
+  <data name="Tip_LaunchUriError.Text" xml:space="preserve">
+    <value>Failed to load link</value>
+  </data>
 </root>

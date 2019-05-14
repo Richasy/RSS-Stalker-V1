@@ -492,4 +492,7 @@
   <data name="Control_SearchEngineSettingTipBlock.Text" xml:space="preserve">
     <value>Serach Engine</value>
   </data>
+  <data name="Tip_BindingOneDriveSuccess" xml:space="preserve">
+    <value>OneDrive is bound and data is being synced</value>
+  </data>
 </root>

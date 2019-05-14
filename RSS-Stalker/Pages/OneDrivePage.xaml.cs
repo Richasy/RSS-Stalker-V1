@@ -38,51 +38,61 @@ namespace RSS_Stalker.Pages
             OneDirveButton.IsEnabled = false;
             OneDirveButton.Content = AppTools.GetReswLanguage("Tip_Waiting");
             bool result=await App.OneDrive.OneDriveAuthorize();
-            if (result)
+            try
             {
-                var tasks = new List<Task>();
-                var cate = Task.Run(async () =>
+                if (result)
                 {
-                    var categoryList = await App.OneDrive.GetCategoryList();
-                    await IOTools.ReplaceCategory(categoryList);
-                });
-                var todo = Task.Run(async () =>
+                    new PopupToast(AppTools.GetReswLanguage("Tip_BindingOneDriveSuccess")).ShowPopup();
+                    var tasks = new List<Task>();
+                    var cate = Task.Run(async () =>
+                    {
+                        var categoryList = await App.OneDrive.GetCategoryList();
+                        await IOTools.ReplaceCategory(categoryList);
+                    });
+                    var todo = Task.Run(async () =>
+                    {
+                        var TodoList = await App.OneDrive.GetTodoList();
+                        await IOTools.ReplaceTodo(TodoList);
+                    });
+                    var star = Task.Run(async () =>
+                    {
+                        var StarList = await App.OneDrive.GetStarList();
+                        await IOTools.ReplaceStar(StarList);
+                    });
+                    var toast = Task.Run(async () =>
+                    {
+                        var ToastList = await App.OneDrive.GetToastList();
+                        await IOTools.ReplaceToast(ToastList);
+                    });
+                    tasks.Add(cate);
+                    tasks.Add(todo);
+                    tasks.Add(star);
+                    tasks.Add(toast);
+                    await Task.WhenAll(tasks.ToArray());
+                    string basicUpdateTime = AppTools.GetRoamingSetting(AppSettings.BasicUpdateTime, "1");
+                    string todoUpdateTime = AppTools.GetRoamingSetting(AppSettings.TodoUpdateTime, "1");
+                    string starUpdateTime = AppTools.GetRoamingSetting(AppSettings.StarUpdateTime, "1");
+                    string toastUpdateTime = AppTools.GetRoamingSetting(AppSettings.ToastUpdateTime, "1");
+                    AppTools.WriteLocalSetting(AppSettings.ToastUpdateTime, toastUpdateTime);
+                    AppTools.WriteLocalSetting(AppSettings.StarUpdateTime, starUpdateTime);
+                    AppTools.WriteLocalSetting(AppSettings.TodoUpdateTime, todoUpdateTime);
+                    AppTools.WriteLocalSetting(AppSettings.BasicUpdateTime, basicUpdateTime);
+                    AppTools.WriteLocalSetting(AppSettings.IsBindingOneDrive, "True");
+                    var frame = Window.Current.Content as Frame;
+                    frame.Navigate(typeof(MainPage));
+                }
+                else
                 {
-                    var TodoList = await App.OneDrive.GetTodoList();
-                    await IOTools.ReplaceTodo(TodoList);
-                });
-                var star = Task.Run(async () =>
-                {
-                    var StarList = await App.OneDrive.GetStarList();
-                    await IOTools.ReplaceStar(StarList);
-                });
-                var toast = Task.Run(async () =>
-                {
-                    var ToastList = await App.OneDrive.GetToastList();
-                    await IOTools.ReplaceToast(ToastList);
-                });
-                tasks.Add(cate);
-                tasks.Add(todo);
-                tasks.Add(star);
-                tasks.Add(toast);
-                await Task.WhenAll(tasks.ToArray());
-                string basicUpdateTime = AppTools.GetRoamingSetting(AppSettings.BasicUpdateTime, "1");
-                string todoUpdateTime = AppTools.GetRoamingSetting(AppSettings.TodoUpdateTime, "1");
-                string starUpdateTime = AppTools.GetRoamingSetting(AppSettings.StarUpdateTime, "1");
-                string toastUpdateTime = AppTools.GetRoamingSetting(AppSettings.ToastUpdateTime,"1");
-                AppTools.WriteLocalSetting(AppSettings.ToastUpdateTime, toastUpdateTime);
-                AppTools.WriteLocalSetting(AppSettings.StarUpdateTime, starUpdateTime);
-                AppTools.WriteLocalSetting(AppSettings.TodoUpdateTime, todoUpdateTime);
-                AppTools.WriteLocalSetting(AppSettings.BasicUpdateTime, basicUpdateTime);
-                AppTools.WriteLocalSetting(AppSettings.IsBindingOneDrive, "True");
-                var frame = Window.Current.Content as Frame;
-                frame.Navigate(typeof(MainPage));
+                    OneDirveButton.IsEnabled = true;
+                    OneDirveButton.Content = AppTools.GetReswLanguage("Tip_LinkToOneDrive");
+                    new PopupToast(AppTools.GetReswLanguage("Tip_BindingOneDriveFailed"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+                }
             }
-            else
+            catch (Exception ex)
             {
                 OneDirveButton.IsEnabled = true;
                 OneDirveButton.Content = AppTools.GetReswLanguage("Tip_LinkToOneDrive");
-                new PopupToast(AppTools.GetReswLanguage("Tip_BindingOneDriveFailed"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+                new PopupToast(ex.Message,AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
         }
     }

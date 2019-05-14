@@ -492,4 +492,7 @@
   <data name="Control_SearchEngineSettingTipBlock.Text" xml:space="preserve">
     <value>搜索引擎</value>
   </data>
+  <data name="Tip_BindingOneDriveSuccess" xml:space="preserve">
+    <value>已绑定OneDrive，正在同步数据</value>
+  </data>
 </root>

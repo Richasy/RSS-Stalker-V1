@@ -201,7 +201,7 @@ namespace RSS_Stalker.Pages
             TitleTextBlock.Text = _sourceFeed.Title;
             string html = await PackageHTML(_sourceFeed.Content);
             DetailWebView.NavigateToString(html);
-            if (MainPage.Current.MenuButton.Visibility == Visibility.Visible)
+            if (MainPage.Current.MinsizeHeaderContainer.Visibility == Visibility.Visible)
             {
                 DetailSplitView.IsPaneOpen = false;
             }

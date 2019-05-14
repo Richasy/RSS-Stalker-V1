@@ -214,7 +214,7 @@ namespace RSS_Stalker.Pages
             {
                 cateList = await App.OneDrive.GetCategoryList();
                 await IOTools.ReplaceCategory(cateList);
-                
+
             });
             var todo = Task.Run(async () =>
             {
@@ -231,29 +231,38 @@ namespace RSS_Stalker.Pages
                 toastList = await App.OneDrive.GetToastList();
                 await IOTools.ReplaceToast(toastList);
             });
-            
+
             tasks.Add(cate);
             tasks.Add(todo);
             tasks.Add(star);
             tasks.Add(toast);
-            await Task.WhenAll(tasks.ToArray());
-            string basicUpdateTime = AppTools.GetRoamingSetting(AppSettings.BasicUpdateTime,"1");
-            string todoUpdateTime = AppTools.GetRoamingSetting(AppSettings.TodoUpdateTime, "1");
-            string starUpdateTime = AppTools.GetRoamingSetting(AppSettings.StarUpdateTime, "1");
-            string toastUpdateTime = AppTools.GetRoamingSetting(AppSettings.ToastUpdateTime, "1");
-            AppTools.WriteLocalSetting(AppSettings.BasicUpdateTime, basicUpdateTime);
-            AppTools.WriteLocalSetting(AppSettings.TodoUpdateTime, todoUpdateTime);
-            AppTools.WriteLocalSetting(AppSettings.StarUpdateTime, starUpdateTime);
-            AppTools.WriteLocalSetting(AppSettings.ToastUpdateTime, toastUpdateTime);
-            MainPage.Current.ReplaceList(cateList);
-            ToastChannels.Clear();
-            foreach (var item in toastList)
+            try
             {
-                ToastChannels.Add(item);
+                await Task.WhenAll(tasks.ToArray());
+                string basicUpdateTime = AppTools.GetRoamingSetting(AppSettings.BasicUpdateTime, "1");
+                string todoUpdateTime = AppTools.GetRoamingSetting(AppSettings.TodoUpdateTime, "1");
+                string starUpdateTime = AppTools.GetRoamingSetting(AppSettings.StarUpdateTime, "1");
+                string toastUpdateTime = AppTools.GetRoamingSetting(AppSettings.ToastUpdateTime, "1");
+                AppTools.WriteLocalSetting(AppSettings.BasicUpdateTime, basicUpdateTime);
+                AppTools.WriteLocalSetting(AppSettings.TodoUpdateTime, todoUpdateTime);
+                AppTools.WriteLocalSetting(AppSettings.StarUpdateTime, starUpdateTime);
+                AppTools.WriteLocalSetting(AppSettings.ToastUpdateTime, toastUpdateTime);
+                MainPage.Current.ReplaceList(cateList);
+                ToastChannels.Clear();
+                foreach (var item in toastList)
+                {
+                    ToastChannels.Add(item);
+                }
+                btn.IsEnabled = true;
+                btn.Content = AppTools.GetReswLanguage("Tip_ForceSync");
+                new PopupToast(AppTools.GetReswLanguage("Tip_SyncSuccess")).ShowPopup();
             }
-            btn.IsEnabled = true;
-            btn.Content = AppTools.GetReswLanguage("Tip_ForceSync");
-            new PopupToast(AppTools.GetReswLanguage("Tip_SyncSuccess")).ShowPopup();
+            catch (Exception ex)
+            {
+                btn.IsEnabled = true;
+                btn.Content = AppTools.GetReswLanguage("Tip_ForceSync");
+                new PopupToast(ex.Message,AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+            }
         }
 
         private async void BaiduTranslateAccountButton_Click(object sender, RoutedEventArgs e)

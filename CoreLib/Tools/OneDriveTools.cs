@@ -98,13 +98,9 @@ namespace CoreLib.Tools
                     return list;
                 }
             }
-            catch(Exception ex)
+            catch(Exception)
             {
-                if(ex is ServiceException)
-                {
-                    await _appFolder.StorageFolderPlatformService.CreateFileAsync("RssList.json", CreationCollisionOption.ReplaceExisting);
-                }
-                return new List<Category>();
+                throw;
             }
         }
         /// <summary>
@@ -135,13 +131,9 @@ namespace CoreLib.Tools
                     return list;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                if (ex is ServiceException)
-                {
-                    await _appFolder.StorageFolderPlatformService.CreateFileAsync("TodoList.json", CreationCollisionOption.ReplaceExisting);
-                }
-                return new List<Feed>();
+                throw;
             }
         }
         /// <summary>
@@ -172,13 +164,9 @@ namespace CoreLib.Tools
                     return list;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                if (ex is ServiceException)
-                {
-                    await _appFolder.StorageFolderPlatformService.CreateFileAsync("ToastList.json", CreationCollisionOption.ReplaceExisting);
-                }
-                return new List<Channel>();
+                throw;
             }
         }
         /// <summary>
@@ -209,13 +197,9 @@ namespace CoreLib.Tools
                     return list;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                if (ex is ServiceException)
-                {
-                    await _appFolder.StorageFolderPlatformService.CreateFileAsync("StarList.json", CreationCollisionOption.ReplaceExisting);
-                }
-                return new List<Feed>();
+                throw;
             }
         }
         /// <summary>

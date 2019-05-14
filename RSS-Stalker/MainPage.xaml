@@ -117,7 +117,6 @@
                             <ToggleButton Style="{StaticResource CircleToggleButtonStyle}" Margin="15,0" Name="StarButton" Click="StarButton_Click" Content="&#xE9DD;"/>
                             <ToggleButton Style="{StaticResource CircleToggleButtonStyle}" Content="&#xE9CB;" Name="SettingButton" Click="SettingButton_Click"/>
                         </StackPanel>
-                        
                     </Grid>
                     <Grid Name="SideChannelGrid" Width="300" Grid.Column="1" Background="{ThemeResource PageBackground}" BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,1,0">
                         <Grid.RowDefinitions>
@@ -153,7 +152,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <StackPanel Orientation="Horizontal" Name="MinsizeHeaderContainer" Padding="30,0" Height="60" BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,0,1">
+                <StackPanel Orientation="Horizontal" Name="MinsizeHeaderContainer" x:FieldModifier="Public" Padding="30,0" Height="60" BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,0,1">
                     <Button Style="{StaticResource GhostCircleButtonStyle}" Name="MenuButton" x:FieldModifier="Public" Click="MenuButton_Click" Content="&#xE994;" VerticalAlignment="Center" FontFamily="{StaticResource Icon}" Width="35" Height="35" FontSize="18"/>
                     <TextBlock TextTrimming="CharacterEllipsis" FontFamily="{StaticResource Basic}" Name="CategoryNameTextBlock" VerticalAlignment="Center" FontSize="15" Margin="15,0,0,0"/>
                 </StackPanel>

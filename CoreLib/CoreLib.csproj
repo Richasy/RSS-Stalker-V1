@@ -134,6 +134,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\AppTools.cs" />
     <Compile Include="Tools\OneDriveTools.cs" />
+    <Compile Include="Tools\StaticExtensions.cs" />
     <EmbeddedResource Include="Properties\CoreLib.rd.xml" />
   </ItemGroup>
   <ItemGroup>

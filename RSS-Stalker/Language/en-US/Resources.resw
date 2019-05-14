@@ -495,4 +495,13 @@
   <data name="Tip_BindingOneDriveSuccess" xml:space="preserve">
     <value>OneDrive is bound and data is being synced</value>
   </data>
+  <data name="Control_SpeechMenuItem.Text" xml:space="preserve">
+    <value>Speech</value>
+  </data>
+  <data name="Tip_ParseError" xml:space="preserve">
+    <value>Parse Failed</value>
+  </data>
+  <data name="Tip_Readability" xml:space="preserve">
+    <value>Get full text</value>
+  </data>
 </root>

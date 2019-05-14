@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -88,8 +89,8 @@ namespace CoreLib.Models
             Type = "rss";
             Text = channel.Description;
             Title = channel.Name;
-            XMLUrl = channel.Link;
-            HTMLUrl = channel.SourceUrl;
+            XMLUrl = WebUtility.UrlEncode(channel.Link);
+            HTMLUrl = WebUtility.UrlEncode(channel.SourceUrl);
         }
 
         ///<summary>

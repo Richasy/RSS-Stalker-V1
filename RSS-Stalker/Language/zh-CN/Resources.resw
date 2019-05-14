@@ -495,4 +495,13 @@
   <data name="Tip_BindingOneDriveSuccess" xml:space="preserve">
     <value>已绑定OneDrive，正在同步数据</value>
   </data>
+  <data name="Control_SpeechMenuItem.Text" xml:space="preserve">
+    <value>朗读</value>
+  </data>
+  <data name="Tip_ParseError" xml:space="preserve">
+    <value>解析失败</value>
+  </data>
+  <data name="Tip_Readability" xml:space="preserve">
+    <value>获取全文</value>
+  </data>
 </root>

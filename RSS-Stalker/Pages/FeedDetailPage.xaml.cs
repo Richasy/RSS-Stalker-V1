@@ -21,6 +21,8 @@ using RSS_Stalker.Tools;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using RSS_Stalker.Dialog;
+using Windows.Storage.Streams;
+using Windows.Media.SpeechSynthesis;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -49,6 +51,7 @@ namespace RSS_Stalker.Pages
             ToolTipService.SetToolTip(RemoveTodoButton, AppTools.GetReswLanguage("Tip_DeleteTodoList"));
             ToolTipService.SetToolTip(AddStarButton, AppTools.GetReswLanguage("Tip_AddStarList"));
             ToolTipService.SetToolTip(RemoveStarButton, AppTools.GetReswLanguage("Tip_DeleteStarList"));
+            ToolTipService.SetToolTip(ReadabilityButton, AppTools.GetReswLanguage("Tip_Readability"));
         }
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -102,6 +105,38 @@ namespace RSS_Stalker.Pages
                 DetailWebView.NavigateToString(html);
                 _isInit = true;
             }
+        }
+        /// <summary>
+        /// 将文本转化为朗读流
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        async Task<IRandomAccessStream> SynthesizeTextToSpeechAsync(string text)
+        {
+            // Windows.Storage.Streams.IRandomAccessStream
+            IRandomAccessStream stream = null;
+
+            // Windows.Media.SpeechSynthesis.SpeechSynthesizer
+            using (SpeechSynthesizer synthesizer = new SpeechSynthesizer())
+            {
+                // Windows.Media.SpeechSynthesis.SpeechSynthesisStream
+                stream = await synthesizer.SynthesizeTextToStreamAsync(text);
+            }
+
+            return (stream);
+        }
+        /// <summary>
+        /// 朗读文本
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <returns></returns>
+        async Task SpeakTextAsync(string text)
+        {
+            IRandomAccessStream stream = await this.SynthesizeTextToSpeechAsync(text);
+            await VoiceMediaElement.PlayStreamAsync(stream, true,()=>
+            {
+                MediaControlButton.Visibility = Visibility.Collapsed;
+            });
         }
         /// <summary>
         /// 检查TodoButton和StarButton的状态，根据不同情况切换不同按钮
@@ -515,6 +550,61 @@ namespace RSS_Stalker.Pages
         private async void WebButton_Click(object sender, RoutedEventArgs e)
         {
             await Launcher.LaunchUriAsync(new Uri(_sourceFeed.FeedUrl));
+        }
+
+        private async void SelectMenu_Speech_Click(object sender, RoutedEventArgs e)
+        {
+            var regex1 = new Regex(@"<\s*br[^>]?>");
+            var regex2 = new Regex(@"(<([^>]+)>)");
+            string text = regex1.Replace(_selectText, "\n");
+            text = regex2.Replace(text, "");
+            if (!string.IsNullOrEmpty(text))
+            {
+                MediaControlButton.Visibility = Visibility.Visible;
+                await SpeakTextAsync(text);
+            }
+        }
+
+        private async void Menu_Speech_Click(object sender, RoutedEventArgs e)
+        {
+            var regex1 = new Regex(@"<\s*br[^>]?>");
+            var regex2 = new Regex(@"(<([^>]+)>)");
+            string text = regex1.Replace(_sourceFeed.Content??_sourceFeed.Summary, "\n");
+            text = regex2.Replace(text, "");
+            if (!string.IsNullOrEmpty(text))
+            {
+                MediaControlButton.Visibility = Visibility.Visible;
+                await SpeakTextAsync(text);
+            }
+        }
+
+        private void MediaControlButton_Click(object sender, RoutedEventArgs e)
+        {
+            VoiceMediaElement.Stop();
+            MediaControlButton.Visibility = Visibility.Collapsed;
+        }
+        /// <summary>
+        /// 获取原网页并解析为可读文本
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void ReadabilityButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadingRing.IsActive = true;
+            ReadabilityButton.IsEnabled = false;
+            SmartReader.Article article = await SmartReader.Reader.ParseArticleAsync(_sourceFeed.FeedUrl);
+            if (article.IsReadable)
+            {
+                string content=await PackageHTML(article.Content);
+                _sourceFeed.Content = content;
+                DetailWebView.NavigateToString(content);
+            }
+            else
+            {
+                new PopupToast(AppTools.GetReswLanguage("Tip_ReadError"),AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+            }
+            ReadabilityButton.IsEnabled = true;
+            LoadingRing.IsActive = false;
         }
     }
 }

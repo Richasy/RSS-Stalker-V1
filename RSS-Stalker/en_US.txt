@@ -2,10 +2,14 @@
 
 The new version has been revised as follows:
 
-1. Unblocked links, but all links will open with the default browser when clicked
-2. Select the text pop-up menu to add two new options 'Search in web' and 'Share', and you can set the default search engine in the settings.
-3. Move the Open Web Page button to the sidebar resident button list
-4. Fixed an issue where the sidebar could not be loaded correctly when opening an article from the timeline
+=====
+Added the function of “Get Full Text”. If your feed only provides a summary, this function can help you convert the original webpage into readable text to help you with full-text browsing.
+=====
+
+1. Added new reading options. You can read aloud or read the full text. The full text reading is in the “three dots” button at the bottom of the article details page.
+2. Fixed an issue where the link was not processed when exporting OPML. This problem will cause the generated OPML to not be recognized properly.
+3. The OneDrive connection failure was captured and the current upload progress was interrupted to protect the source data.
+4. Fix the way the article details list is fixed. Under the wide screen, clicking the related article will not close the sidebar.
 
 ---
 

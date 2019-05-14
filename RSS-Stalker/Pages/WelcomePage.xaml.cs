@@ -41,7 +41,7 @@ namespace RSS_Stalker.Pages
 
         private async void TutorialButton_Click(object sender, RoutedEventArgs e)
         {
-            await Launcher.LaunchUriAsync(new Uri("https://blog.richasy.cn/document/rss/"));
+            await Launcher.LaunchUriAsync(new Uri("https://www.richasy.cn/document/rss/use.html"));
         }
     }
 }

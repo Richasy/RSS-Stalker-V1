@@ -15,6 +15,16 @@
         hljs.initLineNumbersOnLoad();
     </script>
     <script>
+        var getHtml = function () {
+            return document.body.innerHTML;
+        }
+    </script>
+    <script>
+        var setMark = function () {
+            window.getSelection().getRangeAt(0).surroundContents(document.createElement("mark"));
+        }
+    </script>
+    <script>
         // 文本选中事件封装
         var $sinaMiniBlogShare = function (eleContainer) {
             var eleTitle = document.getElementsByTagName("title")[0];

@@ -32,6 +32,11 @@
                 <MenuFlyoutItem Text="中文" Name="SelectMenu_Translate_Zh" Click="TextMenu_Translate_Click"/>
                 <MenuFlyoutItem Text="English" Name="SelectMenu_Translate_En" Click="TextMenu_Translate_Click"/>
             </MenuFlyoutSubItem>
+            <MenuFlyoutItem x:Uid="Control_MarkMenuItem" Name="SelectMenu_Mark" Click="SelectMenu_Mark_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE91F;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
             <MenuFlyoutItem x:Uid="Control_SearchTextInWebMenuItem" Name="SelectMenu_SearchText" Click="SelectMenu_SearchText_Click">
                 <MenuFlyoutItem.Icon>
                     <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE9C8;"/>
@@ -147,7 +152,7 @@
                              BringIntoViewRequested="DetailWebView_BringIntoViewRequested"
                  />
                     <MediaElement Width="5" Height="5" VerticalAlignment="Bottom" HorizontalAlignment="Right" Name="VoiceMediaElement" Visibility="Collapsed"/>
-                    <Button Style="{StaticResource GhostCircleButtonStyle}" Name="MediaControlButton" Content="&#xE9DC;" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,20,30" Visibility="Collapsed" Click="MediaControlButton_Click"/>
+                    <Button Style="{StaticResource GhostCircleButtonStyle}" Width="40" Height="40" Name="MediaControlButton" Content="&#xE997;" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,20,20" Visibility="Collapsed" Click="MediaControlButton_Click"/>
                     <ProgressRing Name="LoadingRing" Style="{StaticResource BasicProgressRingStyle}"/>
                     
                 </Grid>

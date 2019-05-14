@@ -98,8 +98,13 @@ namespace CoreLib.Tools
                     return list;
                 }
             }
-            catch(Exception)
+            catch(Exception ex)
             {
+                if (ex.Message.ToLower().Contains("itemnotfound"))
+                {
+                    await _appFolder.StorageFolderPlatformService.CreateFileAsync("RssList.json", CreationCollisionOption.ReplaceExisting);
+                    return new List<Category>();
+                }
                 throw;
             }
         }
@@ -131,8 +136,13 @@ namespace CoreLib.Tools
                     return list;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                if (ex.Message.ToLower().Contains("itemnotfound"))
+                {
+                    await _appFolder.StorageFolderPlatformService.CreateFileAsync("RssList.json", CreationCollisionOption.ReplaceExisting);
+                    return new List<Feed>();
+                }
                 throw;
             }
         }
@@ -164,8 +174,13 @@ namespace CoreLib.Tools
                     return list;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                if (ex.Message.ToLower().Contains("itemnotfound"))
+                {
+                    await _appFolder.StorageFolderPlatformService.CreateFileAsync("RssList.json", CreationCollisionOption.ReplaceExisting);
+                    return new List<Channel>();
+                }
                 throw;
             }
         }
@@ -197,8 +212,13 @@ namespace CoreLib.Tools
                     return list;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                if (ex.Message.ToLower().Contains("itemnotfound"))
+                {
+                    await _appFolder.StorageFolderPlatformService.CreateFileAsync("RssList.json", CreationCollisionOption.ReplaceExisting);
+                    return new List<Feed>();
+                }
                 throw;
             }
         }

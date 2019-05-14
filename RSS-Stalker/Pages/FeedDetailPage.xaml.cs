@@ -40,6 +40,7 @@ namespace RSS_Stalker.Pages
         private UserActivitySession _currentActivity;
         public static FeedDetailPage Current;
         private string _selectText;
+        private string _tempHtml;
         /// <summary>
         /// 文章详情页面，主体是WebView
         /// </summary>
@@ -115,14 +116,14 @@ namespace RSS_Stalker.Pages
         {
             // Windows.Storage.Streams.IRandomAccessStream
             IRandomAccessStream stream = null;
-
+            LoadingRing.IsActive = true;
             // Windows.Media.SpeechSynthesis.SpeechSynthesizer
             using (SpeechSynthesizer synthesizer = new SpeechSynthesizer())
             {
                 // Windows.Media.SpeechSynthesis.SpeechSynthesisStream
                 stream = await synthesizer.SynthesizeTextToStreamAsync(text);
             }
-
+            LoadingRing.IsActive = false;
             return (stream);
         }
         /// <summary>
@@ -253,8 +254,9 @@ namespace RSS_Stalker.Pages
             FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
         }
 
-        private void Menu_Share_Click(object sender, RoutedEventArgs e)
+        private async void Menu_Share_Click(object sender, RoutedEventArgs e)
         {
+            _tempHtml = await DetailWebView.InvokeScriptAsync("getHtml", new string[] { });
             DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
             dataTransferManager.DataRequested += IndexPage_DataRequested;
             DataTransferManager.ShowShareUI();
@@ -263,9 +265,8 @@ namespace RSS_Stalker.Pages
         {
             //创建一个数据包
             DataPackage dataPackage = new DataPackage();
-
             //把要分享的链接放到数据包里
-            dataPackage.SetHtmlFormat(HtmlFormatHelper.CreateHtmlFormat(_sourceFeed.Content));
+            dataPackage.SetHtmlFormat(HtmlFormatHelper.CreateHtmlFormat(_tempHtml));
             dataPackage.SetWebLink(new Uri(_sourceFeed.FeedUrl));
             //数据包的标题（内容和标题必须提供）
             dataPackage.Properties.Title = _sourceFeed.Title;
@@ -596,7 +597,7 @@ namespace RSS_Stalker.Pages
             if (article.IsReadable)
             {
                 string content=await PackageHTML(article.Content);
-                _sourceFeed.Content = content;
+                _sourceFeed.Content = article.Content;
                 DetailWebView.NavigateToString(content);
             }
             else
@@ -605,6 +606,19 @@ namespace RSS_Stalker.Pages
             }
             ReadabilityButton.IsEnabled = true;
             LoadingRing.IsActive = false;
+        }
+
+        private async void SelectMenu_Mark_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                await DetailWebView.InvokeScriptAsync("setMark", new string[] { });
+            }
+            catch (Exception)
+            {
+                new PopupToast(AppTools.GetReswLanguage("Tip_DoNotMarkAgain"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+            }
+            
         }
     }
 }

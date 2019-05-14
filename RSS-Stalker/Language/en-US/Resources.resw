@@ -504,4 +504,10 @@
   <data name="Tip_Readability" xml:space="preserve">
     <value>Get full text</value>
   </data>
+  <data name="Control_MarkMenuItem.Text" xml:space="preserve">
+    <value>Mark Text</value>
+  </data>
+  <data name="Tip_DoNotMarkAgain" xml:space="preserve">
+    <value>Mark failed, please do not mark same content again.</value>
+  </data>
 </root>

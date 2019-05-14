@@ -123,6 +123,7 @@ namespace RSS_Stalker
         private async void PageInit()
         {
             AppTools.SetTitleBarColor();
+            LoadingRing.IsActive = true;
             AppTitleBlock.Text = AppTools.GetReswLanguage("DisplayName");
             // 监听集合变化
             Categories.CollectionChanged += CategoryCollectionReordered;
@@ -142,6 +143,8 @@ namespace RSS_Stalker
             {
                 CategoryNameTextBlock.Text = "RSS Stalker";
                 SideChannelGrid.Visibility = Visibility.Collapsed;
+                AppSplitView.OpenPaneLength = 250;
+                MainFrame.Navigate(typeof(Pages.WelcomePage));
             }
             else
             {
@@ -160,6 +163,7 @@ namespace RSS_Stalker
             // 在完成列表装载后，将列表的数量重新赋值给标识符
             _categoryListCount = Categories.Count;
             _channelListCount = Channels.Count;
+            LoadingRing.IsActive = false;
             // 完成OneDrive的数据链接
             await App.OneDrive.OneDriveAuthorize();
             // TimerInit();
@@ -172,6 +176,7 @@ namespace RSS_Stalker
             await CheckVersion();
             // 注册快捷键
             Window.Current.Dispatcher.AcceleratorKeyActivated += AccelertorKeyActivedHandle;
+            
             _isInit = true;
         }
         /// <summary>

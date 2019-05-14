@@ -504,4 +504,10 @@
   <data name="Tip_Readability" xml:space="preserve">
     <value>获取全文</value>
   </data>
+  <data name="Control_MarkMenuItem.Text" xml:space="preserve">
+    <value>标记文本</value>
+  </data>
+  <data name="Tip_DoNotMarkAgain" xml:space="preserve">
+    <value>标记失败，请不要重复标记文本</value>
+  </data>
 </root>

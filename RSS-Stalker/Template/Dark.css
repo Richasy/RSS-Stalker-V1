@@ -128,14 +128,8 @@ hr {
 }
 
 mark {
-    max-width: 70%;
-    width: auto;
-    text-align: center;
-    margin: 0 auto;
     background-color: #2D7CD8;
     color: #fff;
-    padding: .4rem;
-    display: block;
     font-style: italic;
 }
 

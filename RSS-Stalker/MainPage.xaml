@@ -159,6 +159,7 @@
                 <Frame Name="MainFrame" x:FieldModifier="Public" Grid.Row="1"/>
             </Grid>
         </SplitView>
+        <ProgressRing Style="{StaticResource BasicProgressRingStyle}" Name="LoadingRing"/>
         <StackPanel VerticalAlignment="Top" Height="20" Name="TitleBarControl" Background="{ThemeResource TransparentBackground}"/>
     </Grid>
 </Page>

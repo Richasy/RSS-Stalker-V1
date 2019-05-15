@@ -348,11 +348,11 @@ namespace RSS_Stalker.Pages
             (sender as Button).IsEnabled = false;
             try
             {
-                await IOTools.DeleteTodoRead(_sourceFeed);
                 MainPage.Current.TodoList.RemoveAll(p=>p.Equals(_sourceFeed));
                 AddTodoButton.Visibility = Visibility.Visible;
                 RemoveTodoButton.Visibility = Visibility.Collapsed;
                 new PopupToast(AppTools.GetReswLanguage("Tip_DeleteTodoListSuccess")).ShowPopup();
+                await IOTools.DeleteTodoRead(_sourceFeed);
             }
             catch (Exception ex)
             {
@@ -366,11 +366,11 @@ namespace RSS_Stalker.Pages
             (sender as Button).IsEnabled = false;
             try
             {
-                await IOTools.DeleteStar(_sourceFeed);
                 MainPage.Current.StarList.RemoveAll(p => p.Equals(_sourceFeed));
                 AddStarButton.Visibility = Visibility.Visible;
                 RemoveStarButton.Visibility = Visibility.Collapsed;
                 new PopupToast(AppTools.GetReswLanguage("Tip_DeleteStarListSuccess")).ShowPopup();
+                await IOTools.DeleteStar(_sourceFeed);
             }
             catch (Exception ex)
             {

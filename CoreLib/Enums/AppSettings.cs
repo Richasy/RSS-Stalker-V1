@@ -15,6 +15,7 @@ namespace CoreLib.Enums
         StarUpdateTime,
         ToastUpdateTime,
         IsBindingOneDrive,
+        IsLocalAccount,
         UserName,
         Translate_BaiduAppId,
         Translate_BaiduKey,

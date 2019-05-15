@@ -44,6 +44,7 @@ namespace RSS_Stalker.Pages
         public async void PageInit()
         {
             string theme = AppTools.GetRoamingSetting(AppSettings.Theme,"Light");
+            bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsBindingOneDrive, "False"));
             string language = AppTools.GetRoamingSetting(AppSettings.Language,"en_US");
             string oneDriveUserName = AppTools.GetLocalSetting(AppSettings.UserName, "");
             string searchEngine = AppTools.GetRoamingSetting(AppSettings.SearchEngine, "Bing");
@@ -51,6 +52,14 @@ namespace RSS_Stalker.Pages
             bool isScreenChannel = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsScreenChannelCustom, "False"));
             double speechRate = Convert.ToDouble(AppTools.GetLocalSetting(AppSettings.SpeechRate, "1.0"));
             string gender = AppTools.GetLocalSetting(AppSettings.VoiceGender, "Female");
+            if (!isOneDrive)
+            {
+                ForceSyncContainer.Visibility = Visibility.Collapsed;
+                SyncWithStartContainer.Visibility = Visibility.Collapsed;
+                OneDriveNameTextBlock.Visibility = Visibility.Collapsed;
+                OneDriveLogoutButton.Visibility = Visibility.Collapsed;
+                LoginOneDriveButton.Visibility = Visibility.Visible;
+            }
             if (theme == "Light")
                 ThemeComboBox.SelectedIndex = 0;
             else
@@ -126,6 +135,7 @@ namespace RSS_Stalker.Pages
                 AppTools.WriteLocalSetting(AppSettings.StarUpdateTime, "0");
                 AppTools.WriteLocalSetting(AppSettings.ToastUpdateTime, "0");
                 AppTools.WriteLocalSetting(AppSettings.IsBindingOneDrive, "False");
+                AppTools.WriteLocalSetting(AppSettings.IsLocalAccount, "False");
                 var frame = Window.Current.Content as Frame;
                 frame.Navigate(typeof(OneDrivePage));
                 new PopupToast(AppTools.GetReswLanguage("Tip_RebindOneDrive")).ShowPopup();
@@ -202,7 +212,6 @@ namespace RSS_Stalker.Pages
                 ToastChannels.Remove(data);
                 MainPage.Current.ToastList.RemoveAll(p => p.Id == data.Id);
                 new PopupToast(AppTools.GetReswLanguage("Tip_Removed")).ShowPopup();
-                return;
             }
             (sender as Button).IsEnabled = true;
         }
@@ -323,8 +332,8 @@ namespace RSS_Stalker.Pages
         }
         private async void TryListenButton_Click(object sender, RoutedEventArgs e)
         {
-            // string content = AppTools.GetReswLanguage("Tip_SpeechTest");
-            string content = "This choice of voice is reflected in the SpeechSynthesizer.";
+            string content = AppTools.GetReswLanguage("Tip_SpeechTest");
+            //string content = "This choice of voice is reflected in the SpeechSynthesizer.";
             await SpeakTextAsync(content);
         }
 
@@ -334,6 +343,53 @@ namespace RSS_Stalker.Pages
                 return;
             string gender = VoiceGenderComboBox.SelectedIndex==0?"Male":"Female";
             AppTools.WriteLocalSetting(AppSettings.VoiceGender, gender);
+        }
+
+        private async void ExportLocalListButton_Click(object sender, RoutedEventArgs e)
+        {
+            var file = await IOTools.GetSaveFile(".json", "RSSStalker_LocalList.json", "JSON File");
+            ExportLocalListButton.IsEnabled = false;
+            ExportLocalListButton.Content = AppTools.GetReswLanguage("Tip_Waiting");
+            if (file != null)
+            {
+                await IOTools.ExportLocalList(file);
+                new PopupToast(AppTools.GetReswLanguage("Tip_ExportSuccess")).ShowPopup();
+            }
+            ExportLocalListButton.IsEnabled = true;
+            ExportLocalListButton.Content = AppTools.GetReswLanguage("Tip_Export");
+        }
+
+        private async void ImportLocalListButton_Click(object sender, RoutedEventArgs e)
+        {
+            ImportLocalListButton.IsEnabled = false;
+            ImportLocalListButton.Content = AppTools.GetReswLanguage("Tip_Waiting");
+            var file = await IOTools.OpenLocalFile(".json");
+            if (file != null)
+            {
+                try
+                {
+                    await IOTools.ImportLocalList(file);
+                    ToastChannels.Clear();
+                    var toastList = await IOTools.GetNeedToastChannels();
+                    if (toastList.Count > 0)
+                    {
+                        foreach (var item in toastList)
+                        {
+                            ToastChannels.Add(item);
+                        }
+                    }
+                    MainPage.Current.TodoList = await IOTools.GetLocalTodoReadList();
+                    MainPage.Current.StarList = await IOTools.GetLocalStarList();
+                    MainPage.Current.ToastList = toastList;
+                    new PopupToast(AppTools.GetReswLanguage("Tip_ImportSuccess")).ShowPopup();
+                }
+                catch (Exception ex)
+                {
+                    new PopupToast(ex.Message, AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+                }
+            }
+            ImportLocalListButton.IsEnabled = true;
+            ImportLocalListButton.Content = AppTools.GetReswLanguage("Tip_Import");
         }
     }
 }

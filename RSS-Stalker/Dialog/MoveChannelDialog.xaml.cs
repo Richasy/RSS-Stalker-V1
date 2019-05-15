@@ -64,14 +64,13 @@ namespace RSS_Stalker.Dialog
                     {
                         sourceCategory.Channels.RemoveAll(p => p.Id == _sourceChannel.Id);
                         selectCategory.Channels.Add(_sourceChannel);
-                        await IOTools.UpdateCategory(sourceCategory);
-                        await IOTools.UpdateCategory(selectCategory);
-                        
+                        new PopupToast(AppTools.GetReswLanguage("Tip_MoveChannelSuccess")).ShowPopup();
                         MainPage.Current.Channels.Remove(MainPage.Current.Channels.Where(p => p.Id == _sourceChannel.Id).FirstOrDefault());
                         MainPage.Current._channelListCount -= 1;
+                        Hide();
+                        await IOTools.UpdateCategory(sourceCategory);
+                        await IOTools.UpdateCategory(selectCategory);
                     }
-                    new PopupToast(AppTools.GetReswLanguage("Tip_MoveChannelSuccess")).ShowPopup();
-                    Hide();
                 }
             }
         }

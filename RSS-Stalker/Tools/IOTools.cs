@@ -10,6 +10,7 @@ using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using CoreLib.Tools;
+using CoreLib.Models.App;
 
 namespace RSS_Stalker.Tools
 {
@@ -165,7 +166,9 @@ namespace RSS_Stalker.Tools
             list.Add(category);
             text = JsonConvert.SerializeObject(list);
             await FileIO.WriteTextAsync(file, text);
-            await App.OneDrive.UpdateCategoryList(file);
+            bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
+            if(isOneDrive)
+                await App.OneDrive.UpdateCategoryList(file);
         }
         /// <summary>
         /// 更新标签
@@ -191,7 +194,9 @@ namespace RSS_Stalker.Tools
             }
             text = JsonConvert.SerializeObject(list);
             await FileIO.WriteTextAsync(file, text);
-            await App.OneDrive.UpdateCategoryList(file);
+            bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
+            if (isOneDrive)
+                await App.OneDrive.UpdateCategoryList(file);
         }
         /// <summary>
         /// 删除标签
@@ -211,7 +216,9 @@ namespace RSS_Stalker.Tools
             list.RemoveAll(p => p.Equals(category));
             text = JsonConvert.SerializeObject(list);
             await FileIO.WriteTextAsync(file, text);
-            await App.OneDrive.UpdateCategoryList(file);
+            bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
+            if (isOneDrive)
+                await App.OneDrive.UpdateCategoryList(file);
         }
         /// <summary>
         /// 完全替换RSS列表
@@ -226,7 +233,8 @@ namespace RSS_Stalker.Tools
                 var file = await localFolder.CreateFileAsync("Channels.json", CreationCollisionOption.OpenIfExists);
                 string text = JsonConvert.SerializeObject(categories);
                 await FileIO.WriteTextAsync(file, text);
-                if (isUpdate)
+                bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
+                if (isUpdate && isOneDrive)
                     await App.OneDrive.UpdateCategoryList(file);
             }
             catch (Exception)
@@ -247,7 +255,8 @@ namespace RSS_Stalker.Tools
                 var file = await localFolder.CreateFileAsync("TodoRead.json", CreationCollisionOption.OpenIfExists);
                 string text = JsonConvert.SerializeObject(feeds);
                 await FileIO.WriteTextAsync(file, text);
-                if (isUpdate)
+                bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
+                if (isUpdate && isOneDrive)
                     await App.OneDrive.UpdateTodoList(file);
             }
             catch (Exception)
@@ -268,7 +277,8 @@ namespace RSS_Stalker.Tools
                 var file = await localFolder.CreateFileAsync("Star.json", CreationCollisionOption.OpenIfExists);
                 string text = JsonConvert.SerializeObject(feeds);
                 await FileIO.WriteTextAsync(file, text);
-                if (isUpdate)
+                bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
+                if (isUpdate && isOneDrive)
                     await App.OneDrive.UpdateStarList(file);
             }
             catch (Exception)
@@ -290,7 +300,8 @@ namespace RSS_Stalker.Tools
                 var file = await localFolder.CreateFileAsync("ToastChannels.json", CreationCollisionOption.OpenIfExists);
                 string text = JsonConvert.SerializeObject(channels);
                 await FileIO.WriteTextAsync(file, text);
-                if (isUpdate)
+                bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
+                if (isUpdate && isOneDrive)
                     await App.OneDrive.UpdateStarList(file);
             }
             catch (Exception)
@@ -344,7 +355,9 @@ namespace RSS_Stalker.Tools
             list.Add(feed);
             text = JsonConvert.SerializeObject(list);
             await FileIO.WriteTextAsync(file, text);
-            await App.OneDrive.UpdateTodoList(file);
+            bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
+            if (isOneDrive)
+                await App.OneDrive.UpdateTodoList(file);
 
         }
         /// <summary>
@@ -365,7 +378,9 @@ namespace RSS_Stalker.Tools
             list.RemoveAll(p => p.Equals(feed));
             text = JsonConvert.SerializeObject(list);
             await FileIO.WriteTextAsync(file, text);
-            await App.OneDrive.UpdateTodoList(file);
+            bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
+            if (isOneDrive)
+                await App.OneDrive.UpdateTodoList(file);
         }
 
         /// <summary>
@@ -414,7 +429,9 @@ namespace RSS_Stalker.Tools
             list.Add(feed);
             text = JsonConvert.SerializeObject(list);
             await FileIO.WriteTextAsync(file, text);
-            await App.OneDrive.UpdateStarList(file);
+            bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
+            if (isOneDrive)
+                await App.OneDrive.UpdateStarList(file);
         }
         /// <summary>
         /// 删除收藏文章
@@ -436,7 +453,9 @@ namespace RSS_Stalker.Tools
                 list.RemoveAll(p => p.Equals(feed));
                 text = JsonConvert.SerializeObject(list);
                 await FileIO.WriteTextAsync(file, text);
-                await App.OneDrive.UpdateStarList(file);
+                bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
+                if (isOneDrive)
+                    await App.OneDrive.UpdateStarList(file);
             }
             catch (Exception)
             {
@@ -477,7 +496,9 @@ namespace RSS_Stalker.Tools
             list.Add(channel);
             text = JsonConvert.SerializeObject(list);
             await FileIO.WriteTextAsync(file, text);
-            await App.OneDrive.UpdateToastList(file);
+            bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
+            if (isOneDrive)
+                await App.OneDrive.UpdateToastList(file);
         }
         /// <summary>
         /// 移除需要通知的频道
@@ -496,7 +517,9 @@ namespace RSS_Stalker.Tools
             list.RemoveAll(p=>p.Id==channel.Id);
             text = JsonConvert.SerializeObject(list);
             await FileIO.WriteTextAsync(file, text);
-            await App.OneDrive.UpdateToastList(file);
+            bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
+            if (isOneDrive)
+                await App.OneDrive.UpdateToastList(file);
         }
         /// <summary>
         /// 添加已读文章
@@ -520,6 +543,107 @@ namespace RSS_Stalker.Tools
                 text = JsonConvert.SerializeObject(list);
                 await FileIO.WriteTextAsync(file, text);
             }
+        }
+        /// <summary>
+        /// 将本地的收藏列表、待读列表和推送列表导出
+        /// </summary>
+        /// <param name="file">文件</param>
+        /// <returns></returns>
+        public static async Task ExportLocalList(StorageFile file)
+        {
+            if (file == null)
+                return;
+            var export = new ExportModel();
+            var tasks = new List<Task>();
+            var task1 = Task.Run(async () =>
+            {
+                var l = await GetLocalTodoReadList();
+                export.Todo = l;
+            });
+            var task2 = Task.Run(async () =>
+            {
+                var l = await GetLocalStarList();
+                export.Star = l;
+            });
+            var task3 = Task.Run(async () =>
+            {
+                var l = await GetNeedToastChannels();
+                export.Toast = l;
+            });
+            tasks.Add(task1);
+            tasks.Add(task2);
+            tasks.Add(task3);
+            await Task.WhenAll(tasks.ToArray());
+            string json = JsonConvert.SerializeObject(export);
+            await FileIO.WriteTextAsync(file, json);
+        }
+        /// <summary>
+        /// 导入收藏列表、待读列表和推送列表
+        /// </summary>
+        /// <param name="file">文件</param>
+        /// <returns></returns>
+        public static async Task ImportLocalList(StorageFile file)
+        {
+            if (file == null)
+                return;
+            string content = await FileIO.ReadTextAsync(file);
+            var export = JsonConvert.DeserializeObject<ExportModel>(content);
+            var tasks = new List<Task>();
+            var task1 = Task.Run(async () =>
+            {
+                var l = await GetLocalTodoReadList();
+                bool isChanged = false;
+                foreach (var item in export.Todo)
+                {
+                    if (!l.Any(p=>p.InternalID==item.InternalID))
+                    {
+                        isChanged = true;
+                        l.Add(item);
+                    }
+                }
+                if (isChanged)
+                {
+                    await ReplaceTodo(l,true);
+                }
+            });
+            var task2 = Task.Run(async () =>
+            {
+                var l = await GetLocalStarList();
+                bool isChanged = false;
+                foreach (var item in export.Star)
+                {
+                    if (!l.Any(p => p.InternalID == item.InternalID))
+                    {
+                        isChanged = true;
+                        l.Add(item);
+                    }
+                }
+                if (isChanged)
+                {
+                    await ReplaceStar(l, true);
+                }
+            });
+            var task3 = Task.Run(async () =>
+            {
+                var l = await GetNeedToastChannels();
+                bool isChanged = false;
+                foreach (var item in export.Toast)
+                {
+                    if (!l.Any(p => p.Link == item.Link))
+                    {
+                        isChanged = true;
+                        l.Add(item);
+                    }
+                }
+                if (isChanged)
+                {
+                    await ReplaceToast(l, true);
+                }
+            });
+            tasks.Add(task1);
+            tasks.Add(task2);
+            tasks.Add(task3);
+            await Task.WhenAll(tasks.ToArray());
         }
     }
 }

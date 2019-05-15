@@ -59,8 +59,6 @@ namespace RSS_Stalker.Dialog
                 PrimaryButtonText = AppTools.GetReswLanguage("Tip_Waiting");
                 _sourceCategory.Name=name;
                 _sourceCategory.Icon = icon;
-                await IOTools.UpdateCategory(_sourceCategory);
-                new PopupToast(AppTools.GetReswLanguage("Tip_UpdateCategorySuccess")).ShowPopup();
                 foreach (var item in MainPage.Current.Categories)
                 {
                     if (item.Id == _sourceCategory.Id)
@@ -69,7 +67,9 @@ namespace RSS_Stalker.Dialog
                         item.Icon = _sourceCategory.Icon;
                     }
                 }
+                new PopupToast(AppTools.GetReswLanguage("Tip_UpdateCategorySuccess")).ShowPopup();
                 Hide();
+                await IOTools.UpdateCategory(_sourceCategory);
             }
             else
             {

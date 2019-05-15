@@ -95,5 +95,17 @@ namespace RSS_Stalker.Pages
                 new PopupToast(ex.Message,AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
         }
+
+        private async void LocalButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new Dialog.ConfirmDialog(AppTools.GetReswLanguage("Tip_LocalLoginTtitle"), AppTools.GetReswLanguage("Tip_LocalLoginTip"));
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                AppTools.WriteLocalSetting(AppSettings.IsLocalAccount, "True");
+                var frame = Window.Current.Content as Frame;
+                frame.Navigate(typeof(MainPage));
+            }
+        }
     }
 }

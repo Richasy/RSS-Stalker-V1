@@ -56,6 +56,10 @@ namespace RSS_Stalker.Dialog
                 IsPrimaryButtonEnabled = false;
                 PrimaryButtonText = AppTools.GetReswLanguage("Tip_Waiting");
                 var cate = new Category(name, icon);
+                MainPage.Current.Categories.Add(cate);
+                MainPage.Current._categoryListCount += 1;
+                new PopupToast(AppTools.GetReswLanguage("Tip_AddCategorySuccess")).ShowPopup();
+                Hide();
                 try
                 {
                     await IOTools.AddCategory(cate);
@@ -64,13 +68,6 @@ namespace RSS_Stalker.Dialog
                 {
                     await Task.Delay(1000);
                     await IOTools.AddCategory(cate);
-                }
-                finally
-                {
-                    new PopupToast(AppTools.GetReswLanguage("Tip_AddCategorySuccess")).ShowPopup();
-                    MainPage.Current.Categories.Add(cate);
-                    MainPage.Current._categoryListCount += 1;
-                    Hide();
                 }
             }
             else

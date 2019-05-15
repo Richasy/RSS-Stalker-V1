@@ -124,6 +124,7 @@ namespace RSS_Stalker
         {
             AppTools.SetTitleBarColor();
             LoadingRing.IsActive = true;
+            bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsBindingOneDrive, "False"));
             AppTitleBlock.Text = AppTools.GetReswLanguage("DisplayName");
             // 监听集合变化
             Categories.CollectionChanged += CategoryCollectionReordered;
@@ -165,7 +166,8 @@ namespace RSS_Stalker
             _channelListCount = Channels.Count;
             LoadingRing.IsActive = false;
             // 完成OneDrive的数据链接
-            await App.OneDrive.OneDriveAuthorize();
+            if(isOneDrive)
+                await App.OneDrive.OneDriveAuthorize();
             // TimerInit();
             TodoList = await IOTools.GetLocalTodoReadList();
             StarList = await IOTools.GetLocalStarList();
@@ -618,7 +620,6 @@ namespace RSS_Stalker
             }
             TodoButton.IsChecked = true;
         }
-
         private void StarButton_Click(object sender, RoutedEventArgs e)
         {
             _isTodoButtonClick = false;

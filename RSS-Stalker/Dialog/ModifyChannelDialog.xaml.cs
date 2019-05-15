@@ -77,8 +77,7 @@ namespace RSS_Stalker.Dialog
                             item.Link = link;
                         }
                     }
-                    await IOTools.UpdateCategory(sourceCategory);
-                    if(MainPage.Current.MainFrame.Content is Pages.ChannelDetailPage)
+                    if (MainPage.Current.MainFrame.Content is Pages.ChannelDetailPage)
                     {
                         if (Pages.ChannelDetailPage.Current._sourceData.Id == _sourceChannel.Id)
                         {
@@ -91,6 +90,7 @@ namespace RSS_Stalker.Dialog
                     }
                     new PopupToast(AppTools.GetReswLanguage("Tip_UpdateChannelSuccess")).ShowPopup();
                     Hide();
+                    await IOTools.UpdateCategory(sourceCategory);
                 }
                 else
                 {

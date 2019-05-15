@@ -548,8 +548,9 @@ namespace CoreLib.Tools
                 VoiceGender g = gender == "Female" ? VoiceGender.Female : VoiceGender.Male;
                 double rate = Convert.ToDouble(GetLocalSetting(AppSettings.SpeechRate, "1.0"));
                 synthesizer.Options.SpeakingRate = rate;
+                string lan = synthesizer.Voice.Language;
                 synthesizer.Voice = (from voice in SpeechSynthesizer.AllVoices
-                                     where voice.Gender == g
+                                     where voice.Gender == g && voice.Language==lan
                                      select voice).FirstOrDefault()?? SpeechSynthesizer.DefaultVoice;
                 stream = await synthesizer.SynthesizeTextToStreamAsync(text);
             }

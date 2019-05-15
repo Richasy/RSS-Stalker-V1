@@ -337,7 +337,7 @@
     <value>没有查找到相应数据</value>
   </data>
   <data name="Tip_OneDriveLogoutTip" xml:space="preserve">
-    <value>当退出OneDrive账户后，需要重新绑定OneDrive账户</value>
+    <value>若重新绑定OneDrive账户，则本地记录将会被云端记录取代，建议您在退出前先备份好本地记录</value>
   </data>
   <data name="Tip_PreWelcome" xml:space="preserve">
     <value>欢迎您，</value>
@@ -524,5 +524,20 @@
   </data>
   <data name="Tip_SpeechTest" xml:space="preserve">
     <value>你好，我是云之幻，软件的开发者。</value>
+  </data>
+  <data name="Control_ExportLocalListTipBlock.Text" xml:space="preserve">
+    <value>导出本地待读、收藏和推送列表</value>
+  </data>
+  <data name="Control_ImportLocalListTipBlock.Text" xml:space="preserve">
+    <value>导入待读、收藏和推送列表</value>
+  </data>
+  <data name="Cotrol_LocalAccountButton.Content" xml:space="preserve">
+    <value>本地账户</value>
+  </data>
+  <data name="Tip_LocalLoginTip" xml:space="preserve">
+    <value>您将跳过OneDrive验证，相应的，您的一切数据都保存在本地，不会进行云同步。</value>
+  </data>
+  <data name="Tip_LocalLoginTitle" xml:space="preserve">
+    <value>本地登录提醒</value>
   </data>
 </root>

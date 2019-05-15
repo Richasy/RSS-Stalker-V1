@@ -64,6 +64,10 @@ namespace RSS_Stalker.Dialog
                         IsPrimaryButtonEnabled = false;
                         PrimaryButtonText = AppTools.GetReswLanguage("Tip_Waiting");
                         selectCategory.Channels.Add(_sourceChannel);
+                        MainPage.Current.Channels.Add(_sourceChannel);
+                        MainPage.Current._channelListCount += 1;
+                        new PopupToast(AppTools.GetReswLanguage("Tip_AddChannelSuccess")).ShowPopup();
+                        Hide();
                         try
                         {
                             await IOTools.UpdateCategory(selectCategory);
@@ -72,13 +76,6 @@ namespace RSS_Stalker.Dialog
                         {
                             await Task.Delay(1000);
                             await IOTools.UpdateCategory(selectCategory);
-                        }
-                        finally
-                        {
-                            MainPage.Current.Channels.Add(_sourceChannel);
-                            MainPage.Current._channelListCount += 1;
-                            new PopupToast(AppTools.GetReswLanguage("Tip_AddChannelSuccess")).ShowPopup();
-                            Hide();
                         }
                     }
                 }

@@ -112,7 +112,8 @@ namespace RSS_Stalker
                 // 创建要充当导航上下文的框架，并导航到第一页
                 rootFrame = new Frame();
                 bool isBinding = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsBindingOneDrive, "False"));
-                if (isBinding)
+                bool isLocal = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsLocalAccount, "False"));
+                if (isBinding || isLocal)
                     rootFrame.Navigate(typeof(MainPage),"Timeline");
                 else
                 {
@@ -139,7 +140,8 @@ namespace RSS_Stalker
             else
             {
                 bool isBinding = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsBindingOneDrive, "False"));
-                if (!isBinding)
+                bool isLocal = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsLocalAccount, "False"));
+                if (!isBinding && !isLocal)
                     return;
                 if (args.Kind == ActivationKind.Protocol)
                 {
@@ -188,6 +190,7 @@ namespace RSS_Stalker
                     // 并通过将所需信息作为导航参数传入来配置
                     // 参数
                     bool isBinding = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsBindingOneDrive, "False"));
+                    bool isLocal = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsLocalAccount, "False"));
                     bool isSyncOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.SyncWithStart, "False"));
                     if (isBinding)
                     {
@@ -199,10 +202,12 @@ namespace RSS_Stalker
                                 rootFrame.Navigate(typeof(SplashPage));
                             else
                                 rootFrame.Navigate(typeof(MainPage), e.Arguments);
-                        }  
+                        }
                         else
                             rootFrame.Navigate(typeof(MainPage), e.Arguments);
                     }
+                    else if (isLocal)
+                        rootFrame.Navigate(typeof(MainPage), e.Arguments);
                     else
                         rootFrame.Navigate(typeof(OneDrivePage));
                 }

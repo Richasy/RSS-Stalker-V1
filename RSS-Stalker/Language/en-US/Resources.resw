@@ -337,7 +337,7 @@
     <value>No data here.</value>
   </data>
   <data name="Tip_OneDriveLogoutTip" xml:space="preserve">
-    <value>You need rebind OneDrive when you logout.</value>
+    <value>If you re-bind your OneDrive account, the local record will be replaced by the cloud record. It is recommended that you back up the local record before exiting.</value>
   </data>
   <data name="Tip_PreWelcome" xml:space="preserve">
     <value>Welcome! </value>
@@ -524,5 +524,20 @@
   </data>
   <data name="Tip_SpeechTest" xml:space="preserve">
     <value>Hello, I'm Richard! Thank you to use this application.</value>
+  </data>
+  <data name="Control_ExportLocalListTipBlock.Text" xml:space="preserve">
+    <value>Export local Todo, Favourites and Alert list</value>
+  </data>
+  <data name="Control_ImportLocalListTipBlock.Text" xml:space="preserve">
+    <value>Import Todo, Favourites and Alert list</value>
+  </data>
+  <data name="Cotrol_LocalAccountButton.Content" xml:space="preserve">
+    <value>Local account</value>
+  </data>
+  <data name="Tip_LocalLoginTip" xml:space="preserve">
+    <value>You will skip OneDrive verification and, as a result, all your data will be saved locally and will not be synced with the cloud.</value>
+  </data>
+  <data name="Tip_LocalLoginTitle" xml:space="preserve">
+    <value>With Local</value>
   </data>
 </root>

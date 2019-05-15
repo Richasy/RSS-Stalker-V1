@@ -25,83 +25,124 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        
+
             <StackPanel>
-                <TextBlock x:Uid="Control_SettingTipBlock" FontFamily="{StaticResource Title}" FontWeight="Bold" Foreground="{ThemeResource ImportantTextColor}" FontSize="20" Margin="0,0,0,10"/>
-                <TextBlock x:Uid="Control_BaseSettingTipBlock" Margin="0,15,0,0" FontWeight="Bold" FontFamily="{StaticResource Title}" Foreground="{ThemeResource ImportantTextColor}" FontSize="15"/>
-                <StackPanel Margin="0,10,0,0">
-                    <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_ThemeSettingTipBlock" Margin="0,0,0,5"/>
-                    <ComboBox Style="{StaticResource BasicComboBoxStyle}"
+                <Pivot Style="{StaticResource PivotStyle1}">
+                    <Pivot.Title>
+                        <TextBlock x:Uid="Control_SettingTipBlock" FontFamily="{StaticResource Title}" FontWeight="Bold" Foreground="{ThemeResource ImportantTextColor}" FontSize="20"/>
+                    </Pivot.Title>
+                    <PivotItem Style="{StaticResource BasicPivotItemStyle}">
+                        <PivotItem.Header>
+                            <TextBlock x:Uid="Control_BaseSettingTipBlock" FontWeight="Bold" FontFamily="{StaticResource Title}" Foreground="{ThemeResource ImportantTextColor}" FontSize="15"/>
+                        </PivotItem.Header>
+                        <StackPanel>
+                            <StackPanel Margin="0,10,0,0">
+                                <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_ThemeSettingTipBlock" Margin="0,0,0,5"/>
+                                <ComboBox Style="{StaticResource BasicComboBoxStyle}"
                       ItemContainerStyle="{StaticResource BasicComboBoxItemContainerStyle}"
                       Name="ThemeComboBox"
                       SelectionChanged="ThemeComboBox_SelectionChanged"
                       >
-                        <ComboBoxItem x:Uid="Control_LightComboItem" Name="Light"/>
-                        <ComboBoxItem x:Uid="Control_DarkComboItem" Name="Dark"/>
-                    </ComboBox>
-                </StackPanel>
-                <StackPanel Margin="0,10,0,0">
-                    <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_LanguageSettingTipBlock" Margin="0,0,0,5"/>
-                    <ComboBox Style="{StaticResource BasicComboBoxStyle}"
+                                    <ComboBoxItem x:Uid="Control_LightComboItem" Name="Light"/>
+                                    <ComboBoxItem x:Uid="Control_DarkComboItem" Name="Dark"/>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Margin="0,10,0,0">
+                                <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_LanguageSettingTipBlock" Margin="0,0,0,5"/>
+                                <ComboBox Style="{StaticResource BasicComboBoxStyle}"
                       ItemContainerStyle="{StaticResource BasicComboBoxItemContainerStyle}"
                       Name="LanguageComboBox"
                       SelectionChanged="LanguageComboBox_SelectionChanged"
                       >
-                        <ComboBoxItem Content="简体中文" Name="zh_CN"/>
-                        <ComboBoxItem Content="English" Name="en_US"/>
-                    </ComboBox>
-                </StackPanel>
-                <StackPanel Margin="0,10,0,0">
-                    <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_ScreenChannelSettingTipBlock" Margin="0,0,0,5"/>
-                    <ComboBox Style="{StaticResource BasicComboBoxStyle}"
+                                    <ComboBoxItem Content="简体中文" Name="zh_CN"/>
+                                    <ComboBoxItem Content="English" Name="en_US"/>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Margin="0,10,0,0">
+                                <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_ScreenChannelSettingTipBlock" Margin="0,0,0,5"/>
+                                <ComboBox Style="{StaticResource BasicComboBoxStyle}"
                       ItemContainerStyle="{StaticResource BasicComboBoxItemContainerStyle}"
                       Name="ScreenChannelComboBox"
                       SelectionChanged="ScreenChannelComboBox_SelectionChanged"
                       >
-                        <ComboBoxItem x:Uid="Control_DefaultComboItem" Name="Default"/>
-                        <ComboBoxItem x:Uid="Control_CustomComboItem" Name="Custom"/>
-                    </ComboBox>
-                </StackPanel>
-                <StackPanel Margin="0,10,0,0">
-                    <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_SearchEngineSettingTipBlock" Margin="0,0,0,5"/>
-                    <ComboBox Style="{StaticResource BasicComboBoxStyle}"
+                                    <ComboBoxItem x:Uid="Control_DefaultComboItem" Name="Default"/>
+                                    <ComboBoxItem x:Uid="Control_CustomComboItem" Name="Custom"/>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Margin="0,10,0,0">
+                                <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_SearchEngineSettingTipBlock" Margin="0,0,0,5"/>
+                                <ComboBox Style="{StaticResource BasicComboBoxStyle}"
                       ItemContainerStyle="{StaticResource BasicComboBoxItemContainerStyle}"
                       Name="SearchEngineComboBox"
                       SelectionChanged="SearchEngineComboBox_SelectionChanged"
                       >
-                        <ComboBoxItem Name="Google" x:Uid="Control_GoogleComboItem"/>
-                        <ComboBoxItem Name="Baidu" x:Uid="Control_BaiduComboItem"/>
-                        <ComboBoxItem Name="Bing" x:Uid="Control_BingComboItem"/>
-                    </ComboBox>
-                </StackPanel>
-                <TextBlock x:Uid="Control_DataSettingTipBlock" FontFamily="{StaticResource Title}" FontWeight="Bold" Margin="0,25,0,0" Foreground="{ThemeResource ImportantTextColor}" FontSize="15"/>
-                <StackPanel Margin="0,10,0,0">
-                    <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_OneDriveSettingTipBlock" Margin="0,0,0,5"/>
-                    <TextBlock Name="OneDriveNameTextBlock" FontWeight="Bold" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource ImportantTextColor}" FontSize="15" HorizontalAlignment="Left"/>
-                    <HyperlinkButton x:Uid="Control_LogoutButton" Name="OneDriveLogoutButton" Click="OneDriveLogoutButton_Click" Foreground="{ThemeResource PrimaryColor}" FontSize="12" FontFamily="{StaticResource Basic}" HorizontalAlignment="Left"/>
-                </StackPanel>
-                <StackPanel Margin="0,10,0,0">
-                    <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_BaiduTranslateSettingTipBlock" Margin="0,0,0,5"/>
-                    <Button Name="BaiduTranslateAccountButton" x:Uid="Control_ManagerButton" Style="{StaticResource DefaultButtonStyle}" Click="BaiduTranslateAccountButton_Click"/>
-                </StackPanel>
+                                    <ComboBoxItem Name="Google" x:Uid="Control_GoogleComboItem"/>
+                                    <ComboBoxItem Name="Baidu" x:Uid="Control_BaiduComboItem"/>
+                                    <ComboBoxItem Name="Bing" x:Uid="Control_BingComboItem"/>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Margin="0,10,0,0">
+                                <TextBlock Style="{StaticResource BaseTextBlockStyle}" x:Uid="Control_VoiceGenderSettingTipBlock" Margin="0,0,0,5"/>
+                                <ComboBox Style="{StaticResource BasicComboBoxStyle}"
+                      ItemContainerStyle="{StaticResource BasicComboBoxItemContainerStyle}"
+                      Name="VoiceGenderComboBox"
+                      SelectionChanged="VoiceGenderComboBox_SelectionChanged"
+                      >
+                                    <ComboBoxItem x:Uid="Control_MaleComboItem"/>
+                                    <ComboBoxItem x:Uid="Control_FemaleComboItem"/>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Margin="0,10,0,0">
+                                <TextBlock Style="{StaticResource BaseTextBlockStyle}" x:Uid="Control_SpeechRateSettingTipBlock" Margin="0,0,0,5"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                    <Slider Style="{StaticResource MediaSliderStyle}" StepFrequency="0.1" Width="300" Name="SpeechRateSlider" Minimum="0.1" Maximum="2" ValueChanged="SpeechRateSlider_ValueChanged" VerticalAlignment="Center"/>
+                                    <Button Style="{StaticResource GhostCircleButtonStyle}" Width="35" Height="35" Content="&#xEA03;" Name="TryListenButton" Click="TryListenButton_Click" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                                    <MediaElement Width="5" Height="5" Name="VoiceMediaElement" Visibility="Collapsed"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </PivotItem>
+                    <PivotItem>
+                        <PivotItem.Header>
+                            <TextBlock x:Uid="Control_DataSettingTipBlock" FontFamily="{StaticResource Title}" FontWeight="Bold" Foreground="{ThemeResource ImportantTextColor}" FontSize="15"/>
+                        </PivotItem.Header>
+                        <StackPanel>
+                            <StackPanel Margin="0,10,0,0">
+                                <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_OneDriveSettingTipBlock" Margin="0,0,0,5"/>
+                                <TextBlock Name="OneDriveNameTextBlock" FontWeight="Bold" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource ImportantTextColor}" FontSize="15" HorizontalAlignment="Left"/>
+                                <HyperlinkButton x:Uid="Control_LogoutButton" Name="OneDriveLogoutButton" Click="OneDriveLogoutButton_Click" Foreground="{ThemeResource PrimaryColor}" FontSize="12" FontFamily="{StaticResource Basic}" HorizontalAlignment="Left"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,10,0,0">
+                                <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_BaiduTranslateSettingTipBlock" Margin="0,0,0,5"/>
+                                <Button Name="BaiduTranslateAccountButton" x:Uid="Control_ManagerButton" Style="{StaticResource DefaultButtonStyle}" Click="BaiduTranslateAccountButton_Click"/>
+                            </StackPanel>
 
-                <StackPanel Margin="0,10,0,0">
-                    <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_ImportOpmlTipBlock" Margin="0,0,0,5"/>
-                    <Button Style="{StaticResource DefaultButtonStyle}" x:Uid="Control_ImportButton" Name="ImportOpmlButton" Click="ImportOpmlButton_Click"/>
-                </StackPanel>
-                <StackPanel Margin="0,10,0,0">
-                    <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_ExportOpmlTipBlock" Margin="0,0,0,5"/>
-                    <Button Style="{StaticResource DefaultButtonStyle}" x:Uid="Control_ExportButton" Name="ExportOpmlButton" Click="ExportOpmlButton_Click"/>
-                </StackPanel>
-                <TextBlock x:Uid="Control_SyncSettingTipBlock" FontFamily="{StaticResource Title}" FontWeight="Bold" Margin="0,25,0,0" Foreground="{ThemeResource ImportantTextColor}" FontSize="15"/>
-                <StackPanel Margin="0,10,0,0">
-                    <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_SyncWithStartTipBlock" Margin="0,0,0,5"/>
-                    <ToggleSwitch Name="SyncWithStartSwitch" Style="{StaticResource BasicSwitchStyle}" Toggled="SyncWithStartSwitch_Toggled"/>
-                </StackPanel>
-                <StackPanel Margin="0,10,0,0">
-                    <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_ForceSyncTipBlock" Margin="0,0,0,5"/>
-                    <Button Name="ForceSyncButton" x:Uid="Control_ForceSyncButton" Style="{StaticResource DefaultButtonStyle}" Click="ForceSyncButton_Click"/>
-                </StackPanel>
+                            <StackPanel Margin="0,10,0,0">
+                                <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_ImportOpmlTipBlock" Margin="0,0,0,5"/>
+                                <Button Style="{StaticResource DefaultButtonStyle}" x:Uid="Control_ImportButton" Name="ImportOpmlButton" Click="ImportOpmlButton_Click"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,10,0,0">
+                                <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_ExportOpmlTipBlock" Margin="0,0,0,5"/>
+                                <Button Style="{StaticResource DefaultButtonStyle}" x:Uid="Control_ExportButton" Name="ExportOpmlButton" Click="ExportOpmlButton_Click"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </PivotItem>
+                    <PivotItem>
+                        <PivotItem.Header>
+                            <TextBlock x:Uid="Control_SyncSettingTipBlock" FontFamily="{StaticResource Title}" FontWeight="Bold" Foreground="{ThemeResource ImportantTextColor}" FontSize="15"/>
+                        </PivotItem.Header>
+                        <StackPanel>
+                            <StackPanel Margin="0,10,0,0">
+                                <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_SyncWithStartTipBlock" Margin="0,0,0,5"/>
+                                <ToggleSwitch Name="SyncWithStartSwitch" Style="{StaticResource BasicSwitchStyle}" Toggled="SyncWithStartSwitch_Toggled"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,10,0,0">
+                                <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_ForceSyncTipBlock" Margin="0,0,0,5"/>
+                                <Button Name="ForceSyncButton" x:Uid="Control_ForceSyncButton" Style="{StaticResource DefaultButtonStyle}" Click="ForceSyncButton_Click"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </PivotItem>
+                </Pivot>
             </StackPanel>
         
         <Grid Grid.Column="1">

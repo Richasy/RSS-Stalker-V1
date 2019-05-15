@@ -24,6 +24,8 @@ namespace CoreLib.Enums
         LastSyncTime,
         IsScreenChannelCustom,
         ScreenChannel,
-        SearchEngine
+        SearchEngine,
+        SpeechRate,
+        VoiceGender
     }
 }

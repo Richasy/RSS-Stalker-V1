@@ -107,25 +107,7 @@ namespace RSS_Stalker.Pages
                 _isInit = true;
             }
         }
-        /// <summary>
-        /// 将文本转化为朗读流
-        /// </summary>
-        /// <param name="text"></param>
-        /// <returns></returns>
-        async Task<IRandomAccessStream> SynthesizeTextToSpeechAsync(string text)
-        {
-            // Windows.Storage.Streams.IRandomAccessStream
-            IRandomAccessStream stream = null;
-            LoadingRing.IsActive = true;
-            // Windows.Media.SpeechSynthesis.SpeechSynthesizer
-            using (SpeechSynthesizer synthesizer = new SpeechSynthesizer())
-            {
-                // Windows.Media.SpeechSynthesis.SpeechSynthesisStream
-                stream = await synthesizer.SynthesizeTextToStreamAsync(text);
-            }
-            LoadingRing.IsActive = false;
-            return (stream);
-        }
+        
         /// <summary>
         /// 朗读文本
         /// </summary>
@@ -133,7 +115,9 @@ namespace RSS_Stalker.Pages
         /// <returns></returns>
         async Task SpeakTextAsync(string text)
         {
-            IRandomAccessStream stream = await this.SynthesizeTextToSpeechAsync(text);
+            LoadingRing.IsActive = true;
+            IRandomAccessStream stream = await AppTools.SynthesizeTextToSpeechAsync(text);
+            LoadingRing.IsActive = false;
             await VoiceMediaElement.PlayStreamAsync(stream, true,()=>
             {
                 MediaControlButton.Visibility = Visibility.Collapsed;

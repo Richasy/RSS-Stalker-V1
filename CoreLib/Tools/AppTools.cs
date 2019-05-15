@@ -22,6 +22,8 @@ using System.Diagnostics;
 using System.Net;
 using Newtonsoft.Json.Linq;
 using Rss.Parsers.Rss;
+using Windows.Storage.Streams;
+using Windows.Media.SpeechSynthesis;
 
 namespace CoreLib.Tools
 {
@@ -528,6 +530,30 @@ namespace CoreLib.Tools
 
             return result;
         }
+        /// <summary>
+        /// 将文本转化为朗读流
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static async Task<IRandomAccessStream> SynthesizeTextToSpeechAsync(string text)
+        {
+            // Windows.Storage.Streams.IRandomAccessStream
+            IRandomAccessStream stream = null;
 
+            // Windows.Media.SpeechSynthesis.SpeechSynthesizer
+            using (SpeechSynthesizer synthesizer = new SpeechSynthesizer())
+            {
+                
+                string gender = GetLocalSetting(AppSettings.VoiceGender, "Female");
+                VoiceGender g = gender == "Female" ? VoiceGender.Female : VoiceGender.Male;
+                double rate = Convert.ToDouble(GetLocalSetting(AppSettings.SpeechRate, "1.0"));
+                synthesizer.Options.SpeakingRate = rate;
+                synthesizer.Voice = (from voice in SpeechSynthesizer.AllVoices
+                                     where voice.Gender == g
+                                     select voice).FirstOrDefault()?? SpeechSynthesizer.DefaultVoice;
+                stream = await synthesizer.SynthesizeTextToStreamAsync(text);
+            }
+            return (stream);
+        }
     }
 }

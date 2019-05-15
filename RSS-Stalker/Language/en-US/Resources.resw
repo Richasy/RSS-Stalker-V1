@@ -510,4 +510,19 @@
   <data name="Tip_DoNotMarkAgain" xml:space="preserve">
     <value>Mark failed, please do not mark same content again.</value>
   </data>
+  <data name="Control_FemaleComboItem.Content" xml:space="preserve">
+    <value>Female</value>
+  </data>
+  <data name="Control_MaleComboItem.Content" xml:space="preserve">
+    <value>Male</value>
+  </data>
+  <data name="Control_SpeechRateSettingTipBlock.Text" xml:space="preserve">
+    <value>Speech Rate</value>
+  </data>
+  <data name="Control_VoiceGenderSettingTipBlock.Text" xml:space="preserve">
+    <value>Voice Gender</value>
+  </data>
+  <data name="Tip_SpeechTest" xml:space="preserve">
+    <value>Hello, I'm Richard! Thank you to use this application.</value>
+  </data>
 </root>

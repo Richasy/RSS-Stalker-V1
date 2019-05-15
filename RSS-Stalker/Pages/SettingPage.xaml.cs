@@ -21,6 +21,7 @@ using RSS_Stalker.Tools;
 using CoreLib.Enums;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Windows.Storage.Streams;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -48,6 +49,8 @@ namespace RSS_Stalker.Pages
             string searchEngine = AppTools.GetRoamingSetting(AppSettings.SearchEngine, "Bing");
             bool isSyncWithStart = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.SyncWithStart, "False"));
             bool isScreenChannel = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsScreenChannelCustom, "False"));
+            double speechRate = Convert.ToDouble(AppTools.GetLocalSetting(AppSettings.SpeechRate, "1.0"));
+            string gender = AppTools.GetLocalSetting(AppSettings.VoiceGender, "Female");
             if (theme == "Light")
                 ThemeComboBox.SelectedIndex = 0;
             else
@@ -70,6 +73,8 @@ namespace RSS_Stalker.Pages
                 default:
                     break;
             }
+            VoiceGenderComboBox.SelectedIndex = gender == "Female" ? 1 : 0;
+            SpeechRateSlider.Value = speechRate;
             SyncWithStartSwitch.IsOn = isSyncWithStart;
             OneDriveNameTextBlock.Text = oneDriveUserName;
             ToastChannels.Clear();
@@ -294,6 +299,41 @@ namespace RSS_Stalker.Pages
                 return;
             var item = SearchEngineComboBox.SelectedItem as ComboBoxItem;
             AppTools.WriteRoamingSetting(AppSettings.SearchEngine, item?.Name??"Bing");
+        }
+
+        private void SpeechRateSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            if (!_isInit)
+                return;
+            AppTools.WriteLocalSetting(AppSettings.SpeechRate, SpeechRateSlider.Value.ToString());
+        }
+        /// <summary>
+        /// 朗读文本
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <returns></returns>
+        async Task SpeakTextAsync(string text)
+        {
+            TryListenButton.IsEnabled = false;
+            IRandomAccessStream stream = await AppTools.SynthesizeTextToSpeechAsync(text);
+            await VoiceMediaElement.PlayStreamAsync(stream, true, () =>
+            {
+                TryListenButton.IsEnabled = true;
+            });
+        }
+        private async void TryListenButton_Click(object sender, RoutedEventArgs e)
+        {
+            // string content = AppTools.GetReswLanguage("Tip_SpeechTest");
+            string content = "This choice of voice is reflected in the SpeechSynthesizer.";
+            await SpeakTextAsync(content);
+        }
+
+        private void VoiceGenderComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!_isInit)
+                return;
+            string gender = VoiceGenderComboBox.SelectedIndex==0?"Male":"Female";
+            AppTools.WriteLocalSetting(AppSettings.VoiceGender, gender);
         }
     }
 }

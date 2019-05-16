@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE =edge">
     <meta name="referrer" content="no-referrer" />
     <meta name="viewport" content="width =device-width,initial-scale =1.0, maximum-scale=1.0, user-scalable=0; ">
-    <link href="./lib/atom-one-$theme$.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/highlight.js/9.15.6/styles/atom-one-$theme$.min.css" rel="stylesheet">
     <script src="./lib/highlight.min.js"></script>
     <script>
         hljs.initHighlightingOnLoad();
@@ -53,9 +53,11 @@
     <style>
         $style$
     </style>
+
 </head>
 <body>
     $body$
+
     
     <script>
         $sinaMiniBlogShare();
@@ -71,7 +73,7 @@
                     let link = target.getAttribute('href');
                     let data = {
                         Key: 'LinkClick',
-                        Value:link
+                        Value: link
                     }
                     window.external.notify(JSON.stringify(data));
                 })
@@ -94,7 +96,7 @@
             }
         }
     </script>
-    
+
 </body>
 
 </html>

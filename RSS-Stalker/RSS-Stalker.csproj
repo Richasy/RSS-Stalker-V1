@@ -21,7 +21,7 @@
     <PackageCertificateThumbprint>99B45ABA0CF05A6B62BC563342390299397CAF65</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-    <AppxPackageDir>E:\Package\RSS Stalker\</AppxPackageDir>
+    <AppxPackageDir>D:\Package\RSS Stalker\</AppxPackageDir>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm|arm64</AppxBundlePlatforms>
     <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
@@ -191,9 +191,9 @@
     </AppxManifest>
     <Content Include="Card.json" />
     <Content Include="en_US.txt" />
-    <Content Include="Template\lib\atom-one-dark.css" />
-    <Content Include="Template\lib\atom-one-light.css" />
-    <Content Include="Template\lib\highlight.min.js" />
+    <Content Include="Template\lib\highlight.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Template\ShowPage.html" />
     <Content Include="zh_CN.txt" />
     <Content Include="Assets\Fonts\PingFang.otf" />

@@ -90,7 +90,11 @@ namespace RSS_Stalker.Pages
             }
             else
             {
-                new PopupToast(AppTools.GetReswLanguage("Tip_WatchingCache")).ShowPopup();
+                if (MainPage.Current._isCacheAlert)
+                {
+                    new PopupToast(AppTools.GetReswLanguage("Tip_WatchingCache")).ShowPopup();
+                    MainPage.Current._isCacheAlert = false;
+                }
                 feed = await IOTools.GetLocalCache(channel);
             }
             if (feed != null && feed.Count > 0)

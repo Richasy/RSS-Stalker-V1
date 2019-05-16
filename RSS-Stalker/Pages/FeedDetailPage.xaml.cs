@@ -243,13 +243,6 @@ namespace RSS_Stalker.Pages
             FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
         }
 
-        private async void Menu_Share_Click(object sender, RoutedEventArgs e)
-        {
-            _tempHtml = await DetailWebView.InvokeScriptAsync("getHtml", new string[] { });
-            DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
-            dataTransferManager.DataRequested += IndexPage_DataRequested;
-            DataTransferManager.ShowShareUI();
-        }
         private void IndexPage_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
         {
             //创建一个数据包
@@ -297,7 +290,7 @@ namespace RSS_Stalker.Pages
             double width = e.NewSize.Width;
             if (!_isInit)
             {
-                if (DetailSplitView != null && width<1000)
+                if (DetailSplitView != null && (width<1000 || ShowFeeds.Count==0))
                 {
                     DetailSplitView.IsPaneOpen = false;
                     FeedListView.Visibility = Visibility.Collapsed;
@@ -598,9 +591,9 @@ namespace RSS_Stalker.Pages
             LoadingRing.IsActive = true;
             ReadabilityButton.IsEnabled = false;
             SmartReader.Article article = await SmartReader.Reader.ParseArticleAsync(_sourceFeed.FeedUrl);
-            if (article.IsReadable)
+            if (article.IsReadable || !string.IsNullOrEmpty(article.TextContent))
             {
-                string content=await PackageHTML(article.Content);
+                string content=await PackageHTML(article.Content??article.TextContent);
                 _sourceFeed.Content = article.Content;
                 DetailWebView.NavigateToString(content);
             }
@@ -625,5 +618,12 @@ namespace RSS_Stalker.Pages
             
         }
 
+        private async void ShareButton_Click(object sender, RoutedEventArgs e)
+        {
+            _tempHtml = await DetailWebView.InvokeScriptAsync("getHtml", new string[] { });
+            DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
+            dataTransferManager.DataRequested += IndexPage_DataRequested;
+            DataTransferManager.ShowShareUI();
+        }
     }
 }

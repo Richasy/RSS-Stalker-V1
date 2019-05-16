@@ -66,7 +66,8 @@ namespace CoreLib.Tools
         }
         public async Task Logout()
         {
-            await OneDriveService.Instance.LogoutAsync();
+            if(_appFolder!=null)
+                await OneDriveService.Instance.LogoutAsync();
             _appFolder = null;
             _user = null;
         }

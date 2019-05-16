@@ -44,6 +44,7 @@ namespace RSS_Stalker
         public List<Channel> ToastList = new List<Channel>();
         public bool _isFromTimeline = false;
         public static MainPage Current;
+        public bool _isCacheAlert = false;
         /// <summary>
         /// 分类列表数量标识，在进行数据替换和拖放排序时作为参照。在清空列表前，一定要将该标识设为-1
         /// </summary>

@@ -540,4 +540,40 @@
   <data name="Tip_LocalLoginTitle" xml:space="preserve">
     <value>本地登录提醒</value>
   </data>
+  <data name="Control_CacheAllButton.Content" xml:space="preserve">
+    <value>缓存全部文章</value>
+  </data>
+  <data name="Control_CacheCategoryMenuItem.Text" xml:space="preserve">
+    <value>缓存分类</value>
+  </data>
+  <data name="Control_CacheChannelMenuItem.Text" xml:space="preserve">
+    <value>缓存频道</value>
+  </data>
+  <data name="Control_CacheTipBlock.Text" xml:space="preserve">
+    <value>缓存</value>
+  </data>
+  <data name="Control_ClearCacheButton.Content" xml:space="preserve">
+    <value>清除缓存</value>
+  </data>
+  <data name="Control_CurrentCacheSizeTipBlock.Text" xml:space="preserve">
+    <value>当前缓存大小</value>
+  </data>
+  <data name="Tip_CacheFailed" xml:space="preserve">
+    <value>缓存失败，请稍后重试</value>
+  </data>
+  <data name="Tip_CacheSuccess" xml:space="preserve">
+    <value>已成功缓存</value>
+  </data>
+  <data name="Tip_ClearSuccess" xml:space="preserve">
+    <value>已清理当前缓存</value>
+  </data>
+  <data name="Tip_ErrorCount" xml:space="preserve">
+    <value>失败个数：</value>
+  </data>
+  <data name="Tip_WatchingCache" xml:space="preserve">
+    <value>您当前正在浏览上次缓存的文章</value>
+  </data>
+  <data name="Tip_FailedWithoutInternet" xml:space="preserve">
+    <value>当前未联网，无法执行操作</value>
+  </data>
 </root>

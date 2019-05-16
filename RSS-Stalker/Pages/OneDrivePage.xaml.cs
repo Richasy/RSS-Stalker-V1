@@ -17,6 +17,9 @@ using Windows.UI.Xaml.Navigation;
 using CoreLib.Enums;
 using RSS_Stalker.Tools;
 using System.Threading.Tasks;
+using Windows.Storage;
+using RSS_Stalker.Dialog;
+using Windows.ApplicationModel;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -32,7 +35,10 @@ namespace RSS_Stalker.Pages
             this.InitializeComponent();
             AppTools.SetTitleBarColor();
         }
-
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            await CheckVersion();
+        }
         private async void OneDirveButton_Click(object sender, RoutedEventArgs e)
         {
             OneDirveButton.IsEnabled = false;
@@ -98,7 +104,7 @@ namespace RSS_Stalker.Pages
 
         private async void LocalButton_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new Dialog.ConfirmDialog(AppTools.GetReswLanguage("Tip_LocalLoginTtitle"), AppTools.GetReswLanguage("Tip_LocalLoginTip"));
+            var dialog = new Dialog.ConfirmDialog(AppTools.GetReswLanguage("Tip_LocalLoginTitle"), AppTools.GetReswLanguage("Tip_LocalLoginTip"));
             var result = await dialog.ShowAsync();
             if (result == ContentDialogResult.Primary)
             {
@@ -106,6 +112,31 @@ namespace RSS_Stalker.Pages
                 var frame = Window.Current.Content as Frame;
                 frame.Navigate(typeof(MainPage));
             }
+        }
+        /// <summary>
+        /// 检查版本更新，并弹出更新通告
+        /// </summary>
+        /// <returns></returns>
+        private async Task CheckVersion()
+        {
+            try
+            {
+                string localVersion = AppTools.GetLocalSetting(AppSettings.AppVersion, "");
+                string nowVersion = string.Format("{0}.{1}.{2}.{3}", Package.Current.Id.Version.Major, Package.Current.Id.Version.Minor, Package.Current.Id.Version.Build, Package.Current.Id.Version.Revision);
+                string lan = AppTools.GetRoamingSetting(AppSettings.Language, "en_US");
+                if (localVersion != nowVersion)
+                {
+                    var updateFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///{lan}.txt"));
+                    string updateInfo = await FileIO.ReadTextAsync(updateFile);
+                    await new ConfirmDialog(AppTools.GetReswLanguage("Tip_UpdateTip"), updateInfo).ShowAsync();
+                    AppTools.WriteLocalSetting(AppSettings.AppVersion, nowVersion);
+                }
+            }
+            catch (Exception)
+            {
+                return;
+            }
+
         }
     }
 }

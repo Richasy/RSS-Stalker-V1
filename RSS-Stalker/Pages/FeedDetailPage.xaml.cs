@@ -23,6 +23,9 @@ using Newtonsoft.Json;
 using RSS_Stalker.Dialog;
 using Windows.Storage.Streams;
 using Windows.Media.SpeechSynthesis;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
+using Microsoft.Toolkit.Uwp.Connectivity;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -64,7 +67,6 @@ namespace RSS_Stalker.Pages
                     var data = e.Parameter as Tuple<Feed, List<Feed>>;
                     _sourceFeed = data.Item1;
                     AllFeeds = data.Item2;
-                    
                     foreach (var item in AllFeeds)
                     {
                         if (item.InternalID != _sourceFeed.InternalID)
@@ -176,7 +178,7 @@ namespace RSS_Stalker.Pages
                 userActivity.VisualElements.DisplayText = feed.Title;
                 userActivity.VisualElements.Content = AdaptiveCardBuilder.CreateAdaptiveCardFromJson(await AppTools.CreateAdaptiveJson(feed));
                 //Populate required properties
-                string url = $"richasy-rss://feed?id={feed.InternalID}&summary={WebUtility.UrlEncode(feed.Summary)}&date={WebUtility.UrlEncode(feed.Date)}&img={WebUtility.UrlEncode(feed.ImageUrl)}&url={WebUtility.UrlDecode(feed.FeedUrl)}&title={WebUtility.UrlEncode(feed.Title)}&content={WebUtility.UrlEncode(feed.Content)}";
+                string url = $"richasy-rss://feed?id={WebUtility.UrlEncode(feed.InternalID)}&summary={WebUtility.UrlEncode(feed.Summary)}&date={WebUtility.UrlEncode(feed.Date)}&img={WebUtility.UrlEncode(feed.ImageUrl)}&url={WebUtility.UrlDecode(feed.FeedUrl)}&title={WebUtility.UrlEncode(feed.Title)}&content={WebUtility.UrlEncode(feed.Content)}";
                 userActivity.ActivationUri = new Uri(url);
                 await userActivity.SaveAsync(); //save the new metadata
 
@@ -209,10 +211,14 @@ namespace RSS_Stalker.Pages
         {
             var data = e.ClickedItem as Feed;
             _sourceFeed = data;
+            await UpdateFeed();
+        }
+        private async Task UpdateFeed()
+        {
             ShowFeeds.Clear();
             foreach (var item in AllFeeds)
             {
-                if (item.InternalID != data.InternalID)
+                if (item.InternalID != _sourceFeed.InternalID)
                 {
                     ShowFeeds.Add(item);
                 }
@@ -227,7 +233,6 @@ namespace RSS_Stalker.Pages
             }
             await GenerateActivityAsync(_sourceFeed);
         }
-
         private void GridViewButton_Click(object sender, RoutedEventArgs e)
         {
             MainPage.Current.MainFrame.Navigate(typeof(ChannelDetailPage), AllFeeds);
@@ -381,6 +386,11 @@ namespace RSS_Stalker.Pages
 
         private async void Menu_Translate_Click(object sender, RoutedEventArgs e)
         {
+            if (!NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+            {
+                new PopupToast(AppTools.GetReswLanguage("Tip_FailedWithoutInternet"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+                return;
+            }
             string language = (sender as MenuFlyoutItem).Name.Replace("Menu_Translate_", "");
             string appId = AppTools.GetRoamingSetting(AppSettings.Translate_BaiduAppId, "");
             if (string.IsNullOrEmpty(appId))
@@ -476,6 +486,11 @@ namespace RSS_Stalker.Pages
         /// <param name="e"></param>
         private async void TextMenu_Translate_Click(object sender, RoutedEventArgs e)
         {
+            if (!NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+            {
+                new PopupToast(AppTools.GetReswLanguage("Tip_FailedWithoutInternet"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+                return;
+            }
             string language = (sender as MenuFlyoutItem).Name.Replace("SelectMenu_Translate_", "");
             string appId = AppTools.GetRoamingSetting(AppSettings.Translate_BaiduAppId, "");
             string appKey = AppTools.GetRoamingSetting(AppSettings.Translate_BaiduKey, "");
@@ -575,6 +590,11 @@ namespace RSS_Stalker.Pages
         /// <param name="e"></param>
         private async void ReadabilityButton_Click(object sender, RoutedEventArgs e)
         {
+            if (!NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+            {
+                new PopupToast(AppTools.GetReswLanguage("Tip_FailedWithoutInternet"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+                return;
+            }
             LoadingRing.IsActive = true;
             ReadabilityButton.IsEnabled = false;
             SmartReader.Article article = await SmartReader.Reader.ParseArticleAsync(_sourceFeed.FeedUrl);
@@ -604,5 +624,6 @@ namespace RSS_Stalker.Pages
             }
             
         }
+
     }
 }

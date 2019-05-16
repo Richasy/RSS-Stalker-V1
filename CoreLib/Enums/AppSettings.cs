@@ -27,6 +27,10 @@ namespace CoreLib.Enums
         ScreenChannel,
         SearchEngine,
         SpeechRate,
-        VoiceGender
+        VoiceGender,
+        IsChannelsChangeInOffline,
+        IsTodoChangeInOffline,
+        IsToastChangeInOffline,
+        IsStarChangeInOffline,
     }
 }

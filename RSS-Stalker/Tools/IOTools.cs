@@ -11,6 +11,7 @@ using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using CoreLib.Tools;
 using CoreLib.Models.App;
+using Microsoft.Toolkit.Uwp.Connectivity;
 
 namespace RSS_Stalker.Tools
 {
@@ -167,8 +168,14 @@ namespace RSS_Stalker.Tools
             text = JsonConvert.SerializeObject(list);
             await FileIO.WriteTextAsync(file, text);
             bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
-            if(isOneDrive)
-                await App.OneDrive.UpdateCategoryList(file);
+            if (isOneDrive)
+            {
+                if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+                    await App.OneDrive.UpdateCategoryList(file);
+                else
+                    AppTools.WriteLocalSetting(CoreLib.Enums.AppSettings.IsChannelsChangeInOffline, "True");
+            }
+                
         }
         /// <summary>
         /// 更新标签
@@ -196,7 +203,12 @@ namespace RSS_Stalker.Tools
             await FileIO.WriteTextAsync(file, text);
             bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
             if (isOneDrive)
-                await App.OneDrive.UpdateCategoryList(file);
+            {
+                if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+                    await App.OneDrive.UpdateCategoryList(file);
+                else
+                    AppTools.WriteLocalSetting(CoreLib.Enums.AppSettings.IsChannelsChangeInOffline, "True");
+            }
         }
         /// <summary>
         /// 删除标签
@@ -218,7 +230,12 @@ namespace RSS_Stalker.Tools
             await FileIO.WriteTextAsync(file, text);
             bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
             if (isOneDrive)
-                await App.OneDrive.UpdateCategoryList(file);
+            {
+                if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+                    await App.OneDrive.UpdateCategoryList(file);
+                else
+                    AppTools.WriteLocalSetting(CoreLib.Enums.AppSettings.IsChannelsChangeInOffline, "True");
+            }
         }
         /// <summary>
         /// 完全替换RSS列表
@@ -357,8 +374,12 @@ namespace RSS_Stalker.Tools
             await FileIO.WriteTextAsync(file, text);
             bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
             if (isOneDrive)
-                await App.OneDrive.UpdateTodoList(file);
-
+            {
+                if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+                    await App.OneDrive.UpdateTodoList(file);
+                else
+                    AppTools.WriteLocalSetting(CoreLib.Enums.AppSettings.IsTodoChangeInOffline, "True");
+            }
         }
         /// <summary>
         /// 删除待读文章
@@ -380,9 +401,67 @@ namespace RSS_Stalker.Tools
             await FileIO.WriteTextAsync(file, text);
             bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
             if (isOneDrive)
-                await App.OneDrive.UpdateTodoList(file);
+            {
+                if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+                    await App.OneDrive.UpdateTodoList(file);
+                else
+                    AppTools.WriteLocalSetting(CoreLib.Enums.AppSettings.IsTodoChangeInOffline, "True");
+            }
         }
-
+        /// <summary>
+        /// 将本地所有更改上传至云端
+        /// </summary>
+        /// <returns></returns>
+        public async static Task UpdateAllListToOneDrive()
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var tasks = new List<Task>();
+            bool isChannelChange = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsChannelsChangeInOffline, "False"));
+            bool isTodoChange = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsTodoChangeInOffline, "False"));
+            bool isStarChange = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsStarChangeInOffline, "False"));
+            bool isToastChange = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsToastChangeInOffline, "False"));
+            if (isChannelChange)
+            {
+                tasks.Add(Task.Run(async () =>
+                {
+                    var file = await localFolder.CreateFileAsync("Channels.json", CreationCollisionOption.OpenIfExists);
+                    await App.OneDrive.UpdateCategoryList(file);
+                    AppTools.WriteLocalSetting(CoreLib.Enums.AppSettings.IsChannelsChangeInOffline, "False");
+                }));
+            }
+            if (isTodoChange)
+            {
+                tasks.Add(Task.Run(async () =>
+                {
+                    var file = await localFolder.CreateFileAsync("TodoRead.json", CreationCollisionOption.OpenIfExists);
+                    await App.OneDrive.UpdateCategoryList(file);
+                    AppTools.WriteLocalSetting(CoreLib.Enums.AppSettings.IsTodoChangeInOffline, "False");
+                }));
+            }
+            if (isStarChange)
+            {
+                tasks.Add(Task.Run(async () =>
+                {
+                    var file = await localFolder.CreateFileAsync("Star.json", CreationCollisionOption.OpenIfExists);
+                    await App.OneDrive.UpdateTodoList(file);
+                    AppTools.WriteLocalSetting(CoreLib.Enums.AppSettings.IsStarChangeInOffline, "False");
+                }));
+            }
+            if (isToastChange)
+            {
+                tasks.Add(Task.Run(async () =>
+                {
+                    var file = await localFolder.CreateFileAsync("ToastChannels.json", CreationCollisionOption.OpenIfExists);
+                    await App.OneDrive.UpdateToastList(file);
+                    AppTools.WriteLocalSetting(CoreLib.Enums.AppSettings.IsToastChangeInOffline, "False");
+                }));
+            }
+            if (tasks.Count == 0)
+            {
+                return;
+            }
+            await Task.WhenAll(tasks.ToArray());
+        }
         /// <summary>
         /// 获取本地保存的收藏信息
         /// </summary>
@@ -431,7 +510,12 @@ namespace RSS_Stalker.Tools
             await FileIO.WriteTextAsync(file, text);
             bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
             if (isOneDrive)
-                await App.OneDrive.UpdateStarList(file);
+            {
+                if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+                    await App.OneDrive.UpdateStarList(file);
+                else
+                    AppTools.WriteLocalSetting(CoreLib.Enums.AppSettings.IsStarChangeInOffline, "True");
+            }
         }
         /// <summary>
         /// 删除收藏文章
@@ -455,7 +539,12 @@ namespace RSS_Stalker.Tools
                 await FileIO.WriteTextAsync(file, text);
                 bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
                 if (isOneDrive)
-                    await App.OneDrive.UpdateStarList(file);
+                {
+                    if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+                        await App.OneDrive.UpdateStarList(file);
+                    else
+                        AppTools.WriteLocalSetting(CoreLib.Enums.AppSettings.IsStarChangeInOffline, "True");
+                }
             }
             catch (Exception)
             {
@@ -498,7 +587,12 @@ namespace RSS_Stalker.Tools
             await FileIO.WriteTextAsync(file, text);
             bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
             if (isOneDrive)
-                await App.OneDrive.UpdateToastList(file);
+            {
+                if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+                    await App.OneDrive.UpdateToastList(file);
+                else
+                    AppTools.WriteLocalSetting(CoreLib.Enums.AppSettings.IsToastChangeInOffline, "True");
+            }
         }
         /// <summary>
         /// 移除需要通知的频道
@@ -519,7 +613,12 @@ namespace RSS_Stalker.Tools
             await FileIO.WriteTextAsync(file, text);
             bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
             if (isOneDrive)
-                await App.OneDrive.UpdateToastList(file);
+            {
+                if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+                    await App.OneDrive.UpdateToastList(file);
+                else
+                    AppTools.WriteLocalSetting(CoreLib.Enums.AppSettings.IsToastChangeInOffline, "True");
+            }
         }
         /// <summary>
         /// 添加已读文章
@@ -644,6 +743,111 @@ namespace RSS_Stalker.Tools
             tasks.Add(task2);
             tasks.Add(task3);
             await Task.WhenAll(tasks.ToArray());
+        }
+        /// <summary>
+        /// 获取缓存文件的大小
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<string> GetCacheSize()
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("CacheList.json", CreationCollisionOption.OpenIfExists);
+            var pr = await file.GetBasicPropertiesAsync();
+            return (pr.Size / 1000) + " kb";
+        }
+        /// <summary>
+        /// 删除缓存文件
+        /// </summary>
+        /// <returns></returns>
+        public static async Task DeleteCache()
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("CacheList.json", CreationCollisionOption.OpenIfExists);
+            await FileIO.WriteTextAsync(file,"[]");
+        }
+        /// <summary>
+        /// 获取缓存列表
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<List<CacheModel>> GetCacheChannels()
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("CacheList.json", CreationCollisionOption.OpenIfExists);
+            string content = await FileIO.ReadTextAsync(file);
+            if (string.IsNullOrEmpty(content))
+            {
+                content = "[]";
+            }
+            var list = JsonConvert.DeserializeObject<List<CacheModel>>(content);
+            return list;
+        }
+        /// <summary>
+        /// 升级缓存
+        /// </summary>
+        /// <param name="channels">需要缓存的频道列表</param>
+        /// <returns></returns>
+        public static async Task AddCacheChannel(Action<int> ProgressHandle,params Channel[] channels)
+        {
+            var list = channels.Distinct().ToArray();
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("CacheList.json", CreationCollisionOption.OpenIfExists);
+            string content = await FileIO.ReadTextAsync(file);
+            if (string.IsNullOrEmpty(content))
+            {
+                content = "[]";
+            }
+            var results = JsonConvert.DeserializeObject<List<CacheModel>>(content);
+            var tasks = new List<Task>();
+            int completeCount = 0;
+            if (list.Length > 0)
+            {
+                foreach (var channel in list)
+                {
+                    tasks.Add(Task.Run(async () =>
+                    {
+                        var articles = await AppTools.GetSchemalFromUrl(channel.Link);
+                        if (results.Any(p => p.Channel.Link == channel.Link))
+                        {
+                            var target = results.Where(p => p.Channel.Link == channel.Link).First();
+                            target.Feeds = articles;
+                        }
+                        else
+                        {
+                            results.Add(new CacheModel() { Channel = channel, Feeds = articles });
+                        }
+                        completeCount += 1;
+                        if (ProgressHandle != null)
+                        {
+                            ProgressHandle(completeCount);
+                        }
+                    }));
+                }
+                await Task.WhenAll(tasks.ToArray());
+                content = JsonConvert.SerializeObject(results);
+                await FileIO.WriteTextAsync(file, content);
+            }
+        }
+        /// <summary>
+        /// 获取本地的文章缓存
+        /// </summary>
+        /// <param name="channel">频道</param>
+        /// <returns></returns>
+        public static async Task<List<Feed>>GetLocalCache(Channel channel)
+        {
+            var list = await GetCacheChannels();
+            var results = new List<Feed>();
+            if (list.Count > 0)
+            {
+                var cache = list.Where(p => p.Channel.Link == channel.Link).FirstOrDefault();
+                if (cache != null)
+                {
+                    foreach (var item in cache.Feeds)
+                    {
+                        results.Add(new Feed(item));
+                    }
+                }
+            }
+            return results;
         }
     }
 }

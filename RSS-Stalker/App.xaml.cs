@@ -232,7 +232,7 @@ namespace RSS_Stalker
             {
                 return;
             }
-            id = id.Substring(4);
+            id = WebUtility.UrlDecode(id.Substring(4));
             title = WebUtility.UrlDecode(title.Substring(6));
             content = WebUtility.UrlDecode(content.Substring(8));
             url = WebUtility.UrlDecode(url.Substring(4));

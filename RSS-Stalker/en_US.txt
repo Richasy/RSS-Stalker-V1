@@ -3,14 +3,18 @@
 The new version has been revised as follows:
 
 =====
-Added the function of “Get Full Text”. If your feed only provides a summary, this function can help you convert the original webpage into readable text to help you with full-text browsing.
+Offline reading function officially launched!
+You can cache articles by level in the right-click menu of the channel, category, or you can cache all articles in the settings->data settings.
 =====
 
-1. Added new reading options. You can read aloud or read the full text. The full text reading is in the “three dots” button at the bottom of the article details page.
-2. Allow mark text and the mark content will output when you share the article.
-2. Fixed an issue where the link was not processed when exporting OPML. This problem will cause the generated OPML to not be recognized properly.
-3. The OneDrive connection failure was captured and the current upload progress was interrupted to protect the source data.
-4. Fix the way the article details list is fixed. Under the wide screen, clicking the related article will not close the sidebar.
+=====
+Allow local accounts to be used.
+Considering that it is difficult for many users to connect to OneDrive, a local channel has been established, and everything is normal except that it cannot be synchronized.
+=====
+
+1. Adjust the asynchronous processing order of the program to ensure the smooth user experience. Now move the OneDrive synchronization changes to the behind the scenes, no longer occupying the waiting time of the foreground.
+2. Rich reading function, you can now adjust the gender and speed in the settings.
+3. Provide local favorites, pending reading and toast list export to facilitate local backup.
 
 ---
 

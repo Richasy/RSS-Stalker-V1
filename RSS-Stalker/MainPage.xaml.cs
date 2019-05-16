@@ -26,6 +26,7 @@ using Windows.UI.Core;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.ApplicationModel;
+using Microsoft.Toolkit.Uwp.Connectivity;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -108,6 +109,10 @@ namespace RSS_Stalker
                 await IOTools.ReplaceCategory(Categories.ToList(), true);
             }
         }
+        private async void CheckUpdateLocalData()
+        {
+            await IOTools.UpdateAllListToOneDrive();
+        }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if(e.Parameter !=null && e.Parameter is string)
@@ -166,7 +171,7 @@ namespace RSS_Stalker
             _channelListCount = Channels.Count;
             LoadingRing.IsActive = false;
             // 完成OneDrive的数据链接
-            if(isOneDrive)
+            if(isOneDrive && NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
                 await App.OneDrive.OneDriveAuthorize();
             // TimerInit();
             TodoList = await IOTools.GetLocalTodoReadList();
@@ -180,6 +185,7 @@ namespace RSS_Stalker
             Window.Current.Dispatcher.AcceleratorKeyActivated += AccelertorKeyActivedHandle;
             
             _isInit = true;
+            CheckUpdateLocalData();
         }
         /// <summary>
         /// 快捷键注册
@@ -441,6 +447,11 @@ namespace RSS_Stalker
 
         private async void AddChannelButton_Click(object sender, RoutedEventArgs e)
         {
+            if (!NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+            {
+                new PopupToast(AppTools.GetReswLanguage("Tip_FailedWithoutInternet"),AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+                return;
+            }
             var dialog = new AddChannelDialog();
             await dialog.ShowAsync();
         }
@@ -735,6 +746,45 @@ namespace RSS_Stalker
             AppTools.WriteLocalSetting(AppSettings.ScreenChannel, _tempChannel.Id);
             AppTools.WriteLocalSetting(AppSettings.IsScreenChannelCustom, "True");
             new PopupToast(AppTools.GetReswLanguage("Tip_Saved")).ShowPopup();
+        }
+
+        private async void CacheChannelMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            LoadingRing.IsActive = true;
+            try
+            {
+                await IOTools.AddCacheChannel(null,_tempChannel);
+                new PopupToast(AppTools.GetReswLanguage("Tip_CacheSuccess")).ShowPopup();
+            }
+            catch (Exception)
+            {
+                new PopupToast(AppTools.GetReswLanguage("Tip_CacheFailed"),AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+            }
+            LoadingRing.IsActive = false;
+        }
+
+        private async void CacheCategoryMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            LoadingRing.IsActive = true;
+            CacheProgressBar.Visibility = Visibility.Visible;
+            try
+            {
+                CacheProgressBar.Maximum = _tempCategory.Channels.Count;
+                await IOTools.AddCacheChannel(async (count)=> {
+                    await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+                    {
+                        CacheProgressBar.Value = count;
+                    });
+                     },
+                    _tempCategory.Channels.ToArray());
+                new PopupToast(AppTools.GetReswLanguage("Tip_CacheSuccess")).ShowPopup();
+            }
+            catch (Exception)
+            {
+                new PopupToast(AppTools.GetReswLanguage("Tip_CacheFailed"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+            }
+            CacheProgressBar.Visibility = Visibility.Collapsed;
+            LoadingRing.IsActive = false;
         }
     }
 }

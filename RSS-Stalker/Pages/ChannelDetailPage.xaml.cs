@@ -20,6 +20,8 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using CoreLib.Enums;
+using Microsoft.Toolkit.Uwp.Connectivity;
+using RSS_Stalker.Tools;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -81,7 +83,16 @@ namespace RSS_Stalker.Pages
             ChannelDescriptionTextBlock.Text = _sourceData.Description;
             ChannelNameTextBlock.Text = _sourceData.Name;
             FeedCollection.Clear();
-            var feed = await AppTools.GetFeedsFromUrl(_sourceData.Link);
+            var feed = new List<Feed>();
+            if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+            {
+                feed = await AppTools.GetFeedsFromUrl(_sourceData.Link);
+            }
+            else
+            {
+                new PopupToast(AppTools.GetReswLanguage("Tip_WatchingCache")).ShowPopup();
+                feed = await IOTools.GetLocalCache(channel);
+            }
             if (feed != null && feed.Count > 0)
             {
                 foreach (var item in feed)

@@ -16,7 +16,9 @@
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
 
-    <Grid>
-        <TextBlock Name="ConfirmTextBlock" Foreground="{ThemeResource NormalTextColor}" FontFamily="{StaticResource Basic}" TextWrapping="Wrap" FontSize="14" LineHeight="22" MaxWidth="300"/>
-    </Grid>
+    <ScrollViewer Style="{StaticResource BasicScrollViewer}" MaxHeight="600">
+        <Grid>
+            <TextBlock Name="ConfirmTextBlock" Foreground="{ThemeResource NormalTextColor}" FontFamily="{StaticResource Basic}" TextWrapping="Wrap" FontSize="14" LineHeight="22" MaxWidth="300"/>
+        </Grid>
+    </ScrollViewer>
 </ContentDialog>

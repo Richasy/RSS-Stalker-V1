@@ -540,4 +540,40 @@
   <data name="Tip_LocalLoginTitle" xml:space="preserve">
     <value>With Local</value>
   </data>
+  <data name="Control_CacheAllButton.Content" xml:space="preserve">
+    <value>Cache all channels</value>
+  </data>
+  <data name="Control_CacheCategoryMenuItem.Text" xml:space="preserve">
+    <value>Cache Category</value>
+  </data>
+  <data name="Control_CacheChannelMenuItem.Text" xml:space="preserve">
+    <value>Cache channel</value>
+  </data>
+  <data name="Control_CacheTipBlock.Text" xml:space="preserve">
+    <value>Cache</value>
+  </data>
+  <data name="Control_ClearCacheButton.Content" xml:space="preserve">
+    <value>Clear cache</value>
+  </data>
+  <data name="Control_CurrentCacheSizeTipBlock.Text" xml:space="preserve">
+    <value>Current cache size</value>
+  </data>
+  <data name="Tip_CacheFailed" xml:space="preserve">
+    <value>Cache failed, please try again later</value>
+  </data>
+  <data name="Tip_CacheSuccess" xml:space="preserve">
+    <value>Successfully cached articles</value>
+  </data>
+  <data name="Tip_ClearSuccess" xml:space="preserve">
+    <value>Successfully cleared the cache</value>
+  </data>
+  <data name="Tip_ErrorCount" xml:space="preserve">
+    <value>Error count: </value>
+  </data>
+  <data name="Tip_WatchingCache" xml:space="preserve">
+    <value>You are currently browsing the last cached article</value>
+  </data>
+  <data name="Tip_FailedWithoutInternet" xml:space="preserve">
+    <value>Currently not connected, unable to perform operations</value>
+  </data>
 </root>

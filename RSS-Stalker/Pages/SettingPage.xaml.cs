@@ -22,6 +22,8 @@ using CoreLib.Enums;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
+using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Toolkit.Uwp.Connectivity;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -82,6 +84,7 @@ namespace RSS_Stalker.Pages
                 default:
                     break;
             }
+            CacheSizeTextBlock.Text = await IOTools.GetCacheSize();
             VoiceGenderComboBox.SelectedIndex = gender == "Female" ? 1 : 0;
             SpeechRateSlider.Value = speechRate;
             SyncWithStartSwitch.IsOn = isSyncWithStart;
@@ -218,6 +221,11 @@ namespace RSS_Stalker.Pages
 
         private async void ForceSyncButton_Click(object sender, RoutedEventArgs e)
         {
+            if (!NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+            {
+                new PopupToast(AppTools.GetReswLanguage("Tip_FailedWithoutInternet"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+                return;
+            }
             var btn = sender as Button;
             btn.IsEnabled = false;
             btn.Content = AppTools.GetReswLanguage("Tip_Waiting");
@@ -261,6 +269,10 @@ namespace RSS_Stalker.Pages
                 AppTools.WriteLocalSetting(AppSettings.TodoUpdateTime, todoUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.StarUpdateTime, starUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.ToastUpdateTime, toastUpdateTime);
+                AppTools.WriteLocalSetting(AppSettings.IsChannelsChangeInOffline, "False");
+                AppTools.WriteLocalSetting(AppSettings.IsTodoChangeInOffline, "False");
+                AppTools.WriteLocalSetting(AppSettings.IsStarChangeInOffline, "False");
+                AppTools.WriteLocalSetting(AppSettings.IsToastChangeInOffline, "False");
                 MainPage.Current.ReplaceList(cateList);
                 ToastChannels.Clear();
                 foreach (var item in toastList)
@@ -390,6 +402,56 @@ namespace RSS_Stalker.Pages
             }
             ImportLocalListButton.IsEnabled = true;
             ImportLocalListButton.Content = AppTools.GetReswLanguage("Tip_Import");
+        }
+
+        private async void CacheAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+            {
+                new PopupToast(AppTools.GetReswLanguage("Tip_FailedWithoutInternet"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+                return;
+            }
+            CacheAllButton.IsEnabled = false;
+            CacheProgressBar.Visibility = Visibility.Visible;
+            
+            var list = new List<Channel>();
+            foreach (var item in MainPage.Current.Categories)
+            {
+                foreach (var cha in item.Channels)
+                {
+                    list.Add(cha);
+                }
+            }
+            
+            if (list.Count > 0)
+            {
+                try
+                {
+                    CacheProgressBar.Maximum = list.Count;
+                    await IOTools.AddCacheChannel(async (count)=>
+                    {
+                        await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+                        {
+                            CacheProgressBar.Value = count;
+                        });
+                    },list.ToArray());
+                    new PopupToast(AppTools.GetReswLanguage("Tip_CacheSuccess")).ShowPopup();
+                }
+                catch (Exception ex)
+                {
+                    new PopupToast(ex.Message).ShowPopup();
+                }
+            }
+            CacheSizeTextBlock.Text = await IOTools.GetCacheSize();
+            CacheAllButton.IsEnabled = true;
+            CacheProgressBar.Visibility = Visibility.Collapsed;
+        }
+
+        private async void ClearCacheButton_Click(object sender, RoutedEventArgs e)
+        {
+            await IOTools.DeleteCache();
+            new PopupToast(AppTools.GetReswLanguage("Tip_ClearSuccess")).ShowPopup();
+            CacheSizeTextBlock.Text = await IOTools.GetCacheSize();
         }
     }
 }

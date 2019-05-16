@@ -30,6 +30,11 @@
                     <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE97C;"/>
                 </MenuFlyoutItem.Icon>
             </MenuFlyoutItem>
+            <MenuFlyoutItem x:Uid="Control_CacheChannelMenuItem" FontFamily="{StaticResource Basic}" Name="CacheChannelMenuItem" Click="CacheChannelMenuItem_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE957;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="Control_DeleteMenuItem" FontFamily="{StaticResource Basic}" Name="DeleteChannelMenuItem" Click="DeleteChannelMenuItem_Click">
                 <MenuFlyoutItem.Icon>
@@ -41,6 +46,11 @@
             <MenuFlyoutItem x:Uid="Control_UpdateMenuItem" FontFamily="{StaticResource Basic}" Name="UpdateCategoryMenuItem" Click="UpdateCategoryMenuItem_Click">
                 <MenuFlyoutItem.Icon>
                     <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE95A;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem x:Uid="Control_CacheCategoryMenuItem" FontFamily="{StaticResource Basic}" Name="CacheCategoryMenuItem" Click="CacheCategoryMenuItem_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE957;"/>
                 </MenuFlyoutItem.Icon>
             </MenuFlyoutItem>
             <MenuFlyoutSeparator/>
@@ -86,6 +96,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Horizontal" Margin="0,30" HorizontalAlignment="Center">
                             <TextBlock FontFamily="{StaticResource Icon}" Text="&#xEA14;" Foreground="{ThemeResource PrimaryColor}" FontSize="22" VerticalAlignment="Center" Margin="0,0,10,0"/>
@@ -112,7 +123,8 @@
                       Margin="20,10,20,0"
                       ItemClick="CategoryListView_ItemClick"
                       />
-                        <StackPanel Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Center" Margin="0,15">
+                        <ProgressBar Grid.Row="4" Background="{ThemeResource LineColor}" Foreground="{ThemeResource PrimaryColor}" Name="CacheProgressBar" Margin="30,0" Height="3" Visibility="Collapsed"/>
+                        <StackPanel Orientation="Horizontal" Grid.Row="5" HorizontalAlignment="Center" Margin="0,15">
                             <ToggleButton Style="{StaticResource CircleToggleButtonStyle}"  Name="TodoButton" Click="TodoButton_Click" Content="&#xE924;"/>
                             <ToggleButton Style="{StaticResource CircleToggleButtonStyle}" Margin="15,0" Name="StarButton" Click="StarButton_Click" Content="&#xE9DD;"/>
                             <ToggleButton Style="{StaticResource CircleToggleButtonStyle}" Content="&#xE9CB;" Name="SettingButton" Click="SettingButton_Click"/>

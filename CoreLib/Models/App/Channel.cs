@@ -77,7 +77,7 @@ namespace CoreLib.Models
         public override bool Equals(object obj)
         {
             return obj is Channel channel &&
-                   Id == channel.Id;
+                   (Id == channel.Id || Link==channel.Link);
         }
 
         public override int GetHashCode()

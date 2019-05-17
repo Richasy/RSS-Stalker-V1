@@ -122,8 +122,11 @@
   <ItemGroup>
     <Compile Include="Enums\AppSettings.cs" />
     <Compile Include="Enums\ColorType.cs" />
+    <Compile Include="Enums\FilterRuleType.cs" />
+    <Compile Include="Models\App\CustomPage.cs" />
     <Compile Include="Models\App\ExportModel.cs" />
     <Compile Include="Models\App\CacheModel.cs" />
+    <Compile Include="Models\App\FilterRule.cs" />
     <Compile Include="Models\OPML\Body.cs" />
     <Compile Include="Models\App\Category.cs" />
     <Compile Include="Models\App\Channel.cs" />

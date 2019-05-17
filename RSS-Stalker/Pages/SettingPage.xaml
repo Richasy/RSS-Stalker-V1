@@ -14,7 +14,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="{x:Bind Name,Mode=OneWay}" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource ImportantTextColor}" FontSize="14" VerticalAlignment="Center"/>
+                <TextBlock Text="{x:Bind Name,Mode=OneWay}" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource ImportantTextColor}" FontSize="14" VerticalAlignment="Center"/>
                 <Button Style="{StaticResource GhostCircleButtonStyle}" Content="&#xE99D;" FontFamily="{StaticResource Icon}" Name="RemoveToastButton" Click="RemoveToastButton_Click" Grid.Column="1" VerticalAlignment="Center"/>
             </Grid>
         </DataTemplate>

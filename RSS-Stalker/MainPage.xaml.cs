@@ -787,5 +787,22 @@ namespace RSS_Stalker
             CacheProgressBar.Visibility = Visibility.Collapsed;
             LoadingRing.IsActive = false;
         }
+
+        private void AddPageButton_Click(object sender, RoutedEventArgs e)
+        {
+            bool isEmpty = true;
+            foreach (var item in Categories)
+            {
+                if (item.Channels.Count > 0)
+                {
+                    isEmpty = false;
+                    break;
+                }
+            }
+            if (!isEmpty)
+                MainFrame.Navigate(typeof(Pages.AddCustomPage));
+            else
+                new PopupToast(AppTools.GetReswLanguage("Tip_AddChannelFirst"),AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+        }
     }
 }

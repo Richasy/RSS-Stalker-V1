@@ -582,4 +582,25 @@
   <data name="Control_AutoCacheTipBlock.Text" xml:space="preserve">
     <value>Auto cache when open channel</value>
   </data>
+  <data name="Control_CategoryTipBlock.Text" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Control_CustomPageTipBlock.Text" xml:space="preserve">
+    <value>Page</value>
+  </data>
+  <data name="Tip_AddChannelFirst" xml:space="preserve">
+    <value>You need add channel first</value>
+  </data>
+  <data name="Tip_RuleFilter" xml:space="preserve">
+    <value>Need Title/Content</value>
+  </data>
+  <data name="Tip_RuleFilterOut" xml:space="preserve">
+    <value>Don't need Title/Content</value>
+  </data>
+  <data name="Tip_SingleLimit" xml:space="preserve">
+    <value>Single limit count</value>
+  </data>
+  <data name="Tip_TotalLimit" xml:space="preserve">
+    <value>Total limit count</value>
+  </data>
 </root>

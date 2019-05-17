@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using CoreLib.Models.App;
 
 namespace CoreLib.Tools
 {
@@ -105,6 +106,44 @@ namespace CoreLib.Tools
                 {
                     await _appFolder.StorageFolderPlatformService.CreateFileAsync("RssList.json", CreationCollisionOption.ReplaceExisting);
                     return new List<Category>();
+                }
+                throw;
+            }
+        }
+        /// <summary>
+        /// 获取OneDrive中存储的Page列表数据
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<CustomPage>> GetPageList()
+        {
+            if (_appFolder == null)
+            {
+                throw new UnauthorizedAccessException("You need to complete OneDrive authorization before you can get this file");
+            }
+            try
+            {
+                var file = await _appFolder.GetFileAsync("PageList.json");
+                using (var stream = (await file.StorageFilePlatformService.OpenAsync()) as IRandomAccessStream)
+                {
+                    Stream st = WindowsRuntimeStreamExtensions.AsStreamForRead(stream);
+                    st.Position = 0;
+                    StreamReader sr = new StreamReader(st, Encoding.UTF8);
+                    string result = sr.ReadToEnd();
+                    result = result.Replace("\0", "");
+                    if (string.IsNullOrEmpty(result))
+                    {
+                        result = "[]";
+                    }
+                    var list = JsonConvert.DeserializeObject<List<CustomPage>>(result);
+                    return list;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.ToLower().Contains("itemnotfound"))
+                {
+                    await _appFolder.StorageFolderPlatformService.CreateFileAsync("PageList.json", CreationCollisionOption.ReplaceExisting);
+                    return new List<CustomPage>();
                 }
                 throw;
             }
@@ -226,7 +265,7 @@ namespace CoreLib.Tools
         /// <summary>
         /// 更新OneDrive中存储的Rss列表
         /// </summary>
-        /// <param name="list">列表</param>
+        /// <param name="localFile">本地文件</param>
         /// <returns></returns>
         public async Task UpdateCategoryList(StorageFile localFile)
         {
@@ -242,6 +281,32 @@ namespace CoreLib.Tools
                     double time = AppTools.DateToTimeStamp(DateTime.Now.ToLocalTime());
                     AppTools.WriteRoamingSetting(Enums.AppSettings.BasicUpdateTime, time.ToString());
                     AppTools.WriteLocalSetting(Enums.AppSettings.BasicUpdateTime, time.ToString());
+                }
+            }
+            catch (Exception)
+            {
+                return;
+            }
+        }
+        /// <summary>
+        /// 更新OneDrive中存储的自定义页面列表
+        /// </summary>
+        /// <param name="localFile">本地文件</param>
+        /// <returns></returns>
+        public async Task UpdatePageList(StorageFile localFile)
+        {
+            if (_appFolder == null)
+            {
+                throw new UnauthorizedAccessException("You need to complete OneDrive authorization before you can get this file");
+            }
+            try
+            {
+                using (var stream = await localFile.OpenReadAsync())
+                {
+                    await _appFolder.StorageFolderPlatformService.CreateFileAsync("PageList.json", CreationCollisionOption.ReplaceExisting, stream);
+                    double time = AppTools.DateToTimeStamp(DateTime.Now.ToLocalTime());
+                    AppTools.WriteRoamingSetting(Enums.AppSettings.PageUpdateTime, time.ToString());
+                    AppTools.WriteLocalSetting(Enums.AppSettings.PageUpdateTime, time.ToString());
                 }
             }
             catch (Exception)

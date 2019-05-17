@@ -582,4 +582,25 @@
   <data name="Control_AutoCacheTipBlock.Text" xml:space="preserve">
     <value>打开频道时自动缓存</value>
   </data>
+  <data name="Control_CategoryTipBlock.Text" xml:space="preserve">
+    <value>分类</value>
+  </data>
+  <data name="Control_CustomPageTipBlock.Text" xml:space="preserve">
+    <value>页面</value>
+  </data>
+  <data name="Tip_AddChannelFirst" xml:space="preserve">
+    <value>您需要先添加频道</value>
+  </data>
+  <data name="Tip_RuleFilter" xml:space="preserve">
+    <value>需要的标题或内容</value>
+  </data>
+  <data name="Tip_RuleFilterOut" xml:space="preserve">
+    <value>不需要的标题或内容</value>
+  </data>
+  <data name="Tip_SingleLimit" xml:space="preserve">
+    <value>单个最大条目数</value>
+  </data>
+  <data name="Tip_TotalLimit" xml:space="preserve">
+    <value>总体最大条目数</value>
+  </data>
 </root>

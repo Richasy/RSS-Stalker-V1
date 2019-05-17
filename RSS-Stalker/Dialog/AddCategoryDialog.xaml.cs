@@ -49,6 +49,10 @@ namespace RSS_Stalker.Dialog
         private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             args.Cancel = true;
+            await AddCategory();
+        }
+        private async Task AddCategory()
+        {
             string icon = IconTextBlock.Text;
             string name = CategoryNameTextBox.Text;
             if (!string.IsNullOrEmpty(icon) && !string.IsNullOrEmpty(name))
@@ -75,7 +79,6 @@ namespace RSS_Stalker.Dialog
                 new PopupToast(AppTools.GetReswLanguage("Tip_FieldEmpty"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
         }
-
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
         }
@@ -90,6 +93,14 @@ namespace RSS_Stalker.Dialog
             var str = e.ClickedItem as string;
             IconTextBlock.Text = str;
             IconFlyout.Hide();
+        }
+
+        private async void CategoryNameTextBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                await AddCategory();
+            }
         }
     }
 }

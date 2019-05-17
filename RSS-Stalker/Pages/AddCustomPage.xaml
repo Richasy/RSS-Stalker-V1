@@ -1,0 +1,58 @@
+﻿<Page
+    x:Class="RSS_Stalker.Pages.AddCustomPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:RSS_Stalker.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:CoreLib.Models"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <DataTemplate x:DataType="models:Channel" x:Key="SourceChannelItemTemplate">
+            <Grid Padding="15,10">
+                <TextBlock HorizontalAlignment="Left" TextTrimming="CharacterEllipsis" Text="{x:Bind Name,Mode=OneWay}" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource ImportantTextColor}" FontSize="14" VerticalAlignment="Center"/>
+            </Grid>
+        </DataTemplate>
+        <CollectionViewSource IsSourceGrouped="True" x:Key="ChannelListSource" x:Name="ChannelListSource" Source="{x:Bind SourceChannelCollection,Mode=OneWay}"/>
+    </Page.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <ListView
+                Name="SourceChannelListView"
+                SelectionMode="Multiple"
+                          ItemContainerStyle="{StaticResource BasicListItemContainer}"
+                          Style="{StaticResource BasicListView}"
+                          ItemsSource="{x:Bind ChannelListSource.View,Mode=OneWay}"
+                          ItemTemplate="{StaticResource SourceChannelItemTemplate}"
+                          IsItemClickEnabled="True"
+                          Width="250"
+                          SelectionChanged="SourceChannelListView_SelectionChanged">
+                <ListView.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Key}" FontSize="12" HorizontalAlignment="Left" Foreground="{ThemeResource TipTextColor}" FontFamily="{StaticResource Basic}" Margin="0,6"/>
+                            </DataTemplate>
+                        </GroupStyle.HeaderTemplate>
+                    </GroupStyle>
+                </ListView.GroupStyle>
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsStackPanel AreStickyGroupHeadersEnabled="False"
+                                             />
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+            </ListView>
+        </Grid>
+    </Grid>
+</Page>

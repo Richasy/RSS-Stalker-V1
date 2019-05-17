@@ -849,5 +849,140 @@ namespace RSS_Stalker.Tools
             }
             return results;
         }
+
+        /// <summary>
+        /// 获取本地保存的自定义页面信息
+        /// </summary>
+        /// <returns></returns>
+        public async static Task<List<CustomPage>> GetLocalPages()
+        {
+            try
+            {
+                var localFolder = ApplicationData.Current.LocalFolder;
+                var file = await localFolder.CreateFileAsync("Pages.json", CreationCollisionOption.OpenIfExists);
+                string text = await FileIO.ReadTextAsync(file);
+                if (string.IsNullOrEmpty(text))
+                {
+                    text = "[]";
+                }
+                var list = JsonConvert.DeserializeObject<List<CustomPage>>(text);
+                return list;
+            }
+            catch (Exception)
+            {
+                return new List<CustomPage>();
+            }
+
+        }
+        /// <summary>
+        /// 添加新页面
+        /// </summary>
+        /// <param name="page">页面</param>
+        /// <returns></returns>
+        public async static Task AddPage(CustomPage page)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("Pages.json", CreationCollisionOption.OpenIfExists);
+            string text = await FileIO.ReadTextAsync(file);
+            if (string.IsNullOrEmpty(text))
+            {
+                text = "[]";
+            }
+            var list = JsonConvert.DeserializeObject<List<CustomPage>>(text);
+            list.Add(page);
+            text = JsonConvert.SerializeObject(list);
+            await FileIO.WriteTextAsync(file, text);
+            bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
+            if (isOneDrive)
+            {
+                if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+                    await App.OneDrive.UpdatePageList(file);
+                else
+                    AppTools.WriteLocalSetting(CoreLib.Enums.AppSettings.IsPagesChangeInOffline, "True");
+            }
+
+        }
+        /// <summary>
+        /// 更新页面
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        public async static Task UpdatePage(CustomPage page)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("Pages.json", CreationCollisionOption.OpenIfExists);
+            string text = await FileIO.ReadTextAsync(file);
+            if (string.IsNullOrEmpty(text))
+            {
+                text = "[]";
+            }
+            var list = JsonConvert.DeserializeObject<List<CustomPage>>(text);
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].Equals(page))
+                {
+                    list[i] = page;
+                }
+            }
+            text = JsonConvert.SerializeObject(list);
+            await FileIO.WriteTextAsync(file, text);
+            bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
+            if (isOneDrive)
+            {
+                if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+                    await App.OneDrive.UpdatePageList(file);
+                else
+                    AppTools.WriteLocalSetting(CoreLib.Enums.AppSettings.IsPagesChangeInOffline, "True");
+            }
+        }
+        /// <summary>
+        /// 删除页面
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        public async static Task DeletePage(CustomPage page)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("Pages.json", CreationCollisionOption.OpenIfExists);
+            string text = await FileIO.ReadTextAsync(file);
+            if (string.IsNullOrEmpty(text))
+            {
+                text = "[]";
+            }
+            var list = JsonConvert.DeserializeObject<List<CustomPage>>(text);
+            list.RemoveAll(p => p.Equals(page));
+            text = JsonConvert.SerializeObject(list);
+            await FileIO.WriteTextAsync(file, text);
+            bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
+            if (isOneDrive)
+            {
+                if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+                    await App.OneDrive.UpdatePageList(file);
+                else
+                    AppTools.WriteLocalSetting(CoreLib.Enums.AppSettings.IsPagesChangeInOffline, "True");
+            }
+        }
+        /// <summary>
+        /// 完全替换Page列表
+        /// </summary>
+        /// <param name="pages">Page列表</param>
+        /// <returns></returns>
+        public async static Task ReplacePage(List<CustomPage> pages, bool isUpdate = false)
+        {
+            try
+            {
+                var localFolder = ApplicationData.Current.LocalFolder;
+                var file = await localFolder.CreateFileAsync("Pages.json", CreationCollisionOption.OpenIfExists);
+                string text = JsonConvert.SerializeObject(pages);
+                await FileIO.WriteTextAsync(file, text);
+                bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
+                if (isUpdate && isOneDrive)
+                    await App.OneDrive.UpdatePageList(file);
+            }
+            catch (Exception)
+            {
+                return;
+            }
+        }
     }
 }

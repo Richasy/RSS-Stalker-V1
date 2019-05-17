@@ -41,6 +41,10 @@ namespace CoreLib.Models
             get { return _tagVisibility; }
             set { _tagVisibility = value; OnPropertyChanged(); }
         }
+        /// <summary>
+        /// 所属频道名
+        /// </summary>
+        public string ChannelName { get; set; }
         public Feed() { }
         public Feed(RssSchema schema)
         {
@@ -49,6 +53,7 @@ namespace CoreLib.Models
             Content = schema.Content??"";
             string theme = AppTools.GetLocalSetting(Enums.AppSettings.Theme, "Light").ToLower();
             ImageUrl = schema.ImageUrl;
+            ChannelName = "";
             if (string.IsNullOrEmpty(ImageUrl))
             {
                 ImgVisibility = Visibility.Collapsed;

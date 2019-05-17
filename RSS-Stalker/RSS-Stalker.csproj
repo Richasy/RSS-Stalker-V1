@@ -157,6 +157,9 @@
     <Compile Include="Dialog\MoveChannelDialog.xaml.cs">
       <DependentUpon>MoveChannelDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\AddCustomPage.xaml.cs">
+      <DependentUpon>AddCustomPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\SplashPage.xaml.cs">
       <DependentUpon>SplashPage.xaml</DependentUpon>
     </Compile>
@@ -316,6 +319,10 @@
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\AddCustomPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\ChannelDetailPage.xaml">
       <SubType>Designer</SubType>

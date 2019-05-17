@@ -32,5 +32,6 @@ namespace CoreLib.Enums
         IsTodoChangeInOffline,
         IsToastChangeInOffline,
         IsStarChangeInOffline,
+        AutoCacheWhenOpenChannel
     }
 }

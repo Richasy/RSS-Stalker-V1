@@ -337,7 +337,7 @@
     <value>No data here.</value>
   </data>
   <data name="Tip_OneDriveLogoutTip" xml:space="preserve">
-    <value>If you re-bind your OneDrive account, the local record will be replaced by the cloud record. It is recommended that you back up the local record before exiting.</value>
+    <value>If you re-bind your OneDrive account, the local record will be replaced by the cloud record. It is recommended that you back up the local record before exiting.\nData Export Function in Data Settings Classification</value>
   </data>
   <data name="Tip_PreWelcome" xml:space="preserve">
     <value>Welcome! </value>
@@ -578,5 +578,8 @@
   </data>
   <data name="Tip_ReadError" xml:space="preserve">
     <value>Parse error</value>
+  </data>
+  <data name="Control_AutoCacheTipBlock.Text" xml:space="preserve">
+    <value>Auto cache when open channel</value>
   </data>
 </root>

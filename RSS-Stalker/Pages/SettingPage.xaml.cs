@@ -54,6 +54,7 @@ namespace RSS_Stalker.Pages
             bool isScreenChannel = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsScreenChannelCustom, "False"));
             double speechRate = Convert.ToDouble(AppTools.GetLocalSetting(AppSettings.SpeechRate, "1.0"));
             string gender = AppTools.GetLocalSetting(AppSettings.VoiceGender, "Female");
+            bool isAutoCache = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.AutoCacheWhenOpenChannel, "False"));
             if (!isOneDrive)
             {
                 ForceSyncContainer.Visibility = Visibility.Collapsed;
@@ -84,6 +85,7 @@ namespace RSS_Stalker.Pages
                 default:
                     break;
             }
+            AutoCacheChannel.IsOn = isAutoCache;
             CacheSizeTextBlock.Text = await IOTools.GetCacheSize();
             VoiceGenderComboBox.SelectedIndex = gender == "Female" ? 1 : 0;
             SpeechRateSlider.Value = speechRate;
@@ -452,6 +454,13 @@ namespace RSS_Stalker.Pages
             await IOTools.DeleteCache();
             new PopupToast(AppTools.GetReswLanguage("Tip_ClearSuccess")).ShowPopup();
             CacheSizeTextBlock.Text = await IOTools.GetCacheSize();
+        }
+
+        private void AutoCacheChannel_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (!_isInit)
+                return;
+            AppTools.WriteLocalSetting(AppSettings.AutoCacheWhenOpenChannel, AutoCacheChannel.IsOn.ToString());
         }
     }
 }

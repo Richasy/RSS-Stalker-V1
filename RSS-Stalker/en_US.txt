@@ -2,19 +2,15 @@
 
 The new version has been revised as follows:
 
-=====
-Offline reading function officially launched!
-You can cache articles by level in the right-click menu of the channel, category, or you can cache all articles in the settings->data settings.
-=====
+add the option for automatic caching. You can open it in the settings, so every time you open the channel, the software will automatically help you cache the articles in the current channel.
 
-=====
-Allow local accounts to be used.
-Considering that it is difficult for many users to connect to OneDrive, a local channel has been established, and everything is normal except that it cannot be synchronized.
-=====
+---
 
-1. Adjust the asynchronous processing order of the program to ensure the smooth user experience. Now move the OneDrive synchronization changes to the behind the scenes, no longer occupying the waiting time of the foreground.
-2. Rich reading function, you can now adjust the gender and speed in the settings.
-3. Provide local favorites, pending reading and toast list export to facilitate local backup.
+Recently, the "free combination channel content" and "read/unread options" functions have been prepared, and the update frequency has been reduced (probably)
+
+If the software makes you feel great, don't forget to give me praise and recommend it to your friends. 
+
+Thank you :)
 
 ---
 

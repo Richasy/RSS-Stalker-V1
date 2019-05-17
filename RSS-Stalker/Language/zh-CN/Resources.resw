@@ -337,7 +337,7 @@
     <value>没有查找到相应数据</value>
   </data>
   <data name="Tip_OneDriveLogoutTip" xml:space="preserve">
-    <value>若重新绑定OneDrive账户，则本地记录将会被云端记录取代，建议您在退出前先备份好本地记录</value>
+    <value>若重新绑定OneDrive账户，则本地记录将会被云端记录取代，建议您在退出前先备份好本地记录。\n数据导出功能在数据设置分类中</value>
   </data>
   <data name="Tip_PreWelcome" xml:space="preserve">
     <value>欢迎您，</value>
@@ -578,5 +578,8 @@
   </data>
   <data name="Tip_ReadError" xml:space="preserve">
     <value>阅读解析失败</value>
+  </data>
+  <data name="Control_AutoCacheTipBlock.Text" xml:space="preserve">
+    <value>打开频道时自动缓存</value>
   </data>
 </root>

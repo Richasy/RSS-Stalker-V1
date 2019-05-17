@@ -87,6 +87,11 @@ namespace RSS_Stalker.Pages
             if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
                 feed = await AppTools.GetFeedsFromUrl(_sourceData.Link);
+                bool isAutoCache = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.AutoCacheWhenOpenChannel, "False"));
+                if (isAutoCache && feed.Count > 0)
+                {
+                    await IOTools.AddCacheChannel(null, channel);
+                }
             }
             else
             {
@@ -95,7 +100,9 @@ namespace RSS_Stalker.Pages
                     new PopupToast(AppTools.GetReswLanguage("Tip_WatchingCache")).ShowPopup();
                     MainPage.Current._isCacheAlert = false;
                 }
+                
                 feed = await IOTools.GetLocalCache(channel);
+                
             }
             if (feed != null && feed.Count > 0)
             {

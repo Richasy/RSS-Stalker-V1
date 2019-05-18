@@ -2,32 +2,29 @@
 using CoreLib.Tools;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CoreLib.Models.App
 {
-    /// <summary>
-    /// 筛选条件
-    /// </summary>
     public class FilterRule
     {
         public string RuleName { get; set; }
         public FilterRuleType Type { get; set; }
-        public string Content { get; set; }
-
         public override string ToString()
         {
-            return RuleName+": "+Content;
+            return RuleName;
         }
         public FilterRule()
         {
             RuleName = "";
-            Content = "";
         }
-        public FilterRule(FilterRuleType type):base()
+        public FilterRule(FilterRuleType type) : base()
         {
+            Type = type;
             switch (type)
             {
                 case FilterRuleType.Filter:
@@ -56,6 +53,34 @@ namespace CoreLib.Models.App
                 new FilterRule(FilterRuleType.SingleLimit),
             };
             return list;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is FilterRule rule &&
+                   Type == rule.Type;
+        }
+
+        public override int GetHashCode()
+        {
+            return 2049151605 + Type.GetHashCode();
+        }
+    }
+    /// <summary>
+    /// 筛选条件
+    /// </summary>
+    public class FilterItem
+    {
+        //private FilterRule _rule;
+        public FilterRule Rule
+        {
+            get;set;
+        } 
+        public string Content { get; set; }
+
+        public override string ToString()
+        {
+            return Rule.RuleName+": "+Content;
         }
     }
 }

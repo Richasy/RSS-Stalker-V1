@@ -462,17 +462,11 @@
   <data name="Tip_NeedLinkTranslateService" xml:space="preserve">
     <value>你需要创建翻译配置</value>
   </data>
-  <data name="Control_CustomComboItem.Content" xml:space="preserve">
-    <value>自定义</value>
-  </data>
   <data name="Control_DefaultComboItem.Content" xml:space="preserve">
     <value>默认</value>
   </data>
   <data name="Control_HomeChannelMenuItem.Text" xml:space="preserve">
     <value>设为首页</value>
-  </data>
-  <data name="Control_ScreenChannelSettingTipBlock.Text" xml:space="preserve">
-    <value>首页频道</value>
   </data>
   <data name="Control_SearchTextInWebMenuItem.Text" xml:space="preserve">
     <value>在网页中搜索</value>
@@ -526,10 +520,10 @@
     <value>你好，我是云之幻，软件的开发者。</value>
   </data>
   <data name="Control_ExportLocalListTipBlock.Text" xml:space="preserve">
-    <value>导出本地待读、收藏和推送列表</value>
+    <value>导出本地待读、收藏、推送和自定义页面列表</value>
   </data>
   <data name="Control_ImportLocalListTipBlock.Text" xml:space="preserve">
-    <value>导入待读、收藏和推送列表</value>
+    <value>导入待读、收藏、推送和自定义页面列表</value>
   </data>
   <data name="Cotrol_LocalAccountButton.Content" xml:space="preserve">
     <value>本地账户</value>
@@ -602,5 +596,56 @@
   </data>
   <data name="Tip_TotalLimit" xml:space="preserve">
     <value>总体最大条目数</value>
+  </data>
+  <data name="Control_AddRuleButton.Content" xml:space="preserve">
+    <value>添加新规则</value>
+  </data>
+  <data name="Control_PageNameTipBlock.Text" xml:space="preserve">
+    <value>页面名</value>
+  </data>
+  <data name="Control_RuleTipBlock.Text" xml:space="preserve">
+    <value>筛选规则</value>
+  </data>
+  <data name="Control_SaveButton.Content" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="Control_CachePageMenuItem.Text" xml:space="preserve">
+    <value>缓存页面</value>
+  </data>
+  <data name="Control_RuleInputTipBlock.Text" xml:space="preserve">
+    <value>对于想要或不想要的内容，应输入正则表达式，简单的关键词筛选可以竖线' | '分割，比如在“需要的标题或内容”下可以写“云之幻|UWP|Windows”，这样软件会帮你查找所有包含上述字眼的文章。如果需要和不需要的内容包含了相同的关键词，则不需要的优先级更高。条目数选项指的是总体或单个频道的最大选取个数，需要填写数字，默认以时间排序，超出最大容量则切断</value>
+  </data>
+  <data name="Tip_AddCustomPage" xml:space="preserve">
+    <value>添加自定义页面</value>
+  </data>
+  <data name="Tip_DeletePageSuccess" xml:space="preserve">
+    <value>页面删除成功</value>
+  </data>
+  <data name="Tip_DeletePageWarning" xml:space="preserve">
+    <value>您将删除该自定义页面，是否确认？</value>
+  </data>
+  <data name="Tip_InputNumberError" xml:space="preserve">
+    <value>请输入正确的数字</value>
+  </data>
+  <data name="Tip_InputRegexError" xml:space="preserve">
+    <value>请输入正确的正则表达式</value>
+  </data>
+  <data name="Tip_NoPageSelected" xml:space="preserve">
+    <value>没有页面被选中</value>
+  </data>
+  <data name="Tip_RuleRepeat" xml:space="preserve">
+    <value>规则重复</value>
+  </data>
+  <data name="Control_CustomChannelComboItem.Content" xml:space="preserve">
+    <value>自定义频道</value>
+  </data>
+  <data name="Control_CustomPageComboItem.Content" xml:space="preserve">
+    <value>自定义页面</value>
+  </data>
+  <data name="Control_ScreenSettingTipBlock.Text" xml:space="preserve">
+    <value>首页设置</value>
+  </data>
+  <data name="Tip_Selected" xml:space="preserve">
+    <value>上次选择</value>
   </data>
 </root>

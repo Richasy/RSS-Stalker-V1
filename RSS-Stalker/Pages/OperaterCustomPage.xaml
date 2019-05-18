@@ -1,0 +1,143 @@
+﻿<Page
+    x:Class="RSS_Stalker.Pages.OperaterCustomPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:RSS_Stalker.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:CoreLib.Models"
+    xmlns:app="using:CoreLib.Models.App"
+    Loaded="Page_Loaded"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <DataTemplate x:DataType="models:Channel" x:Key="SourceChannelItemTemplate">
+            <Grid Padding="15,10">
+                <TextBlock HorizontalAlignment="Left" TextTrimming="CharacterEllipsis" Text="{x:Bind Name,Mode=OneWay}" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource ImportantTextColor}" FontSize="14" VerticalAlignment="Center"/>
+            </Grid>
+        </DataTemplate>
+        <CollectionViewSource IsSourceGrouped="True" x:Key="ChannelListSource" x:Name="ChannelListSource" Source="{x:Bind SourceChannelCollection,Mode=OneWay}"/>
+        <DataTemplate x:DataType="x:String" x:Key="IconItemTemplate">
+            <Border Width="30" Height="30">
+                <TextBlock Text="{Binding}" FontFamily="{StaticResource Icon}" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </Border>
+        </DataTemplate>
+        <DataTemplate x:DataType="app:FilterItem" x:Key="FilterItemTemplate">
+            <Grid Padding="0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <ComboBox ItemContainerStyle="{StaticResource BasicComboBoxItemContainerStyle}"
+                          Style="{StaticResource BasicComboBoxStyle}"
+                          SelectedItem="{x:Bind Rule,Mode=TwoWay}"
+                          ItemsSource="{x:Bind local:OperaterCustomPage.Current.RuleCollection}"
+                          VerticalAlignment="Center"
+                          Loaded="RuleComboBox_Loaded"
+                          SelectionChanged="RuleComboBox_SelectionChanged"
+                          HorizontalAlignment="Stretch"
+                          />
+                <TextBox Text="{x:Bind Content,Mode=TwoWay}" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource BasicTextBoxStyle}" Margin="10,0,0,0"/>
+                <Button Style="{StaticResource GhostCircleButtonStyle}" Margin="10,0,0,0" Content="&#xE99D;" FontFamily="{StaticResource Icon}" Name="RemoveRuleButton" Click="RemoveRuleButton_Click"  Grid.Column="2" VerticalAlignment="Center"/>
+            </Grid>
+        </DataTemplate>
+        <Flyout FlyoutPresenterStyle="{StaticResource BasicFlyoutStyle}" x:Key="IconFlyout" x:Name="IconFlyout" Placement="Bottom">
+            <GridView x:Name="IconGridView"
+                      ItemContainerStyle="{StaticResource ThinGridViewItemContainerStyle}"
+                      Style="{StaticResource BasicGridView}"
+                      ItemTemplate="{StaticResource IconItemTemplate}"
+                      MaxWidth="300"
+                      Margin="5,0,0,0"
+                      MaxHeight="200"
+                      ItemsSource="{x:Bind local:OperaterCustomPage.Current.IconCollection}"
+                      IsItemClickEnabled="True"
+                      ItemClick="IconGridView_ItemClick"
+                      HorizontalAlignment="Center"
+                      />
+        </Flyout>
+    </Page.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,0,1" Padding="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_IconTipBlock" Margin="0,0,0,5"/>
+                <Border Width="35" Height="35" CornerRadius="3" BorderBrush="{ThemeResource LineColor}" BorderThickness="1" FlyoutBase.AttachedFlyout="{StaticResource IconFlyout}" Background="{ThemeResource TransparentBackground}" Name="IconContainer" Tapped="IconContainer_Tapped">
+                    <TextBlock Name="IconTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="{StaticResource Icon}" Foreground="{ThemeResource ImportantTextColor}" FontSize="17"/>
+                </Border>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Margin="15,0" VerticalAlignment="Center">
+                <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_PageNameTipBlock" Margin="0,0,0,5"/>
+                <TextBox Style="{StaticResource BasicTextBoxStyle}" Name="PageNameTextBox" x:Uid="Control_CategoryNameTextBox" HorizontalAlignment="Stretch"/>
+            </StackPanel>
+            <Button Style="{StaticResource PrimaryButtonStyle}" VerticalAlignment="Bottom" Width="100" x:Uid="Control_SaveButton" Name="SaveButton" Grid.Column="2" Click="SaveButton_Click"/>
+        </Grid>
+        <Grid Grid.Row="1" Padding="20,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="1.5*"/>
+            </Grid.ColumnDefinitions>
+            <ListView
+                Name="SourceChannelListView"
+                SelectionMode="Multiple"
+                          ItemContainerStyle="{StaticResource BasicListItemContainer}"
+                          Style="{StaticResource BasicListView}"
+                Loaded="SourceChannelListView_Loaded"
+                          ItemsSource="{x:Bind ChannelListSource.View,Mode=OneWay}"
+                          ItemTemplate="{StaticResource SourceChannelItemTemplate}"
+                          IsItemClickEnabled="True"
+                          Padding="0,0,10,10"
+                          SelectionChanged="{x:Bind SourceChannelListView_SelectionChanged}">
+                <ListView.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Key}" FontSize="13" HorizontalAlignment="Left" Foreground="{ThemeResource TipTextColor}" FontFamily="{StaticResource Basic}" Margin="0,6"/>
+                            </DataTemplate>
+                        </GroupStyle.HeaderTemplate>
+                    </GroupStyle>
+                </ListView.GroupStyle>
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsStackPanel AreStickyGroupHeadersEnabled="False"
+                                             />
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+            </ListView>
+            <Grid Grid.Column="1" Padding="20,15,0,0" Margin="20,0,0,0" BorderBrush="{ThemeResource LineColor}" BorderThickness="1,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                    <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_RuleTipBlock" VerticalAlignment="Center"/>
+                    <Button Style="{StaticResource TransparentButtonStyle}" Content="&#xE97B;" FontFamily="{StaticResource Icon}" VerticalAlignment="Center" Margin="15,0,0,0">
+                        <Button.Flyout>
+                            <Flyout FlyoutPresenterStyle="{StaticResource BasicFlyoutStyle}">
+                                <TextBlock x:Uid="Control_RuleInputTipBlock" Margin="12,5" Foreground="{ThemeResource NormalTextColor}" FontFamily="{StaticResource Basic}" FontSize="14" LineHeight="22" TextWrapping="Wrap" MaxWidth="200"/>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                </StackPanel>
+                
+                <ListView ItemTemplate="{StaticResource FilterItemTemplate}"
+                          Grid.Row="1"
+                      ItemContainerStyle="{StaticResource TransparentListItemContainer}"
+                      SelectionMode="None"
+                      Style="{StaticResource BasicListView}"
+                      ItemsSource="{x:Bind FilterCollection}"
+                      />
+                <Button Style="{StaticResource DefaultButtonStyle}" HorizontalAlignment="Stretch" x:Uid="Control_AddRuleButton" Name="AddRuleButton" Click="AddRuleButton_Click" Grid.Row="2" Margin="0,10,0,0"/>
+            </Grid>
+            
+        </Grid>
+    </Grid>
+</Page>

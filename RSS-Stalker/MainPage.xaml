@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:CoreLib.Models"
+    xmlns:models1="using:CoreLib.Models.App"
     SizeChanged="Page_SizeChanged"
     mc:Ignorable="d">
     <Page.Resources>
@@ -60,6 +61,39 @@
                 </MenuFlyoutItem.Icon>
             </MenuFlyoutItem>
         </MenuFlyout>
+        <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource BasicMenuFlyoutStyle}" x:Name="PageMenuFlyout" x:Key="PageMenuFlyout">
+            <MenuFlyoutItem x:Uid="Control_HomeChannelMenuItem" FontFamily="{StaticResource Basic}" Name="HomePageMenuItem" Click="HomePageMenuItem_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE97C;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem x:Uid="Control_UpdateMenuItem" FontFamily="{StaticResource Basic}" Name="UpdatePageMenuItem" Click="UpdatePageMenuItem_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE95A;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem x:Uid="Control_CachePageMenuItem" FontFamily="{StaticResource Basic}" Name="CachePageMenuItem" Click="CachePageMenuItem_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE957;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="Control_DeleteMenuItem" FontFamily="{StaticResource Basic}" Name="DeletePageMenuItem" Click="DeletePageMenuItem_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE9EB;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+        </MenuFlyout>
+        <DataTemplate x:DataType="models1:CustomPage" x:Key="PageItemTemplate">
+            <Grid Padding="15,15,0,15" Background="{ThemeResource TransparentBackground}" RightTapped="PageItem_RightTapped" Holding="PageItem_Holding">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{x:Bind Icon,Mode=OneWay}" FontFamily="{StaticResource Icon}" FontSize="18" VerticalAlignment="Center"/>
+                <TextBlock Text="{x:Bind Name,Mode=OneWay}" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource PrimaryMenuTextColor}" FontSize="14" VerticalAlignment="Center" Grid.Column="1" Margin="15,0" TextTrimming="CharacterEllipsis" />
+            </Grid>
+        </DataTemplate>
         <DataTemplate x:DataType="models:Category" x:Key="CategoryItemTemplate">
             <Grid Padding="15,15,0,15" Background="{ThemeResource TransparentBackground}" RightTapped="CategoryItem_RightTapped" Holding="CategoryItem_Holding">
                 <Grid.ColumnDefinitions>
@@ -110,7 +144,8 @@
                                 <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_CustomPageTipBlock" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True"/>
                                 <Button Style="{StaticResource GhostCircleButtonStyle}" Content="&#xE9BA;" Name="AddPageButton" Click="AddPageButton_Click" RelativePanel.AlignVerticalCenterWithPanel="True" RelativePanel.AlignRightWithPanel="True"/>
                             </RelativePanel>
-                            <ListView ItemTemplate="{StaticResource CategoryItemTemplate}"
+                            <ListView ItemTemplate="{StaticResource PageItemTemplate}"
+                                      ItemsSource="{x:Bind CustomPages}"
                                       Grid.Row="1"
                                       x:FieldModifier="Public"
                                       IsItemClickEnabled="True"
@@ -119,6 +154,7 @@
                                       Name="PageListView"
                                       IsSwipeEnabled="True"
                                       AllowDrop="True"
+                                      ItemClick="PageListView_ItemClick"
                                       CanReorderItems="True"
                                       Margin="20,10,20,0"
                                       MaxHeight="300"

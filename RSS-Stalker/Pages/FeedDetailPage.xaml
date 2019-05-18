@@ -142,10 +142,9 @@
                 </SplitView.Pane>
                 <Grid>
                     <WebView Name="DetailWebView"
-                 Loaded="DetailWebView_Loaded"
+                             DOMContentLoaded="DetailWebView_DOMContentLoaded"
                              ScriptNotify="DetailWebView_ScriptNotify"
                  DefaultBackgroundColor="{ThemeResource PageColor}"
-                             BringIntoViewRequested="DetailWebView_BringIntoViewRequested"
                  />
                     <MediaElement Width="5" Height="5" VerticalAlignment="Bottom" HorizontalAlignment="Right" Name="VoiceMediaElement" Visibility="Collapsed"/>
                     <Button Style="{StaticResource GhostCircleButtonStyle}" Width="40" Height="40" Name="MediaControlButton" Content="&#xE997;" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,20,20" Visibility="Collapsed" Click="MediaControlButton_Click"/>

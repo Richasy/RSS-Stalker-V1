@@ -10,6 +10,7 @@ namespace CoreLib.Models.App
     public class CacheModel
     {
         public Channel Channel { get; set; }
+        public CustomPage Page { get; set; }
         public List<RssSchema> Feeds { get; set; }
     }
 }

@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.ApplicationModel;
 using Microsoft.Toolkit.Uwp.Connectivity;
+using CoreLib.Models.App;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -39,12 +40,17 @@ namespace RSS_Stalker
     {
         public ObservableCollection<Category> Categories = new ObservableCollection<Category>();
         public ObservableCollection<Channel> Channels = new ObservableCollection<Channel>();
+        public ObservableCollection<CustomPage> CustomPages = new ObservableCollection<CustomPage>();
         public List<Feed> TodoList = new List<Feed>();
         public List<Feed> StarList = new List<Feed>();
         public List<Channel> ToastList = new List<Channel>();
         public bool _isFromTimeline = false;
         public static MainPage Current;
         public bool _isCacheAlert = false;
+        /// <summary>
+        /// 分类列表数量标识，在进行数据替换和拖放排序时作为参照。在清空列表前，一定要将该标识设为-1
+        /// </summary>
+        public int _pageListCount = -1;
         /// <summary>
         /// 分类列表数量标识，在进行数据替换和拖放排序时作为参照。在清空列表前，一定要将该标识设为-1
         /// </summary>
@@ -61,6 +67,10 @@ namespace RSS_Stalker
         /// 呼出右键菜单时记录的目标分类
         /// </summary>
         private Category _tempCategory;
+        /// <summary>
+        /// 呼出右键菜单时记录的目标页面
+        /// </summary>
+        private CustomPage _tempPage;
         /// <summary>
         /// 检测同步的计时器（由于RoamingSettings的不即时性，当前已弃用该功能）
         /// </summary>
@@ -110,6 +120,18 @@ namespace RSS_Stalker
                 await IOTools.ReplaceCategory(Categories.ToList(), true);
             }
         }
+        private async void PageCollectionReordered(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (!_isInit)
+            {
+                return;
+            }
+            var list = CustomPages.ToList();
+            if (list.Count == _pageListCount)
+            {
+                await IOTools.ReplacePage(list, true);
+            }
+        }
         private async void CheckUpdateLocalData()
         {
             await IOTools.UpdateAllListToOneDrive();
@@ -135,16 +157,24 @@ namespace RSS_Stalker
             // 监听集合变化
             Categories.CollectionChanged += CategoryCollectionReordered;
             Channels.CollectionChanged += ChannelCollectionReordered;
+            CustomPages.CollectionChanged += PageCollectionReordered;
             // 获取本地保存的订阅源副本
             var categories = await IOTools.GetLocalCategories();
+            var pages = await IOTools.GetLocalPages();
             // 清空列表前将标识符设置为-1
             _categoryListCount = -1;
             _channelListCount = -1;
+            _pageListCount = -1;
             Channels.Clear();
             Categories.Clear();
+            CustomPages.Clear();
             foreach (var item in categories)
             {
                 Categories.Add(item);
+            }
+            foreach (var item in pages)
+            {
+                CustomPages.Add(item);
             }
             if (Categories.Count == 0)
             {
@@ -300,6 +330,7 @@ namespace RSS_Stalker
         public void ReplaceList(List<Category> list)
         {
             string roamTime = AppTools.GetRoamingSetting(AppSettings.BasicUpdateTime, "1");
+            
             string selectCategoryId = (CategoryListView.SelectedItem as Category)?.Id;
             string selectChannelId = (ChannelListView.SelectedItem as Channel)?.Id;
             _categoryListCount = -1;
@@ -328,9 +359,32 @@ namespace RSS_Stalker
                     }
                 }
             }
+            
+            
             _categoryListCount = Categories.Count;
             _channelListCount = Channels.Count;
             AppTools.WriteLocalSetting(AppSettings.BasicUpdateTime, roamTime);
+        }
+        public void ReplacePageList(List<CustomPage> pages)
+        {
+            string roamTime = AppTools.GetRoamingSetting(AppSettings.PageUpdateTime, "1");
+            string selectPageId = (PageListView.SelectedItem as CustomPage)?.Id;
+            _pageListCount = -1;
+            CustomPages.Clear();
+            foreach (var item in pages)
+            {
+                CustomPages.Add(item);
+            }
+            if (!string.IsNullOrEmpty(selectPageId))
+            {
+                var selectPage = CustomPages.Where(p => p.Id == selectPageId).FirstOrDefault();
+                if (selectPage != null)
+                {
+                    PageListView.SelectedItem = selectPage;
+                }
+            }
+            _pageListCount = CustomPages.Count;
+            AppTools.WriteLocalSetting(AppSettings.PageUpdateTime, roamTime);
         }
         /// <summary>
         /// 离开页面前注销计时器
@@ -375,6 +429,7 @@ namespace RSS_Stalker
             SettingButton.IsChecked = false;
             CategoryNameTextBlock.Text = item.Name;
             ChannelListView.SelectedIndex = -1;
+            PageListView.SelectedIndex = -1;
             SideChannelGrid.Visibility = Visibility.Visible;
             AppSplitView.OpenPaneLength = 550;
             _channelListCount = -1;
@@ -468,6 +523,7 @@ namespace RSS_Stalker
             CategoryListView.SelectedIndex = -1;
             TodoButton.IsChecked = false;
             StarButton.IsChecked = false;
+            PageListView.SelectedIndex = -1;
             MainFrame.Navigate(typeof(Pages.SettingPage));
             SettingButton.IsChecked = true;
         }
@@ -618,6 +674,7 @@ namespace RSS_Stalker
             }
             SettingButton.IsChecked = false;
             StarButton.IsChecked = false;
+            PageListView.SelectedIndex = -1;
             SideChannelGrid.Visibility = Visibility.Collapsed;
             AppSplitView.OpenPaneLength = 250;
             CategoryListView.SelectedIndex = -1;
@@ -641,6 +698,7 @@ namespace RSS_Stalker
             }
             TodoButton.IsChecked = false;
             SettingButton.IsChecked = false;
+            PageListView.SelectedIndex = -1;
             SideChannelGrid.Visibility = Visibility.Collapsed;
             AppSplitView.OpenPaneLength = 250;
             CategoryListView.SelectedIndex = -1;
@@ -675,7 +733,9 @@ namespace RSS_Stalker
         public void SelectChannelByCustom()
         {
             bool IsCustomHome = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsScreenChannelCustom, "False"));
+            bool IsCustomPage = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsScreenPageCustom, "False"));
             string channelId = AppTools.GetLocalSetting(AppSettings.ScreenChannel, "");
+            string pageId = AppTools.GetLocalSetting(AppSettings.ScreenPage, "");
             if (IsCustomHome)
             {
                 if (string.IsNullOrEmpty(channelId))
@@ -729,6 +789,47 @@ namespace RSS_Stalker
                     }
                 }
             }
+            else if (IsCustomPage)
+            {
+                CategoryNameTextBlock.Text = "RSS Stalker";
+                SideChannelGrid.Visibility = Visibility.Collapsed;
+                AppSplitView.OpenPaneLength = 250;
+                if (string.IsNullOrEmpty(pageId))
+                {
+                    var first= CustomPages.FirstOrDefault();
+                    if (first != null)
+                    {
+                        PageListView.SelectedItem = first;
+                        CategoryNameTextBlock.Text = first.Name;
+                        MainFrame.Navigate(typeof(Pages.CustomPageDetailPage), first);
+                    }
+                    else
+                    {
+                        MainFrame.Navigate(typeof(Pages.WelcomePage));
+                    }
+                }
+                else
+                {
+                    CustomPage selectItem = null;
+                    foreach (var page in CustomPages)
+                    {
+                        if (page.Id == pageId)
+                        {
+                            PageListView.SelectedItem = page;
+                            CategoryNameTextBlock.Text = page.Name;
+                            selectItem = page;
+                        }
+                    }
+                    if (selectItem != null)
+                    {
+                        MainFrame.Navigate(typeof(Pages.CustomPageDetailPage), selectItem);
+                    }
+                    else
+                    {
+                        MainFrame.Navigate(typeof(Pages.WelcomePage));
+                    }
+                }
+            }
             else
             {
                 CategoryListView.SelectedItem = Categories.FirstOrDefault();
@@ -746,6 +847,7 @@ namespace RSS_Stalker
         {
             AppTools.WriteLocalSetting(AppSettings.ScreenChannel, _tempChannel.Id);
             AppTools.WriteLocalSetting(AppSettings.IsScreenChannelCustom, "True");
+            AppTools.WriteLocalSetting(AppSettings.IsScreenPageCustom, "False");
             new PopupToast(AppTools.GetReswLanguage("Tip_Saved")).ShowPopup();
         }
 
@@ -800,9 +902,132 @@ namespace RSS_Stalker
                 }
             }
             if (!isEmpty)
-                MainFrame.Navigate(typeof(Pages.AddCustomPage));
+            {
+                SettingButton.IsChecked = false;
+                StarButton.IsChecked = false;
+                PageListView.SelectedIndex = -1;
+                SettingButton.IsChecked = false;
+                CategoryListView.SelectedIndex = -1;
+                SideChannelGrid.Visibility = Visibility.Collapsed;
+                AppSplitView.OpenPaneLength = 250;
+                CategoryNameTextBlock.Text = AppTools.GetReswLanguage("Tip_AddCustomPage");
+                MainFrame.Navigate(typeof(Pages.OperaterCustomPage));
+            }
             else
                 new PopupToast(AppTools.GetReswLanguage("Tip_AddChannelFirst"),AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+        }
+
+        private async void PageListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var item = e.ClickedItem as CustomPage;
+            CloseCategory();
+            if (MinsizeHeaderContainer.Visibility == Visibility.Visible)
+            {
+                AppSplitView.IsPaneOpen = false;
+            }
+            CategoryNameTextBlock.Text = item.Name;
+            if (MainFrame.Content is Pages.CustomPageDetailPage)
+            {
+                await Pages.CustomPageDetailPage.Current.UpdateLayout(item);
+            }
+            else
+            {
+                MainFrame.Navigate(typeof(Pages.CustomPageDetailPage), item);
+            }
+        }
+        private void CloseCategory()
+        {
+            TodoButton.IsChecked = false;
+            StarButton.IsChecked = false;
+            SettingButton.IsChecked = false;
+            CategoryListView.SelectedIndex = -1;
+            ChannelListView.SelectedIndex = -1;
+            SideChannelGrid.Visibility = Visibility.Collapsed;
+            AppSplitView.OpenPaneLength = 250;
+            _channelListCount = -1;
+            Channels.Clear();
+            _channelListCount = 0;
+        }
+        private void PageItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var data = (sender as FrameworkElement).DataContext as CustomPage;
+            _tempPage = data;
+            PageMenuFlyout.ShowAt((FrameworkElement)sender, e.GetPosition((FrameworkElement)sender));
+        }
+
+        private void UpdatePageMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            CloseCategory();
+            MainFrame.Navigate(typeof(Pages.OperaterCustomPage), _tempPage);
+        }
+
+        private async void CachePageMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            LoadingRing.IsActive = true;
+            CacheProgressBar.Visibility = Visibility.Visible;
+            try
+            {
+                CacheProgressBar.Maximum = 1;
+                await IOTools.AddCachePage(async (count) => {
+                    await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+                    {
+                        CacheProgressBar.Value = count;
+                    });
+                },
+                    _tempPage);
+                new PopupToast(AppTools.GetReswLanguage("Tip_CacheSuccess")).ShowPopup();
+            }
+            catch (Exception)
+            {
+                new PopupToast(AppTools.GetReswLanguage("Tip_CacheFailed"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+            }
+            CacheProgressBar.Visibility = Visibility.Collapsed;
+            LoadingRing.IsActive = false;
+        }
+
+        private async void DeletePageMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var confirmDialog = new ConfirmDialog(AppTools.GetReswLanguage("Tip_DeleteWarning"), AppTools.GetReswLanguage("Tip_DeletePageWarning"));
+            confirmDialog.PrimaryButtonClick += async (_s, _e) =>
+            {
+                _e.Cancel = true;
+                var selectPage = PageListView.SelectedItem as CustomPage;
+                if (_tempPage != null)
+                {
+                    if (selectPage != null && selectPage.Id == _tempPage.Id)
+                    {
+                        MainFrame.Navigate(typeof(Pages.WelcomePage));
+                    }
+                    confirmDialog.IsPrimaryButtonEnabled = false;
+                    confirmDialog.PrimaryButtonText = AppTools.GetReswLanguage("Tip_Waiting");
+                    await IOTools.DeletePage(_tempPage);
+                    CustomPages.Remove(_tempPage);
+                    _pageListCount -= 1;
+                    new PopupToast(AppTools.GetReswLanguage("Tip_DeletePageSuccess")).ShowPopup();
+                    _tempPage = null;
+                    confirmDialog.Hide();
+                }
+                else
+                {
+                    new PopupToast(AppTools.GetReswLanguage("Tip_NoPageSelected"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+                }
+            };
+            await confirmDialog.ShowAsync();
+        }
+
+        private void HomePageMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            AppTools.WriteLocalSetting(AppSettings.ScreenPage, _tempPage.Id);
+            AppTools.WriteLocalSetting(AppSettings.IsScreenChannelCustom, "False");
+            AppTools.WriteLocalSetting(AppSettings.IsScreenPageCustom, "True");
+            new PopupToast(AppTools.GetReswLanguage("Tip_Saved")).ShowPopup();
+        }
+
+        private void PageItem_Holding(object sender, HoldingRoutedEventArgs e)
+        {
+            var data = (sender as FrameworkElement).DataContext as CustomPage;
+            _tempPage = data;
+            PageMenuFlyout.ShowAt((FrameworkElement)sender, e.GetPosition((FrameworkElement)sender));
         }
     }
 }

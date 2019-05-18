@@ -4,7 +4,7 @@
     xmlns:local="using:RSS_Stalker.Theme">
     
     <SolidColorBrush x:Key="SideBackground" Color="#FFFFFF"/>
-    <AcrylicBrush x:Key="MaskBackground" BackgroundSource="Backdrop" TintColor="Black" TintOpacity="0.7" FallbackColor="Black"/>
+    <SolidColorBrush x:Key="MaskBackground" Color="Black" Opacity="0.6"/>
     <AcrylicBrush x:Key="FlyoutBackground" BackgroundSource="Backdrop" TintColor="#FFFFFF" TintOpacity="0.9" FallbackColor="#FFFFFF"/>
     <SolidColorBrush x:Key="MediaControlsBackground" Color="#FFFFFF" Opacity="0.4"/>
     <SolidColorBrush x:Key="PageBackground" Color="#EDF0F5"/>

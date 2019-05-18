@@ -14,5 +14,6 @@ namespace CoreLib.Models.App
         public List<Feed> Todo { get; set; }
         public List<Feed> Star { get; set; }
         public List<Channel> Toast { get; set; }
+        public List<CustomPage> Pages { get; set; }
     }
 }

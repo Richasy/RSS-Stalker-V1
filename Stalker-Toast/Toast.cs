@@ -37,7 +37,7 @@ namespace StalkerToast
                 {
                     try
                     {
-                        var items = await AppTools.GetSchemalFromUrl(t.Link);
+                        var items = await AppTools.GetSchemaFromUrl(t.Link);
                         if (items != null && items.Count > 0)
                         {
                             string title = t.Name;

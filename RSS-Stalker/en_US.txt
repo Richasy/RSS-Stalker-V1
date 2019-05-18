@@ -2,16 +2,22 @@
 
 The new version has been revised as follows:
 
-add the option for automatic caching. You can open it in the settings, so every time you open the channel, the software will automatically help you cache the articles in the current channel.
+===
+Join the new level "page"
+The new page function allows you to integrate existing feeds and attach simple rules to filter content.
+Right click on the page item (long press on the touch screen) to pop up the menu, you can set it as the home page, or you can cache the page.
+===
 
----
-
-Recently, the "free combination channel content" and "read/unread options" functions have been prepared, and the update frequency has been reduced (probably)
+1. Make a series of adaptations to the "page" to better integrate it into the overall architecture of the software (but not to mention that there will still be bugs, if any, please email me)
+2. Improve the problem of the card when jumping between the article details and the article list
+3. fix OPML file import and output.
+4. Repair of other minor problems
 
 If the software makes you feel great, don't forget to give me praise and recommend it to your friends. 
 
 Thank you :)
 
 ---
+My E-mail: thansy@foxmail.com
 
 That's all, good luck.

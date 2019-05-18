@@ -644,7 +644,7 @@ namespace RSS_Stalker.Tools
             }
         }
         /// <summary>
-        /// 将本地的收藏列表、待读列表和推送列表导出
+        /// 将本地的收藏列表、待读列表、推送列表和自定义页面导出
         /// </summary>
         /// <param name="file">文件</param>
         /// <returns></returns>
@@ -669,15 +669,21 @@ namespace RSS_Stalker.Tools
                 var l = await GetNeedToastChannels();
                 export.Toast = l;
             });
+            var task4 = Task.Run(async () =>
+            {
+                var l = await GetLocalPages();
+                export.Pages = l;
+            });
             tasks.Add(task1);
             tasks.Add(task2);
             tasks.Add(task3);
+            tasks.Add(task4);
             await Task.WhenAll(tasks.ToArray());
             string json = JsonConvert.SerializeObject(export);
             await FileIO.WriteTextAsync(file, json);
         }
         /// <summary>
-        /// 导入收藏列表、待读列表和推送列表
+        /// 导入收藏列表、待读列表、推送列表和自定义页面
         /// </summary>
         /// <param name="file">文件</param>
         /// <returns></returns>
@@ -739,9 +745,31 @@ namespace RSS_Stalker.Tools
                     await ReplaceToast(l, true);
                 }
             });
+            var task4 = Task.Run(async () =>
+            {
+                var l = await GetLocalPages();
+                bool isChanged = false;
+                if (export.Pages != null)
+                {
+                    foreach (var item in export.Pages)
+                    {
+                        if (!l.Any(p => p.Id == item.Id))
+                        {
+                            isChanged = true;
+                            l.Add(item);
+                        }
+                    }
+                }
+                
+                if (isChanged)
+                {
+                    await ReplacePage(l, true);
+                }
+            });
             tasks.Add(task1);
             tasks.Add(task2);
             tasks.Add(task3);
+            tasks.Add(task4);
             await Task.WhenAll(tasks.ToArray());
         }
         /// <summary>
@@ -751,9 +779,11 @@ namespace RSS_Stalker.Tools
         public static async Task<string> GetCacheSize()
         {
             var localFolder = ApplicationData.Current.LocalFolder;
-            var file = await localFolder.CreateFileAsync("CacheList.json", CreationCollisionOption.OpenIfExists);
-            var pr = await file.GetBasicPropertiesAsync();
-            return (pr.Size / 1000) + " kb";
+            var file1 = await localFolder.CreateFileAsync("CacheList.json", CreationCollisionOption.OpenIfExists);
+            var file2 = await localFolder.CreateFileAsync("CachePageList.json", CreationCollisionOption.OpenIfExists);
+            var pr1 = await file1.GetBasicPropertiesAsync();
+            var pr2 = await file2.GetBasicPropertiesAsync();
+            return ((pr1.Size + pr2.Size) / 1000) + " kb";
         }
         /// <summary>
         /// 删除缓存文件
@@ -763,7 +793,9 @@ namespace RSS_Stalker.Tools
         {
             var localFolder = ApplicationData.Current.LocalFolder;
             var file = await localFolder.CreateFileAsync("CacheList.json", CreationCollisionOption.OpenIfExists);
+            var file2 = await localFolder.CreateFileAsync("CachePageList.json", CreationCollisionOption.OpenIfExists);
             await FileIO.WriteTextAsync(file,"[]");
+            await FileIO.WriteTextAsync(file2, "[]");
         }
         /// <summary>
         /// 获取缓存列表
@@ -773,6 +805,22 @@ namespace RSS_Stalker.Tools
         {
             var localFolder = ApplicationData.Current.LocalFolder;
             var file = await localFolder.CreateFileAsync("CacheList.json", CreationCollisionOption.OpenIfExists);
+            string content = await FileIO.ReadTextAsync(file);
+            if (string.IsNullOrEmpty(content))
+            {
+                content = "[]";
+            }
+            var list = JsonConvert.DeserializeObject<List<CacheModel>>(content);
+            return list;
+        }
+        /// <summary>
+        /// 获取缓存列表
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<List<CacheModel>> GetCachePages()
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("CachePageList.json", CreationCollisionOption.OpenIfExists);
             string content = await FileIO.ReadTextAsync(file);
             if (string.IsNullOrEmpty(content))
             {
@@ -805,7 +853,7 @@ namespace RSS_Stalker.Tools
                 {
                     tasks.Add(Task.Run(async () =>
                     {
-                        var articles = await AppTools.GetSchemalFromUrl(channel.Link);
+                        var articles = await AppTools.GetSchemaFromUrl(channel.Link);
                         if (results.Any(p => p.Channel.Link == channel.Link))
                         {
                             var target = results.Where(p => p.Channel.Link == channel.Link).First();
@@ -814,6 +862,52 @@ namespace RSS_Stalker.Tools
                         else
                         {
                             results.Add(new CacheModel() { Channel = channel, Feeds = articles });
+                        }
+                        completeCount += 1;
+                        if (ProgressHandle != null)
+                        {
+                            ProgressHandle(completeCount);
+                        }
+                    }));
+                }
+                await Task.WhenAll(tasks.ToArray());
+                content = JsonConvert.SerializeObject(results);
+                await FileIO.WriteTextAsync(file, content);
+            }
+        }
+        /// <summary>
+        /// 升级缓存
+        /// </summary>
+        /// <param name="channels">需要缓存的页面列表</param>
+        /// <returns></returns>
+        public static async Task AddCachePage(Action<int> ProgressHandle, params CustomPage[] pages)
+        {
+            var list = pages.Distinct().ToArray();
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("CachePageList.json", CreationCollisionOption.OpenIfExists);
+            string content = await FileIO.ReadTextAsync(file);
+            if (string.IsNullOrEmpty(content))
+            {
+                content = "[]";
+            }
+            var results = JsonConvert.DeserializeObject<List<CacheModel>>(content);
+            var tasks = new List<Task>();
+            int completeCount = 0;
+            if (list.Length > 0)
+            {
+                foreach (var page in list)
+                {
+                    tasks.Add(Task.Run(async () =>
+                    {
+                        var articles = await AppTools.GetSchemaFromPage(page);
+                        if (results.Any(p => p.Page.Id == page.Id))
+                        {
+                            var target = results.Where(p => p.Page.Id == page.Id).First();
+                            target.Feeds = articles;
+                        }
+                        else
+                        {
+                            results.Add(new CacheModel() { Page = page, Feeds = articles });
                         }
                         completeCount += 1;
                         if (ProgressHandle != null)
@@ -839,6 +933,28 @@ namespace RSS_Stalker.Tools
             if (list.Count > 0)
             {
                 var cache = list.Where(p => p.Channel.Link == channel.Link).FirstOrDefault();
+                if (cache != null)
+                {
+                    foreach (var item in cache.Feeds)
+                    {
+                        results.Add(new Feed(item));
+                    }
+                }
+            }
+            return results;
+        }
+        /// <summary>
+        /// 获取本地的页面缓存
+        /// </summary>
+        /// <param name="page">页面</param>
+        /// <returns></returns>
+        public static async Task<List<Feed>> GetLocalCache(CustomPage page)
+        {
+            var list = await GetCachePages();
+            var results = new List<Feed>();
+            if (list.Count > 0)
+            {
+                var cache = list.Where(p => p.Page.Id == page.Id).FirstOrDefault();
                 if (cache != null)
                 {
                     foreach (var item in cache.Feeds)

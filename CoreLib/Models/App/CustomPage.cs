@@ -12,11 +12,11 @@ namespace CoreLib.Models.App
         public string Icon { get; set; }
         public string Id { get; set; }
         public IList<Channel> Channels { get; set; }
-        public IList<FilterRule> Rules { get; set; }
+        public IList<FilterItem> Rules { get; set; }
         public CustomPage()
         {
             Channels = new List<Channel>();
-            Rules = new List<FilterRule>();
+            Rules = new List<FilterItem>();
         }
         public override bool Equals(object obj)
         {

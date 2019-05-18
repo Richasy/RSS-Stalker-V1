@@ -462,17 +462,11 @@
   <data name="Tip_NeedLinkTranslateService" xml:space="preserve">
     <value>You need build translate config first.</value>
   </data>
-  <data name="Control_CustomComboItem.Content" xml:space="preserve">
-    <value>Custom</value>
-  </data>
   <data name="Control_DefaultComboItem.Content" xml:space="preserve">
     <value>Default</value>
   </data>
   <data name="Control_HomeChannelMenuItem.Text" xml:space="preserve">
     <value>Home Channel</value>
-  </data>
-  <data name="Control_ScreenChannelSettingTipBlock.Text" xml:space="preserve">
-    <value>Home page</value>
   </data>
   <data name="Control_SearchTextInWebMenuItem.Text" xml:space="preserve">
     <value>Search in web</value>
@@ -526,10 +520,10 @@
     <value>Hello, I'm Richard! Thank you to use this application.</value>
   </data>
   <data name="Control_ExportLocalListTipBlock.Text" xml:space="preserve">
-    <value>Export local Todo, Favourites and Alert list</value>
+    <value>Export local Todo, Favourites, Alert and Custom page list</value>
   </data>
   <data name="Control_ImportLocalListTipBlock.Text" xml:space="preserve">
-    <value>Import Todo, Favourites and Alert list</value>
+    <value>Import Todo, Favourites, Alert and Custom page list</value>
   </data>
   <data name="Cotrol_LocalAccountButton.Content" xml:space="preserve">
     <value>Local account</value>
@@ -602,5 +596,56 @@
   </data>
   <data name="Tip_TotalLimit" xml:space="preserve">
     <value>Total limit count</value>
+  </data>
+  <data name="Control_AddRuleButton.Content" xml:space="preserve">
+    <value>Add New Rule</value>
+  </data>
+  <data name="Control_PageNameTipBlock.Text" xml:space="preserve">
+    <value>Page Name</value>
+  </data>
+  <data name="Control_RuleTipBlock.Text" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="Control_SaveButton.Content" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Control_CachePageMenuItem.Text" xml:space="preserve">
+    <value>Cache Page</value>
+  </data>
+  <data name="Control_RuleInputTipBlock.Text" xml:space="preserve">
+    <value>For content that you want or don't want, support regular expression, for sample keyword, you can split it with a vertical line ' | ', for example, under "Need Title/Content" you can write "Richard|UWP|Windows", so the software will help you find each words that contain the article. If the need and noneed content contains the same keywords, the noneed is higher level. The limit count option refers to the maximum number of choices for the total or single channels. You should input number. The default is sorted by time. If the maximum capacity is exceeded, the list is cut.</value>
+  </data>
+  <data name="Tip_AddCustomPage" xml:space="preserve">
+    <value>Add New Page</value>
+  </data>
+  <data name="Tip_DeletePageSuccess" xml:space="preserve">
+    <value>Page Deleted</value>
+  </data>
+  <data name="Tip_DeletePageWarning" xml:space="preserve">
+    <value>You will delete the custom page, are you sure?</value>
+  </data>
+  <data name="Tip_InputNumberError" xml:space="preserve">
+    <value>Please input right number.</value>
+  </data>
+  <data name="Tip_InputRegexError" xml:space="preserve">
+    <value>Please input right regular expression.</value>
+  </data>
+  <data name="Tip_NoPageSelected" xml:space="preserve">
+    <value>No page has been selected</value>
+  </data>
+  <data name="Tip_RuleRepeat" xml:space="preserve">
+    <value>Rule repeat</value>
+  </data>
+  <data name="Control_CustomChannelComboItem.Content" xml:space="preserve">
+    <value>Custom Channel</value>
+  </data>
+  <data name="Control_CustomPageComboItem.Content" xml:space="preserve">
+    <value>Custom Page</value>
+  </data>
+  <data name="Control_ScreenSettingTipBlock.Text" xml:space="preserve">
+    <value>Home Setting</value>
+  </data>
+  <data name="Tip_Selected" xml:space="preserve">
+    <value>Last Selected</value>
   </data>
 </root>

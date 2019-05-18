@@ -77,7 +77,7 @@
         </Grid>
         <GridView HorizontalAlignment="Center"
                   Grid.Row="2"
-                  Padding="30,30,0,0"
+                  Padding="0,30,0,0"
                   Name="FeedGridView"
                   ItemTemplate="{StaticResource FeddItemTemplate}"
                   ItemsSource="{x:Bind FeedCollection}"
@@ -89,7 +89,7 @@
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <controls1:StaggeredPanel DesiredColumnWidth="250"
-                                             HorizontalAlignment="Left"/>
+                                             HorizontalAlignment="Center"/>
                 </ItemsPanelTemplate>
             </GridView.ItemsPanel>
         </GridView>

@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.Connectivity;
+using CoreLib.Models.App;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -52,6 +53,7 @@ namespace RSS_Stalker.Pages
             string searchEngine = AppTools.GetRoamingSetting(AppSettings.SearchEngine, "Bing");
             bool isSyncWithStart = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.SyncWithStart, "False"));
             bool isScreenChannel = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsScreenChannelCustom, "False"));
+            bool isScreenPage = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsScreenPageCustom, "False"));
             double speechRate = Convert.ToDouble(AppTools.GetLocalSetting(AppSettings.SpeechRate, "1.0"));
             string gender = AppTools.GetLocalSetting(AppSettings.VoiceGender, "Female");
             bool isAutoCache = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.AutoCacheWhenOpenChannel, "False"));
@@ -102,6 +104,8 @@ namespace RSS_Stalker.Pages
             }
             if (isScreenChannel)
                 ScreenChannelComboBox.SelectedIndex = 1;
+            else if (isScreenPage)
+                ScreenChannelComboBox.SelectedIndex = 2;
             else
                 ScreenChannelComboBox.SelectedIndex = 0;
             //TestRoamingTimeBlock.Text = AppTools.GetRoamingSetting(AppSettings.BasicUpdateTime, "1");
@@ -234,6 +238,7 @@ namespace RSS_Stalker.Pages
             var tasks = new List<Task>();
             var cateList = new List<Category>();
             var toastList = new List<Channel>();
+            var pageList = new List<CustomPage>();
             var cate = Task.Run(async () =>
             {
                 cateList = await App.OneDrive.GetCategoryList();
@@ -255,11 +260,16 @@ namespace RSS_Stalker.Pages
                 toastList = await App.OneDrive.GetToastList();
                 await IOTools.ReplaceToast(toastList);
             });
-
+            var page = Task.Run(async () =>
+            {
+                pageList = await App.OneDrive.GetPageList();
+                await IOTools.ReplacePage(pageList);
+            });
             tasks.Add(cate);
             tasks.Add(todo);
             tasks.Add(star);
             tasks.Add(toast);
+            tasks.Add(page);
             try
             {
                 await Task.WhenAll(tasks.ToArray());
@@ -267,15 +277,19 @@ namespace RSS_Stalker.Pages
                 string todoUpdateTime = AppTools.GetRoamingSetting(AppSettings.TodoUpdateTime, "1");
                 string starUpdateTime = AppTools.GetRoamingSetting(AppSettings.StarUpdateTime, "1");
                 string toastUpdateTime = AppTools.GetRoamingSetting(AppSettings.ToastUpdateTime, "1");
+                string pageUpdateTime = AppTools.GetRoamingSetting(AppSettings.PageUpdateTime, "1");
                 AppTools.WriteLocalSetting(AppSettings.BasicUpdateTime, basicUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.TodoUpdateTime, todoUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.StarUpdateTime, starUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.ToastUpdateTime, toastUpdateTime);
+                AppTools.WriteLocalSetting(AppSettings.PageUpdateTime, pageUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.IsChannelsChangeInOffline, "False");
                 AppTools.WriteLocalSetting(AppSettings.IsTodoChangeInOffline, "False");
                 AppTools.WriteLocalSetting(AppSettings.IsStarChangeInOffline, "False");
                 AppTools.WriteLocalSetting(AppSettings.IsToastChangeInOffline, "False");
+                AppTools.WriteLocalSetting(AppSettings.IsPageChangeInOffline, "False");
                 MainPage.Current.ReplaceList(cateList);
+                MainPage.Current.ReplacePageList(pageList);
                 ToastChannels.Clear();
                 foreach (var item in toastList)
                 {
@@ -311,9 +325,20 @@ namespace RSS_Stalker.Pages
             if (!_isInit)
                 return;
             if (ScreenChannelComboBox.SelectedIndex == 0)
+            {
                 AppTools.WriteLocalSetting(AppSettings.IsScreenChannelCustom, "False");
-            else
+                AppTools.WriteLocalSetting(AppSettings.IsScreenPageCustom, "False");
+            }  
+            else if (ScreenChannelComboBox.SelectedIndex == 1)
+            {
                 AppTools.WriteLocalSetting(AppSettings.IsScreenChannelCustom, "True");
+                AppTools.WriteLocalSetting(AppSettings.IsScreenPageCustom, "False");
+            }
+            else if (ScreenChannelComboBox.SelectedIndex == 2)
+            {
+                AppTools.WriteLocalSetting(AppSettings.IsScreenChannelCustom, "False");
+                AppTools.WriteLocalSetting(AppSettings.IsScreenPageCustom, "True");
+            }
         }
 
         private void SearchEngineComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -424,19 +449,36 @@ namespace RSS_Stalker.Pages
                     list.Add(cha);
                 }
             }
-            
+            var pageList = MainPage.Current.CustomPages;
             if (list.Count > 0)
             {
                 try
                 {
-                    CacheProgressBar.Maximum = list.Count;
-                    await IOTools.AddCacheChannel(async (count)=>
-                    {
-                        await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+                    CacheProgressBar.Maximum = list.Count+pageList.Count;
+                    int channelCount = 0;
+                    int pageCount = 0;
+                    var tasks = new Task[2];
+                    tasks[0] = Task.Run(async () => {
+                        await IOTools.AddCacheChannel(async (count) =>
                         {
-                            CacheProgressBar.Value = count;
-                        });
-                    },list.ToArray());
+                            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+                            {
+                                channelCount = count;
+                                CacheProgressBar.Value = channelCount + pageCount;
+                            });
+                        }, list.ToArray());
+                    });
+                    tasks[1] = Task.Run(async () => {
+                        await IOTools.AddCachePage(async (count) =>
+                        {
+                            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+                            {
+                                pageCount = count;
+                                CacheProgressBar.Value = channelCount + pageCount;
+                            });
+                        }, pageList.ToArray());
+                    });
+                    await Task.WhenAll(tasks);
                     new PopupToast(AppTools.GetReswLanguage("Tip_CacheSuccess")).ShowPopup();
                 }
                 catch (Exception ex)

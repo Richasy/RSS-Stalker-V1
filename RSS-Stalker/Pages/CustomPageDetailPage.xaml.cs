@@ -1,6 +1,11 @@
-﻿using RSS_Stalker.Controls;
+﻿using CoreLib.Enums;
 using CoreLib.Models;
+using CoreLib.Models.App;
 using CoreLib.Tools;
+using Microsoft.Toolkit.Uwp.Connectivity;
+using Microsoft.Toolkit.Uwp.Helpers;
+using RSS_Stalker.Controls;
+using RSS_Stalker.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,10 +24,6 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using CoreLib.Enums;
-using Microsoft.Toolkit.Uwp.Connectivity;
-using RSS_Stalker.Tools;
-using Microsoft.Toolkit.Uwp.Helpers;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -31,40 +32,37 @@ namespace RSS_Stalker.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class ChannelDetailPage : Page
+    public sealed partial class CustomPageDetailPage : Page
     {
-        public Channel _sourceData = null;
+        public CustomPage _sourceData = null;
         private ObservableCollection<Feed> FeedCollection = new ObservableCollection<Feed>();
         private Feed _shareData = null;
-        public static ChannelDetailPage Current;
-        
-        public ChannelDetailPage()
+        public static CustomPageDetailPage Current;
+        public CustomPageDetailPage()
         {
             this.InitializeComponent();
             Current = this;
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if(e.Parameter!=null)
+            if (e.Parameter != null)
             {
                 // 当传入源为频道数据时（获取当前频道最新资讯）
-                if(e.Parameter is Channel)
+                if (e.Parameter is CustomPage)
                 {
-                    await UpdateLayout(e.Parameter as Channel);
+                    await UpdateLayout(e.Parameter as CustomPage);
                     ChangeLayout();
                 }
                 // 当传入源为文章列表时（说明是上一级返回，不获取最新资讯）
-                else if(e.Parameter is List<Feed>)
+                else if (e.Parameter is List<Feed>)
                 {
-                    LoadingRing.IsActive = true;
-                    _sourceData = MainPage.Current.ChannelListView.SelectedItem as Channel;
+                    _sourceData = MainPage.Current.PageListView.SelectedItem as CustomPage;
                     if (_sourceData != null)
                     {
-                        ChannelDescriptionTextBlock.Text = _sourceData.Description;
-                        ChannelNameTextBlock.Text = _sourceData.Name;
-
+                        PageNameTextBlock.Text = _sourceData.Name;
                     }
-                    await Task.Run(async () =>
+                    LoadingRing.IsActive = true;
+                    await Task.Run(async() =>
                     {
                         await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
                         {
@@ -83,24 +81,27 @@ namespace RSS_Stalker.Pages
         /// <summary>
         /// 更新布局，获取最新资讯
         /// </summary>
-        /// <param name="channel">频道数据</param>
+        /// <param name="page">频道数据</param>
         /// <returns></returns>
-        public async Task UpdateLayout(Channel channel)
+        public async Task UpdateLayout(CustomPage page)
         {
             LoadingRing.IsActive = true;
             NoDataTipContainer.Visibility = Visibility.Collapsed;
-            _sourceData = channel;
-            ChannelDescriptionTextBlock.Text = _sourceData.Description;
-            ChannelNameTextBlock.Text = _sourceData.Name;
+            _sourceData = page;
+            PageNameTextBlock.Text = _sourceData.Name;
             FeedCollection.Clear();
             var feed = new List<Feed>();
             if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
-                feed = await AppTools.GetFeedsFromUrl(_sourceData.Link);
+                var schema = await AppTools.GetSchemaFromPage(_sourceData);
+                foreach (var item in schema)
+                {
+                    feed.Add(new Feed(item));
+                }
                 bool isAutoCache = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.AutoCacheWhenOpenChannel, "False"));
                 if (isAutoCache && feed.Count > 0)
                 {
-                    await IOTools.AddCacheChannel(null, channel);
+                    await IOTools.AddCachePage(null, page);
                 }
             }
             else
@@ -110,9 +111,9 @@ namespace RSS_Stalker.Pages
                     new PopupToast(AppTools.GetReswLanguage("Tip_WatchingCache")).ShowPopup();
                     MainPage.Current._isCacheAlert = false;
                 }
-                
-                feed = await IOTools.GetLocalCache(channel);
-                
+
+                feed = await IOTools.GetLocalCache(page);
+
             }
             if (feed != null && feed.Count > 0)
             {
@@ -132,18 +133,6 @@ namespace RSS_Stalker.Pages
             var item = e.ClickedItem as Feed;
             var t = new Tuple<Feed, List<Feed>>(item, FeedCollection.ToList());
             MainPage.Current.MainFrame.Navigate(typeof(FeedDetailPage), t);
-        }
-
-        private async void OpenChannelButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (!string.IsNullOrEmpty(_sourceData.SourceUrl))
-            {
-                await Launcher.LaunchUriAsync(new Uri(_sourceData.SourceUrl));
-            }
-            else
-            {
-                new PopupToast(AppTools.GetReswLanguage("App_InvalidUrl"),AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
-            }
         }
 
         private async void OpenFeedButton_Click(object sender, RoutedEventArgs e)
@@ -235,13 +224,13 @@ namespace RSS_Stalker.Pages
                     name = "All";
                     break;
             }
-            string oldLayout = AppTools.GetRoamingSetting(CoreLib.Enums.AppSettings.FeedLayoutType, "All");
+            string oldLayout = AppTools.GetRoamingSetting(AppSettings.FeedLayoutType, "All");
             if (oldLayout != name)
             {
-                AppTools.WriteRoamingSetting(CoreLib.Enums.AppSettings.FeedLayoutType, name);
+                AppTools.WriteRoamingSetting(AppSettings.FeedLayoutType, name);
                 ChangeLayout();
             }
-            
+
         }
     }
 }

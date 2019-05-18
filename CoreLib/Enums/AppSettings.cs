@@ -25,7 +25,9 @@ namespace CoreLib.Enums
         SyncWithStart,
         LastSyncTime,
         IsScreenChannelCustom,
+        IsScreenPageCustom,
         ScreenChannel,
+        ScreenPage,
         SearchEngine,
         SpeechRate,
         VoiceGender,
@@ -34,6 +36,7 @@ namespace CoreLib.Enums
         IsTodoChangeInOffline,
         IsToastChangeInOffline,
         IsStarChangeInOffline,
-        AutoCacheWhenOpenChannel
+        AutoCacheWhenOpenChannel,
+        IsPageChangeInOffline
     }
 }

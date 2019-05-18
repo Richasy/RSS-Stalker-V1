@@ -27,7 +27,7 @@
         </Grid.ColumnDefinitions>
 
             <StackPanel>
-                <Pivot Style="{StaticResource PivotStyle1}">
+                <Pivot Style="{StaticResource PivotStyle1}" Margin="0,-10,0,0">
                     <Pivot.Title>
                         <TextBlock x:Uid="Control_SettingTipBlock" FontFamily="{StaticResource Title}" FontWeight="Bold" Foreground="{ThemeResource ImportantTextColor}" FontSize="20"/>
                     </Pivot.Title>
@@ -59,14 +59,15 @@
                                 </ComboBox>
                             </StackPanel>
                             <StackPanel Margin="0,10,0,0">
-                                <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_ScreenChannelSettingTipBlock" Margin="0,0,0,5"/>
+                                <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_ScreenSettingTipBlock" Margin="0,0,0,5"/>
                                 <ComboBox Style="{StaticResource BasicComboBoxStyle}"
                       ItemContainerStyle="{StaticResource BasicComboBoxItemContainerStyle}"
                       Name="ScreenChannelComboBox"
                       SelectionChanged="ScreenChannelComboBox_SelectionChanged"
                       >
-                                    <ComboBoxItem x:Uid="Control_DefaultComboItem" Name="Default"/>
-                                    <ComboBoxItem x:Uid="Control_CustomComboItem" Name="Custom"/>
+                                    <ComboBoxItem x:Uid="Control_DefaultComboItem"/>
+                                    <ComboBoxItem x:Uid="Control_CustomChannelComboItem"/>
+                                    <ComboBoxItem x:Uid="Control_CustomPageComboItem"/>
                                 </ComboBox>
                             </StackPanel>
                             <StackPanel Margin="0,10,0,0">
@@ -82,7 +83,7 @@
                                 </ComboBox>
                             </StackPanel>
                             <StackPanel Margin="0,10,0,0">
-                                <TextBlock Style="{StaticResource BaseTextBlockStyle}" x:Uid="Control_VoiceGenderSettingTipBlock" Margin="0,0,0,5"/>
+                                <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_VoiceGenderSettingTipBlock" Margin="0,0,0,5"/>
                                 <ComboBox Style="{StaticResource BasicComboBoxStyle}"
                       ItemContainerStyle="{StaticResource BasicComboBoxItemContainerStyle}"
                       Name="VoiceGenderComboBox"
@@ -93,7 +94,7 @@
                                 </ComboBox>
                             </StackPanel>
                             <StackPanel Margin="0,10,0,0">
-                                <TextBlock Style="{StaticResource BaseTextBlockStyle}" x:Uid="Control_SpeechRateSettingTipBlock" Margin="0,0,0,5"/>
+                                <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_SpeechRateSettingTipBlock" Margin="0,0,0,5"/>
                                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                                     <Slider Style="{StaticResource MediaSliderStyle}" StepFrequency="0.1" Width="300" Name="SpeechRateSlider" Minimum="0.1" Maximum="2" ValueChanged="SpeechRateSlider_ValueChanged" VerticalAlignment="Center"/>
                                     <Button Style="{StaticResource GhostCircleButtonStyle}" Width="35" Height="35" Content="&#xEA03;" Name="TryListenButton" Click="TryListenButton_Click" Margin="10,0,0,0" VerticalAlignment="Center"/>

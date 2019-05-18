@@ -36,6 +36,7 @@ namespace RSS_Stalker.Pages
     /// </summary>
     public sealed partial class FeedDetailPage : Page
     {
+        private string _sourceContent;
         private Feed _sourceFeed;
         private ObservableCollection<Feed> ShowFeeds = new ObservableCollection<Feed>();
         private List<Feed> AllFeeds = new List<Feed>();
@@ -66,6 +67,7 @@ namespace RSS_Stalker.Pages
                 {
                     var data = e.Parameter as Tuple<Feed, List<Feed>>;
                     _sourceFeed = data.Item1;
+                    _sourceContent = _sourceFeed.Content;
                     AllFeeds = data.Item2;
                     foreach (var item in AllFeeds)
                     {
@@ -93,6 +95,7 @@ namespace RSS_Stalker.Pages
                         Summary=data[6],
                         ImgVisibility = string.IsNullOrEmpty(data[4]) ? Visibility.Collapsed : Visibility.Visible
                     };
+                    _sourceContent = data[2];
                     LoadingRing.IsActive = true;
                     GridViewButton.Visibility = Visibility.Collapsed;
                     SideListButton.Visibility = Visibility.Collapsed;
@@ -202,10 +205,6 @@ namespace RSS_Stalker.Pages
                 MainPage.Current.MainFrame.Navigate(typeof(ChannelDetailPage), AllFeeds);
             }
         }
-        private void DetailWebView_Loaded(object sender, RoutedEventArgs e)
-        {
-            LoadingRing.IsActive = false;
-        }
 
         private async void FeedListView_ItemClick(object sender, ItemClickEventArgs e)
         {
@@ -226,6 +225,7 @@ namespace RSS_Stalker.Pages
             ButtonStatusCheck();
             TitleTextBlock.Text = _sourceFeed.Title;
             string html = await PackageHTML(_sourceFeed.Content);
+            LoadingRing.IsActive = true;
             DetailWebView.NavigateToString(html);
             if (MainPage.Current.MinsizeHeaderContainer.Visibility == Visibility.Visible)
             {
@@ -235,7 +235,15 @@ namespace RSS_Stalker.Pages
         }
         private void GridViewButton_Click(object sender, RoutedEventArgs e)
         {
-            MainPage.Current.MainFrame.Navigate(typeof(ChannelDetailPage), AllFeeds);
+            if (MainPage.Current.PageListView.SelectedIndex != -1)
+            {
+                MainPage.Current.MainFrame.Navigate(typeof(CustomPageDetailPage), AllFeeds);
+            }
+            else
+            {
+                MainPage.Current.MainFrame.Navigate(typeof(ChannelDetailPage), AllFeeds);
+            }
+           
         }
 
         private void MoreButton_Click(object sender, RoutedEventArgs e)
@@ -276,7 +284,7 @@ namespace RSS_Stalker.Pages
 
         private async void Menu_ReInit_Click(object sender, RoutedEventArgs e)
         {
-            string html = await PackageHTML(_sourceFeed.Content);
+            string html = await PackageHTML(_sourceContent);
             DetailWebView.NavigateToString(html);
         }
 
@@ -310,11 +318,11 @@ namespace RSS_Stalker.Pages
             (sender as Button).IsEnabled = false;
             try
             {
-                await IOTools.AddTodoRead(_sourceFeed);
                 MainPage.Current.TodoList.Add(_sourceFeed);
                 AddTodoButton.Visibility = Visibility.Collapsed;
                 RemoveTodoButton.Visibility = Visibility.Visible;
                 new PopupToast(AppTools.GetReswLanguage("Tip_AddTodoListSuccess")).ShowPopup();
+                await IOTools.AddTodoRead(_sourceFeed);
             }
             catch (Exception ex)
             {
@@ -328,11 +336,11 @@ namespace RSS_Stalker.Pages
             (sender as Button).IsEnabled = false;
             try
             {
-                await IOTools.AddStar(_sourceFeed);
                 MainPage.Current.StarList.Add(_sourceFeed);
                 AddStarButton.Visibility = Visibility.Collapsed;
                 RemoveStarButton.Visibility = Visibility.Visible;
                 new PopupToast(AppTools.GetReswLanguage("Tip_AddStarListSuccess")).ShowPopup();
+                await IOTools.AddStar(_sourceFeed);
             }
             catch (Exception ex)
             {
@@ -412,11 +420,6 @@ namespace RSS_Stalker.Pages
                 }
                 LoadingRing.IsActive = false;
             }
-        }
-
-        private void DetailWebView_BringIntoViewRequested(UIElement sender, BringIntoViewRequestedEventArgs args)
-        {
-            args.Handled = true;
         }
 
         private async void DetailWebView_ScriptNotify(object sender, NotifyEventArgs e)
@@ -624,6 +627,11 @@ namespace RSS_Stalker.Pages
             DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
             dataTransferManager.DataRequested += IndexPage_DataRequested;
             DataTransferManager.ShowShareUI();
+        }
+
+        private void DetailWebView_DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
+        {
+            LoadingRing.IsActive = false;
         }
     }
 }

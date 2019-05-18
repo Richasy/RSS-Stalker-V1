@@ -24,6 +24,7 @@ using Newtonsoft.Json.Linq;
 using Rss.Parsers.Rss;
 using Windows.Storage.Streams;
 using Windows.Media.SpeechSynthesis;
+using CoreLib.Models.App;
 
 namespace CoreLib.Tools
 {
@@ -346,7 +347,7 @@ namespace CoreLib.Tools
         /// </summary>
         /// <param name="url">地址</param>
         /// <returns></returns>
-        public static async Task<List<RssSchema>> GetSchemalFromUrl(string url)
+        public static async Task<List<RssSchema>> GetSchemaFromUrl(string url)
         {
             string feed = null;
 
@@ -377,6 +378,95 @@ namespace CoreLib.Tools
 
             }
             return list;
+        }
+        /// <summary>
+        /// 从Page获取解析后的Item的信息
+        /// </summary>
+        /// <param name="page">地址</param>
+        /// <returns></returns>
+        public static async Task<List<RssSchema>> GetSchemaFromPage(CustomPage page)
+        {
+            var allList = new List<RssSchema>();
+            var tasks = new List<Task>();
+            foreach (var item in page.Channels)
+            {
+                if (!string.IsNullOrEmpty(item.Link))
+                {
+                    tasks.Add(Task.Run(async () =>
+                    {
+                        var schemas = await GetSchemaFromUrl(item.Link);
+                        if (page.Rules.Count > 0)
+                        {
+                            foreach (var rule in page.Rules)
+                            {
+                                schemas = FilterRssList(schemas, rule);
+                            }
+                        }
+                        foreach (var s in schemas)
+                        {
+                            allList.Add(s);
+                        }
+                    }));
+                }
+            }
+            await Task.WhenAll(tasks.ToArray());
+            allList = allList.OrderByDescending(p => p.PublishDate).ToList();
+            if (page.Rules.Count > 0)
+            {
+                var total = page.Rules.Where(r => r.Rule.Type == FilterRuleType.TotalLimit).FirstOrDefault();
+                if (total != null)
+                {
+                    int limit = Convert.ToInt32(total.Content);
+                    if (allList.Count > limit)
+                    {
+                        allList = allList.GetRange(0, limit);
+                    }
+                }
+            }
+            return allList;
+        }
+        private static List<RssSchema> FilterRssList(List<RssSchema> list,FilterItem rule)
+        {
+            var results = new List<RssSchema>();
+            if (rule.Rule.Type == FilterRuleType.Filter)
+            {
+                var regex = new Regex(rule.Content);
+                foreach (var item in list)
+                {
+                    if(regex.IsMatch(item.Title) || regex.IsMatch(item.Content))
+                    {
+                        results.Add(item);
+                    }
+                }
+            }
+            else if(rule.Rule.Type == FilterRuleType.FilterOut)
+            {
+                var regex = new Regex(rule.Content);
+                foreach (var item in list)
+                {
+                    if (!regex.IsMatch(item.Title) && !regex.IsMatch(item.Content))
+                    {
+                        results.Add(item);
+                    }
+                }
+            }
+            else if (rule.Rule.Type == FilterRuleType.SingleLimit)
+            {
+                int limit = Convert.ToInt32(rule.Content);
+                if (list.Count > limit)
+                {
+                    results = list.GetRange(0, limit);
+                }
+                else
+                {
+                    results = list;
+                }
+            }
+            else
+            {
+                results = list;
+            }
+            return results;
         }
         /// <summary>
         /// 从URL获取解析后的文章的信息

@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -44,6 +46,15 @@ namespace CoreLib.Models
         /// <param name="content">Location of the OPML file</param>
         public Opml(string content)
         {
+            var regex = new Regex("(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]");
+            var matchs = regex.Matches(content);
+            if (matchs.Count > 0)
+            {
+                foreach (var match in matchs)
+                {
+                    content=content.Replace(match.ToString(), WebUtility.UrlDecode(match.ToString()));
+                }
+            }
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(content);
             readOpmlNodes(doc);

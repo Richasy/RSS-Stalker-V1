@@ -79,6 +79,12 @@ namespace RSS_Stalker.Pages
         }
         private async Task FeedInit()
         {
+            if (AllFeeds.Count == 0)
+            {
+                NoDataTipContainer.Visibility = Visibility.Visible;
+                AllReadTipContainer.Visibility = Visibility.Collapsed;
+                return;
+            }
             bool isJustUnread = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsJustUnread, "False"));
             FeedCollection.Clear();
             await Task.Run(async () =>
@@ -125,6 +131,7 @@ namespace RSS_Stalker.Pages
         /// <returns></returns>
         public async Task UpdateLayout(CustomPage page)
         {
+            AllFeeds.Clear();
             LoadingRing.IsActive = true;
             JustNoReadSwitch.IsEnabled = false;
             NoDataTipContainer.Visibility = Visibility.Collapsed;

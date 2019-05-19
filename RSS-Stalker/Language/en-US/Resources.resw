@@ -160,7 +160,7 @@
     <value>Export</value>
   </data>
   <data name="Control_ExportOpmlTipBlock.Text" xml:space="preserve">
-    <value>Export OPML</value>
+    <value>Export OPML (feeds)</value>
   </data>
   <data name="Control_FeedSearchBox.PlaceholderText" xml:space="preserve">
     <value>Search article...</value>
@@ -172,7 +172,7 @@
     <value>Import</value>
   </data>
   <data name="Control_ImportOpmlTipBlock.Text" xml:space="preserve">
-    <value>Import OPML</value>
+    <value>Import OPML (feeds)</value>
   </data>
   <data name="Control_LanguageSettingTipBlock.Text" xml:space="preserve">
     <value>Language options</value>
@@ -520,10 +520,10 @@
     <value>Hello, I'm Richard! Thank you to use this application.</value>
   </data>
   <data name="Control_ExportLocalListTipBlock.Text" xml:space="preserve">
-    <value>Export local Todo, Favourites, Alert and Custom page list</value>
+    <value>Export local data (Don't include feeds)</value>
   </data>
   <data name="Control_ImportLocalListTipBlock.Text" xml:space="preserve">
-    <value>Import Todo, Favourites, Alert and Custom page list</value>
+    <value>Import local data (Don't include feeds)</value>
   </data>
   <data name="Cotrol_LocalAccountButton.Content" xml:space="preserve">
     <value>Local account</value>
@@ -647,5 +647,14 @@
   </data>
   <data name="Tip_Selected" xml:space="preserve">
     <value>Last Selected</value>
+  </data>
+  <data name="Control_AllReadButton.Content" xml:space="preserve">
+    <value>All Read</value>
+  </data>
+  <data name="Control_AllReadTipBlock.Text" xml:space="preserve">
+    <value>You have read the full article</value>
+  </data>
+  <data name="Control_JustNoReadTipBlock.Text" xml:space="preserve">
+    <value>Look unread</value>
   </data>
 </root>

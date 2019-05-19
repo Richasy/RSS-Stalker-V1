@@ -420,6 +420,8 @@ namespace RSS_Stalker.Tools
             bool isTodoChange = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsTodoChangeInOffline, "False"));
             bool isStarChange = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsStarChangeInOffline, "False"));
             bool isToastChange = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsToastChangeInOffline, "False"));
+            bool isPageChange = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsPageChangeInOffline, "False"));
+            bool isReadChange = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsReadChangeInOffline, "False"));
             if (isChannelChange)
             {
                 tasks.Add(Task.Run(async () =>
@@ -454,6 +456,24 @@ namespace RSS_Stalker.Tools
                     var file = await localFolder.CreateFileAsync("ToastChannels.json", CreationCollisionOption.OpenIfExists);
                     await App.OneDrive.UpdateToastList(file);
                     AppTools.WriteLocalSetting(CoreLib.Enums.AppSettings.IsToastChangeInOffline, "False");
+                }));
+            }
+            if (isPageChange)
+            {
+                tasks.Add(Task.Run(async () =>
+                {
+                    var file = await localFolder.CreateFileAsync("Pages.json", CreationCollisionOption.OpenIfExists);
+                    await App.OneDrive.UpdatePageList(file);
+                    AppTools.WriteLocalSetting(CoreLib.Enums.AppSettings.IsPageChangeInOffline, "False");
+                }));
+            }
+            if (isReadChange)
+            {
+                tasks.Add(Task.Run(async () =>
+                {
+                    var file = await localFolder.CreateFileAsync("ReadIds.json", CreationCollisionOption.OpenIfExists);
+                    await App.OneDrive.UpdateReadList(file);
+                    AppTools.WriteLocalSetting(CoreLib.Enums.AppSettings.IsReadChangeInOffline, "False");
                 }));
             }
             if (tasks.Count == 0)
@@ -621,30 +641,7 @@ namespace RSS_Stalker.Tools
             }
         }
         /// <summary>
-        /// 添加已读文章
-        /// </summary>
-        /// <returns></returns>
-        public static async Task AddAlreadyReadFeed(Feed feed)
-        {
-            var localFolder = ApplicationData.Current.LocalFolder;
-            var file = await localFolder.CreateFileAsync("AlreadyReadList.json", CreationCollisionOption.OpenIfExists);
-            string text = await FileIO.ReadTextAsync(file);
-            if (string.IsNullOrEmpty(text))
-            {
-                text = "[]";
-            }
-            var list = JsonConvert.DeserializeObject<List<Feed>>(text);
-            var time = AppTools.DateToTimeStamp(DateTime.Now.ToLocalTime());
-            list.RemoveAll(p => AppTools.DateToTimeStamp(DateTime.Parse(p.Date)) < time - 604800);
-            if (!list.Any(p => p.InternalID == feed.InternalID))
-            {
-                list.Add(feed);
-                text = JsonConvert.SerializeObject(list);
-                await FileIO.WriteTextAsync(file, text);
-            }
-        }
-        /// <summary>
-        /// 将本地的收藏列表、待读列表、推送列表和自定义页面导出
+        /// 将本地的收藏列表、待读列表、推送列表、自定义页面和阅读记录导出
         /// </summary>
         /// <param name="file">文件</param>
         /// <returns></returns>
@@ -674,16 +671,22 @@ namespace RSS_Stalker.Tools
                 var l = await GetLocalPages();
                 export.Pages = l;
             });
+            var task5 = Task.Run(async () =>
+            {
+                var l = await GetReadIds();
+                export.Reads = l;
+            });
             tasks.Add(task1);
             tasks.Add(task2);
             tasks.Add(task3);
             tasks.Add(task4);
+            tasks.Add(task5);
             await Task.WhenAll(tasks.ToArray());
             string json = JsonConvert.SerializeObject(export);
             await FileIO.WriteTextAsync(file, json);
         }
         /// <summary>
-        /// 导入收藏列表、待读列表、推送列表和自定义页面
+        /// 导入收藏列表、待读列表、推送列表、自定义页面和阅读记录
         /// </summary>
         /// <param name="file">文件</param>
         /// <returns></returns>
@@ -766,11 +769,68 @@ namespace RSS_Stalker.Tools
                     await ReplacePage(l, true);
                 }
             });
+            var task5 = Task.Run(async () =>
+            {
+                var l = await GetReadIds();
+                bool isChanged = false;
+                if (export.Pages != null)
+                {
+                    foreach (var item in export.Reads)
+                    {
+                        if (!l.Any(p => p == item))
+                        {
+                            isChanged = true;
+                            l.Add(item);
+                        }
+                    }
+                }
+
+                if (isChanged)
+                {
+                    await ReplaceReadIds(l);
+                }
+            });
             tasks.Add(task1);
             tasks.Add(task2);
             tasks.Add(task3);
             tasks.Add(task4);
+            tasks.Add(task5);
             await Task.WhenAll(tasks.ToArray());
+        }
+        /// <summary>
+        /// 获取已读文章ID
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<List<string>> GetReadIds()
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("ReadIds.json", CreationCollisionOption.OpenIfExists);
+            string text = await FileIO.ReadTextAsync(file);
+            if (string.IsNullOrEmpty(text))
+            {
+                text = "[]";
+            }
+            var list = JsonConvert.DeserializeObject<List<string>>(text);
+            return list;
+        }
+        /// <summary>
+        /// 新增已读文章ID
+        /// </summary>
+        /// <returns></returns>
+        public static async Task ReplaceReadIds(List<string> articleIds)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("ReadIds.json", CreationCollisionOption.OpenIfExists);
+            string text = JsonConvert.SerializeObject(articleIds);
+            await FileIO.WriteTextAsync(file, text);
+            bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
+            if (isOneDrive)
+            {
+                if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+                    await App.OneDrive.UpdateReadList(file);
+                else
+                    AppTools.WriteLocalSetting(CoreLib.Enums.AppSettings.IsReadChangeInOffline, "True");
+            }
         }
         /// <summary>
         /// 获取缓存文件的大小

@@ -36,8 +36,10 @@ namespace RSS_Stalker.Pages
     {
         public CustomPage _sourceData = null;
         private ObservableCollection<Feed> FeedCollection = new ObservableCollection<Feed>();
+        private List<Feed> AllFeeds = new List<Feed>();
         private Feed _shareData = null;
         public static CustomPageDetailPage Current;
+        private bool _isInit = false;
         public CustomPageDetailPage()
         {
             this.InitializeComponent();
@@ -64,19 +66,57 @@ namespace RSS_Stalker.Pages
                     LoadingRing.IsActive = true;
                     await Task.Run(async() =>
                     {
-                        await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+                        await DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
                         {
-                            var feed = e.Parameter as List<Feed>;
-                            foreach (var item in feed)
-                            {
-                                FeedCollection.Add(item);
-                            }
+                            AllFeeds = e.Parameter as List<Feed>;
+                            await FeedInit();
                             ChangeLayout();
                         });
                     });
                     LoadingRing.IsActive = false;
                 }
             }
+        }
+        private async Task FeedInit()
+        {
+            bool isJustUnread = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsJustUnread, "False"));
+            FeedCollection.Clear();
+            await Task.Run(async () =>
+            {
+                await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+                {
+                    if (isJustUnread)
+                    {
+                        foreach (var item in AllFeeds)
+                        {
+                            if (!MainPage.Current.ReadIds.Contains(item.InternalID))
+                            {
+                                FeedCollection.Add(item);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in AllFeeds)
+                        {
+                            FeedCollection.Add(item);
+                        }
+                    }
+                    bool isHasUnread = false;
+                    foreach (var item in FeedCollection)
+                    {
+                        if (!MainPage.Current.ReadIds.Contains(item.InternalID))
+                        {
+                            isHasUnread = true;
+                        }
+                    }
+                    if (FeedCollection.Count == 0)
+                    {
+                        AllReadTipContainer.Visibility = Visibility.Visible;
+                    }
+                    AllReadButton.Visibility = isHasUnread ? Visibility.Visible : Visibility.Collapsed;
+                });
+            });
         }
         /// <summary>
         /// 更新布局，获取最新资讯
@@ -86,7 +126,9 @@ namespace RSS_Stalker.Pages
         public async Task UpdateLayout(CustomPage page)
         {
             LoadingRing.IsActive = true;
+            JustNoReadSwitch.IsEnabled = false;
             NoDataTipContainer.Visibility = Visibility.Collapsed;
+            AllReadTipContainer.Visibility = Visibility.Collapsed;
             _sourceData = page;
             PageNameTextBlock.Text = _sourceData.Name;
             FeedCollection.Clear();
@@ -117,21 +159,20 @@ namespace RSS_Stalker.Pages
             }
             if (feed != null && feed.Count > 0)
             {
-                foreach (var item in feed)
-                {
-                    FeedCollection.Add(item);
-                }
+                AllFeeds = feed;
+                await FeedInit();
             }
             else
             {
                 NoDataTipContainer.Visibility = Visibility.Visible;
             }
+            JustNoReadSwitch.IsEnabled = true;
             LoadingRing.IsActive = false;
         }
         private void FeedGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as Feed;
-            var t = new Tuple<Feed, List<Feed>>(item, FeedCollection.ToList());
+            var t = new Tuple<Feed, List<Feed>>(item, AllFeeds);
             MainPage.Current.MainFrame.Navigate(typeof(FeedDetailPage), t);
         }
 
@@ -231,6 +272,49 @@ namespace RSS_Stalker.Pages
                 ChangeLayout();
             }
 
+        }
+
+        private async void AllReadButton_Click(object sender, RoutedEventArgs e)
+        {
+            var list = new List<string>();
+            foreach (var item in AllFeeds)
+            {
+                list.Add(item.InternalID);
+            }
+            MainPage.Current.AddReadId(list.ToArray());
+            AllReadButton.Visibility = Visibility.Collapsed;
+            bool isJustUnread = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsJustUnread, "False"));
+            if (isJustUnread)
+                await FeedInit();
+        }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (MainPage.Current.MinsizeHeaderContainer.Visibility == Visibility.Visible)
+            {
+                HeaderContainer.Height = 60;
+            }
+            else
+            {
+                HeaderContainer.Height = 70;
+            }
+        }
+
+        private async void JustNoReadSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (!_isInit)
+                return;
+            AllReadTipContainer.Visibility = Visibility.Collapsed;
+            bool isOn = JustNoReadSwitch.IsOn;
+            AppTools.WriteLocalSetting(AppSettings.IsJustUnread, isOn.ToString());
+            await FeedInit();
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            bool isJustUnread = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsJustUnread, "False"));
+            JustNoReadSwitch.IsOn = isJustUnread;
+            _isInit = true;
         }
     }
 }

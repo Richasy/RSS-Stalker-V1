@@ -66,6 +66,7 @@ namespace RSS_Stalker.Pages
                 if(e.Parameter is Tuple<Feed, List<Feed>>)
                 {
                     var data = e.Parameter as Tuple<Feed, List<Feed>>;
+                    bool isUnread = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsJustUnread, "False"));
                     _sourceFeed = data.Item1;
                     _sourceContent = _sourceFeed.Content;
                     AllFeeds = data.Item2;
@@ -73,11 +74,14 @@ namespace RSS_Stalker.Pages
                     {
                         if (item.InternalID != _sourceFeed.InternalID)
                         {
-                            ShowFeeds.Add(item);
+                            if (isUnread && !MainPage.Current.ReadIds.Contains(item.InternalID))
+                                ShowFeeds.Add(item);
+                            else if (!isUnread)
+                                ShowFeeds.Add(item);
                         }
                     }
                     LoadingRing.IsActive = true;
-                    await IOTools.AddAlreadyReadFeed(_sourceFeed);
+                    MainPage.Current.AddReadId(_sourceFeed.InternalID);
                     await GenerateActivityAsync(_sourceFeed);
                 }
                 // 这种情况表明入口点是动态卡片
@@ -215,11 +219,15 @@ namespace RSS_Stalker.Pages
         private async Task UpdateFeed()
         {
             ShowFeeds.Clear();
+            bool isUnread = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsJustUnread, "False"));
             foreach (var item in AllFeeds)
             {
                 if (item.InternalID != _sourceFeed.InternalID)
                 {
-                    ShowFeeds.Add(item);
+                    if (isUnread && !MainPage.Current.ReadIds.Contains(item.InternalID))
+                        ShowFeeds.Add(item);
+                    else if (!isUnread)
+                        ShowFeeds.Add(item);
                 }
             }
             ButtonStatusCheck();

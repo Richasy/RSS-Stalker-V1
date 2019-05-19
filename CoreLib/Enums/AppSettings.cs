@@ -15,6 +15,7 @@ namespace CoreLib.Enums
         TodoUpdateTime,
         StarUpdateTime,
         ToastUpdateTime,
+        ReadUpdateTime,
         IsBindingOneDrive,
         IsLocalAccount,
         UserName,
@@ -35,8 +36,10 @@ namespace CoreLib.Enums
         IsPagesChangeInOffline,
         IsTodoChangeInOffline,
         IsToastChangeInOffline,
+        IsReadChangeInOffline,
         IsStarChangeInOffline,
         AutoCacheWhenOpenChannel,
-        IsPageChangeInOffline
+        IsPageChangeInOffline,
+        IsJustUnread
     }
 }

@@ -8,6 +8,12 @@ The new page function allows you to integrate existing feeds and attach simple r
 Right click on the page item (long press on the touch screen) to pop up the menu, you can set it as the home page, or you can cache the page.
 ===
 
+===
+Add the "read/unread" flag.
+Unlike other software, the read unread flags here are implicit. You cannot manually change the reading flag of each article. As long as you open the article, the article will be automatically marked as read.
+The read records will be synchronized by the OneDrive and will also allow for merge export.
+===
+
 1. Make a series of adaptations to the "page" to better integrate it into the overall architecture of the software (but not to mention that there will still be bugs, if any, please email me)
 2. Improve the problem of the card when jumping between the article details and the article list
 3. fix OPML file import and output.

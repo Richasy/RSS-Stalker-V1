@@ -47,7 +47,7 @@ namespace StalkerToast
                             if (history == null)
                             {
                                 historyList.Add(new ChannelTarget() { ChannelId = t.Id, LastArticleId = first.InternalID });
-                                if (!readList.Any(p => p.InternalID == first.InternalID))
+                                if (!readList.Any(p => p == first.InternalID))
                                 {
                                     content = first.Title;
                                 }
@@ -56,7 +56,7 @@ namespace StalkerToast
                             {
                                 if (first.InternalID != history.LastArticleId)
                                 {
-                                    if (!readList.Any(p => p.InternalID == first.InternalID))
+                                    if (!readList.Any(p => p == first.InternalID))
                                     {
                                         content = first.Title;
                                         history.LastArticleId = first.InternalID;
@@ -95,16 +95,16 @@ namespace StalkerToast
         /// 获取已读文章
         /// </summary>
         /// <returns></returns>
-        private async Task<List<Feed>> GetAlreadyReadFeed()
+        private async Task<List<string>> GetAlreadyReadFeed()
         {
             var localFolder = ApplicationData.Current.LocalFolder;
-            var file = await localFolder.CreateFileAsync("AlreadyReadList.json", CreationCollisionOption.OpenIfExists);
+            var file = await localFolder.CreateFileAsync("ReadIds.json", CreationCollisionOption.OpenIfExists);
             string text = await FileIO.ReadTextAsync(file);
             if (string.IsNullOrEmpty(text))
             {
                 text = "[]";
             }
-            var list = JsonConvert.DeserializeObject<List<Feed>>(text);
+            var list = JsonConvert.DeserializeObject<List<string>>(text);
             return list;
         }
         private async Task<List<Channel>> GetNeedToastChannels()

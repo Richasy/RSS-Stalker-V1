@@ -35,9 +35,10 @@ namespace RSS_Stalker.Pages
     {
         public Channel _sourceData = null;
         private ObservableCollection<Feed> FeedCollection = new ObservableCollection<Feed>();
+        private List<Feed> AllFeeds = new List<Feed>();
         private Feed _shareData = null;
         public static ChannelDetailPage Current;
-        
+        private bool _isInit = false;
         public ChannelDetailPage()
         {
             this.InitializeComponent();
@@ -62,17 +63,14 @@ namespace RSS_Stalker.Pages
                     {
                         ChannelDescriptionTextBlock.Text = _sourceData.Description;
                         ChannelNameTextBlock.Text = _sourceData.Name;
-
                     }
                     await Task.Run(async () =>
                     {
-                        await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+                        await DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
                         {
                             var feed = e.Parameter as List<Feed>;
-                            foreach (var item in feed)
-                            {
-                                FeedCollection.Add(item);
-                            }
+                            AllFeeds = feed;
+                            await FeedInit();
                             ChangeLayout();
                         });
                     });
@@ -88,7 +86,9 @@ namespace RSS_Stalker.Pages
         public async Task UpdateLayout(Channel channel)
         {
             LoadingRing.IsActive = true;
+            JustNoReadSwitch.IsEnabled = false;
             NoDataTipContainer.Visibility = Visibility.Collapsed;
+            AllReadTipContainer.Visibility = Visibility.Collapsed;
             _sourceData = channel;
             ChannelDescriptionTextBlock.Text = _sourceData.Description;
             ChannelNameTextBlock.Text = _sourceData.Name;
@@ -110,27 +110,24 @@ namespace RSS_Stalker.Pages
                     new PopupToast(AppTools.GetReswLanguage("Tip_WatchingCache")).ShowPopup();
                     MainPage.Current._isCacheAlert = false;
                 }
-                
                 feed = await IOTools.GetLocalCache(channel);
-                
             }
             if (feed != null && feed.Count > 0)
             {
-                foreach (var item in feed)
-                {
-                    FeedCollection.Add(item);
-                }
+                AllFeeds = feed;
+                await FeedInit();
             }
             else
             {
                 NoDataTipContainer.Visibility = Visibility.Visible;
             }
+            JustNoReadSwitch.IsEnabled = true;
             LoadingRing.IsActive = false;
         }
         private void FeedGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as Feed;
-            var t = new Tuple<Feed, List<Feed>>(item, FeedCollection.ToList());
+            var t = new Tuple<Feed, List<Feed>>(item, AllFeeds);
             MainPage.Current.MainFrame.Navigate(typeof(FeedDetailPage), t);
         }
 
@@ -238,10 +235,93 @@ namespace RSS_Stalker.Pages
             string oldLayout = AppTools.GetRoamingSetting(CoreLib.Enums.AppSettings.FeedLayoutType, "All");
             if (oldLayout != name)
             {
-                AppTools.WriteRoamingSetting(CoreLib.Enums.AppSettings.FeedLayoutType, name);
+                AppTools.WriteRoamingSetting(AppSettings.FeedLayoutType, name);
                 ChangeLayout();
             }
             
+        }
+
+        private async void JustNoReadSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (!_isInit)
+                return;
+            AllReadTipContainer.Visibility = Visibility.Collapsed;
+            bool isOn = JustNoReadSwitch.IsOn;
+            AppTools.WriteLocalSetting(AppSettings.IsJustUnread, isOn.ToString());
+            await FeedInit();
+        }
+        private async Task FeedInit()
+        {
+            bool isJustUnread = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsJustUnread, "False"));
+            FeedCollection.Clear();
+            await Task.Run(async () =>
+            {
+                await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+                {
+                    if (isJustUnread)
+                    {
+                        foreach (var item in AllFeeds)
+                        {
+                            if (!MainPage.Current.ReadIds.Contains(item.InternalID))
+                            {
+                                FeedCollection.Add(item);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in AllFeeds)
+                        {
+                            FeedCollection.Add(item);
+                        }
+                    }
+                    bool isHasUnread = false;
+                    foreach (var item in FeedCollection)
+                    {
+                        if (!MainPage.Current.ReadIds.Contains(item.InternalID))
+                        {
+                            isHasUnread = true;
+                        }
+                    }
+                    if (FeedCollection.Count == 0)
+                    {
+                        AllReadTipContainer.Visibility = Visibility.Visible;
+                    }
+                    AllReadButton.Visibility = isHasUnread ? Visibility.Visible : Visibility.Collapsed;
+                });
+            });
+        }
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            bool isJustUnread = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsJustUnread, "False"));
+            JustNoReadSwitch.IsOn = isJustUnread;
+            _isInit = true;
+        }
+
+        private async void AllReadButton_Click(object sender, RoutedEventArgs e)
+        {
+            var list = new List<string>();
+            foreach (var item in AllFeeds)
+            {
+                list.Add(item.InternalID);
+            }
+            MainPage.Current.AddReadId(list.ToArray());
+            AllReadButton.Visibility = Visibility.Collapsed;
+            bool isJustUnread = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsJustUnread, "False"));
+            if(isJustUnread)
+                await FeedInit();
+        }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (MainPage.Current.MinsizeHeaderContainer.Visibility == Visibility.Visible)
+            {
+                ChannelDescriptionTextBlock.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                ChannelDescriptionTextBlock.Visibility = Visibility.Visible;
+            }
         }
     }
 }

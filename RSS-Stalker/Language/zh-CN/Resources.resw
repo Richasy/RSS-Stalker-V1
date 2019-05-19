@@ -160,7 +160,7 @@
     <value>导出</value>
   </data>
   <data name="Control_ExportOpmlTipBlock.Text" xml:space="preserve">
-    <value>导出OPML</value>
+    <value>导出OPML (订阅源列表)</value>
   </data>
   <data name="Control_FeedSearchBox.PlaceholderText" xml:space="preserve">
     <value>搜索文章</value>
@@ -172,7 +172,7 @@
     <value>导入</value>
   </data>
   <data name="Control_ImportOpmlTipBlock.Text" xml:space="preserve">
-    <value>导入OPML</value>
+    <value>导入OPML (订阅源列表)</value>
   </data>
   <data name="Control_LanguageSettingTipBlock.Text" xml:space="preserve">
     <value>语言选项</value>
@@ -520,10 +520,10 @@
     <value>你好，我是云之幻，软件的开发者。</value>
   </data>
   <data name="Control_ExportLocalListTipBlock.Text" xml:space="preserve">
-    <value>导出本地待读、收藏、推送和自定义页面列表</value>
+    <value>导出本地数据集（不包含订阅源）</value>
   </data>
   <data name="Control_ImportLocalListTipBlock.Text" xml:space="preserve">
-    <value>导入待读、收藏、推送和自定义页面列表</value>
+    <value>导入本地数据集（不包含订阅源）</value>
   </data>
   <data name="Cotrol_LocalAccountButton.Content" xml:space="preserve">
     <value>本地账户</value>
@@ -647,5 +647,14 @@
   </data>
   <data name="Tip_Selected" xml:space="preserve">
     <value>上次选择</value>
+  </data>
+  <data name="Control_AllReadButton.Content" xml:space="preserve">
+    <value>全部已读</value>
+  </data>
+  <data name="Control_AllReadTipBlock.Text" xml:space="preserve">
+    <value>您已读完全部文章</value>
+  </data>
+  <data name="Control_JustNoReadTipBlock.Text" xml:space="preserve">
+    <value>只看未读</value>
   </data>
 </root>

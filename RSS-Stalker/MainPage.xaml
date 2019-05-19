@@ -115,8 +115,9 @@
             </Grid>
         </DataTemplate>
     </Page.Resources>
+
     <Grid Name="RootGrid" x:FieldModifier="Public">
-        <SplitView Style="{StaticResource BasicSplitViewStyle}" Name="AppSplitView" DisplayMode="CompactInline" IsPaneOpen="True" OpenPaneLength="550" CompactPaneLength="50">
+        <SplitView Style="{StaticResource BasicSplitViewStyle}" Name="AppSplitView" DisplayMode="CompactInline" IsPaneOpen="True" OpenPaneLength="250" CompactPaneLength="50">
             <SplitView.Pane>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -191,7 +192,7 @@
                             <ToggleButton Style="{StaticResource CircleToggleButtonStyle}" Content="&#xE9CB;" Name="SettingButton" Click="SettingButton_Click"/>
                         </StackPanel>
                     </Grid>
-                    <Grid Name="SideChannelGrid" Width="300" Grid.Column="1" Background="{ThemeResource PageBackground}" BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,1,0">
+                    <Grid Name="SideChannelGrid" Visibility="Collapsed" Width="300" Grid.Column="1" Background="{ThemeResource PageBackground}" BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,1,0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>

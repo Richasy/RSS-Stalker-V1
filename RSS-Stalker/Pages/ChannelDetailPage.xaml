@@ -8,9 +8,10 @@
     xmlns:models="using:CoreLib.Models"
     xmlns:controls="using:RSS_Stalker.Controls"
     xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    Loaded="Page_Loaded"
+    SizeChanged="Page_SizeChanged"
     mc:Ignorable="d">
     <Page.Resources>
-        
         <DataTemplate x:DataType="x:String" x:Key="TagItemTemplate">
             <Border CornerRadius="4" Padding="5,3" BorderBrush="{ThemeResource LineColor}" BorderThickness="1">
                 <TextBlock Text="{Binding}" FontFamily="{StaticResource Basic}" FontSize="11" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{ThemeResource TipTextColor}"/>
@@ -109,8 +110,13 @@
                 <TextBlock Name="ChannelNameTextBlock" x:FieldModifier="Public" FontFamily="{StaticResource Title}" FontWeight="Bold" MaxLines="2" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource ImportantTextColor}" FontSize="20"/>
                 <TextBlock Name="ChannelDescriptionTextBlock" MaxLines="2" x:FieldModifier="Public" Margin="0,10,0,0" LineHeight="20" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource NormalTextColor}" TextTrimming="CharacterEllipsis" FontSize="13" TextWrapping="Wrap"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="0,0,30,0" Grid.Column="1">
-                <Button Style="{StaticResource GhostCircleButtonStyle}" Name="RefreshButton" Click="RefreshButton_Click"  Content="&#xE9C4;" VerticalAlignment="Center"/>
+            <StackPanel Orientation="Horizontal" Margin="0,0,30,10" VerticalAlignment="Bottom" Grid.Column="1">
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource BasicTipTextStyle}" Margin="0,0,10,0" x:Uid="Control_JustNoReadTipBlock" VerticalAlignment="Center"/>
+                    <ToggleSwitch Name="JustNoReadSwitch" VerticalAlignment="Center" Toggled="JustNoReadSwitch_Toggled" Style="{StaticResource BasicSwitchStyle}"/>
+                </StackPanel>
+                <Button Style="{StaticResource DefaultButtonStyle}" Visibility="Collapsed" Margin="15,0,0,0" FontSize="12" Padding="8,4" Name="AllReadButton" Click="AllReadButton_Click" x:Uid="Control_AllReadButton" VerticalAlignment="Center"/>
+                <Button Style="{StaticResource GhostCircleButtonStyle}" Margin="15,0,0,0" Name="RefreshButton" Click="RefreshButton_Click"  Content="&#xE9C4;" VerticalAlignment="Center"/>
                 <Button Style="{StaticResource GhostCircleButtonStyle}" Margin="15,0,0,0" Name="SwitchLayoutButton" Content="&#xE95E;" VerticalAlignment="Center">
                     <Button.Flyout>
                         <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource BasicMenuFlyoutStyle}">
@@ -133,6 +139,7 @@
                     </Button.Flyout>
                 </Button>
                 <Button Style="{StaticResource GhostCircleButtonStyle}" Margin="15,0,0,0" Name="OpenChannelButton" Click="OpenChannelButton_Click" Content="&#xE975;" VerticalAlignment="Center"/>
+                
             </StackPanel>
             
         </Grid>
@@ -174,6 +181,15 @@
                     >
             <TextBlock Text="&#xE96D;" Foreground="{ThemeResource TipTextColor}" FontSize="60" HorizontalAlignment="Center" FontFamily="{StaticResource Icon}"/>
             <TextBlock x:Uid="Control_NoDataTipBlock" Foreground="{ThemeResource TipTextColor}" HorizontalAlignment="Center" FontFamily="{StaticResource Basic}" FontSize="18" Margin="0,10,0,0"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Name="AllReadTipContainer"
+                    Visibility="Collapsed"
+                    >
+            <TextBlock Text="&#xE9DA;" Foreground="{ThemeResource TipTextColor}" FontSize="60" HorizontalAlignment="Center" FontFamily="{StaticResource Icon}"/>
+            <TextBlock x:Uid="Control_AllReadTipBlock" Foreground="{ThemeResource TipTextColor}" HorizontalAlignment="Center" FontFamily="{StaticResource Basic}" FontSize="18" Margin="0,10,0,0"/>
         </StackPanel>
         <ProgressRing Grid.Row="1" Style="{StaticResource BasicProgressRingStyle}" Name="LoadingRing"/>
     </Grid>

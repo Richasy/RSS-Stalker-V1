@@ -7,17 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using RSS_Stalker.Tools;
 using Windows.ApplicationModel.Background;
@@ -44,6 +37,7 @@ namespace RSS_Stalker
         public List<Feed> TodoList = new List<Feed>();
         public List<Feed> StarList = new List<Feed>();
         public List<Channel> ToastList = new List<Channel>();
+        public List<string> ReadIds = new List<string>();
         public bool _isFromTimeline = false;
         public static MainPage Current;
         public bool _isCacheAlert = false;
@@ -161,6 +155,7 @@ namespace RSS_Stalker
             // 获取本地保存的订阅源副本
             var categories = await IOTools.GetLocalCategories();
             var pages = await IOTools.GetLocalPages();
+            ReadIds = await IOTools.GetReadIds();
             // 清空列表前将标识符设置为-1
             _categoryListCount = -1;
             _channelListCount = -1;
@@ -189,12 +184,11 @@ namespace RSS_Stalker
                     SelectChannelByCustom();
                 else
                 {
-                    var cat= Categories.First();
-                    CategoryListView.SelectedItem = cat;
-                    foreach (var item in cat.Channels)
-                    {
-                        Channels.Add(item);
-                    }
+                    CategoryNameTextBlock.Text = "RSS Stalker";
+                    SideChannelGrid.Visibility = Visibility.Collapsed;
+                    PageListView.SelectedIndex = -1;
+                    CategoryListView.SelectedIndex = -1;
+                    AppSplitView.OpenPaneLength = 250;
                 }
             }
             // 在完成列表装载后，将列表的数量重新赋值给标识符
@@ -738,6 +732,8 @@ namespace RSS_Stalker
             string pageId = AppTools.GetLocalSetting(AppSettings.ScreenPage, "");
             if (IsCustomHome)
             {
+                SideChannelGrid.Visibility = Visibility.Visible;
+                AppSplitView.OpenPaneLength = 550;
                 if (string.IsNullOrEmpty(channelId))
                 {
                     CategoryListView.SelectedItem = Categories.FirstOrDefault();
@@ -832,6 +828,8 @@ namespace RSS_Stalker
             }
             else
             {
+                SideChannelGrid.Visibility = Visibility.Visible;
+                AppSplitView.OpenPaneLength = 550;
                 CategoryListView.SelectedItem = Categories.FirstOrDefault();
                 CategoryNameTextBlock.Text = Categories.First().Name;
                 foreach (var channel in Categories.First().Channels)
@@ -1028,6 +1026,22 @@ namespace RSS_Stalker
             var data = (sender as FrameworkElement).DataContext as CustomPage;
             _tempPage = data;
             PageMenuFlyout.ShowAt((FrameworkElement)sender, e.GetPosition((FrameworkElement)sender));
+        }
+        public async void AddReadId(params string[] ids)
+        {
+            bool isAdd = false;
+            foreach (var id in ids)
+            {
+                if (!ReadIds.Contains(id))
+                {
+                    ReadIds.Add(id);
+                    isAdd = true;
+                }
+            }
+            if (isAdd)
+            {
+                await IOTools.ReplaceReadIds(ReadIds);
+            }
         }
     }
 }

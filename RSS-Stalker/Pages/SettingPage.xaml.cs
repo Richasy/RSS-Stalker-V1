@@ -239,6 +239,7 @@ namespace RSS_Stalker.Pages
             var cateList = new List<Category>();
             var toastList = new List<Channel>();
             var pageList = new List<CustomPage>();
+            var readList = new List<string>();
             var cate = Task.Run(async () =>
             {
                 cateList = await App.OneDrive.GetCategoryList();
@@ -265,11 +266,17 @@ namespace RSS_Stalker.Pages
                 pageList = await App.OneDrive.GetPageList();
                 await IOTools.ReplacePage(pageList);
             });
+            var read = Task.Run(async () =>
+            {
+                readList = await App.OneDrive.GetReadList();
+                await IOTools.ReplaceReadIds(readList);
+            });
             tasks.Add(cate);
             tasks.Add(todo);
             tasks.Add(star);
             tasks.Add(toast);
             tasks.Add(page);
+            tasks.Add(read);
             try
             {
                 await Task.WhenAll(tasks.ToArray());
@@ -278,18 +285,22 @@ namespace RSS_Stalker.Pages
                 string starUpdateTime = AppTools.GetRoamingSetting(AppSettings.StarUpdateTime, "1");
                 string toastUpdateTime = AppTools.GetRoamingSetting(AppSettings.ToastUpdateTime, "1");
                 string pageUpdateTime = AppTools.GetRoamingSetting(AppSettings.PageUpdateTime, "1");
+                string readUpdateTime = AppTools.GetRoamingSetting(AppSettings.ReadUpdateTime, "1");
                 AppTools.WriteLocalSetting(AppSettings.BasicUpdateTime, basicUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.TodoUpdateTime, todoUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.StarUpdateTime, starUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.ToastUpdateTime, toastUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.PageUpdateTime, pageUpdateTime);
+                AppTools.WriteLocalSetting(AppSettings.ReadUpdateTime, readUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.IsChannelsChangeInOffline, "False");
                 AppTools.WriteLocalSetting(AppSettings.IsTodoChangeInOffline, "False");
                 AppTools.WriteLocalSetting(AppSettings.IsStarChangeInOffline, "False");
                 AppTools.WriteLocalSetting(AppSettings.IsToastChangeInOffline, "False");
                 AppTools.WriteLocalSetting(AppSettings.IsPageChangeInOffline, "False");
+                AppTools.WriteLocalSetting(AppSettings.IsReadChangeInOffline, "False");
                 MainPage.Current.ReplaceList(cateList);
                 MainPage.Current.ReplacePageList(pageList);
+                MainPage.Current.ReadIds = readList;
                 ToastChannels.Clear();
                 foreach (var item in toastList)
                 {

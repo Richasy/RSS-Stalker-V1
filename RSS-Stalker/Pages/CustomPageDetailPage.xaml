@@ -8,6 +8,8 @@
     xmlns:models="using:CoreLib.Models"
     xmlns:controls="using:RSS_Stalker.Controls"
     xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    SizeChanged="Page_SizeChanged"
+    Loaded="Page_Loaded"
     mc:Ignorable="d">
     <Page.Resources>
 
@@ -100,16 +102,21 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,0,1">
+        <Grid BorderBrush="{ThemeResource LineColor}" Height="70" Name="HeaderContainer" BorderThickness="0,0,0,1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Grid Padding="30,0" Height="60">
+            <Grid Padding="30,0">
                 <TextBlock Name="PageNameTextBlock" VerticalAlignment="Center" x:FieldModifier="Public" FontFamily="{StaticResource Title}" FontWeight="Bold" MaxLines="2" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource ImportantTextColor}" FontSize="20"/>
             </Grid>
-            <StackPanel Orientation="Horizontal" Margin="0,0,30,0" Grid.Column="1">
-                <Button Style="{StaticResource GhostCircleButtonStyle}" Name="RefreshButton" Click="RefreshButton_Click"  Content="&#xE9C4;" VerticalAlignment="Center"/>
+            <StackPanel Orientation="Horizontal" Margin="0,0,30,0" Grid.Column="1" VerticalAlignment="Center">
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource BasicTipTextStyle}" Margin="0,0,10,0" x:Uid="Control_JustNoReadTipBlock" VerticalAlignment="Center"/>
+                    <ToggleSwitch Name="JustNoReadSwitch" VerticalAlignment="Center" Toggled="JustNoReadSwitch_Toggled" Style="{StaticResource BasicSwitchStyle}"/>
+                </StackPanel>
+                <Button Style="{StaticResource DefaultButtonStyle}" Margin="15,0,0,0" Visibility="Collapsed" FontSize="12" Padding="8,4" Name="AllReadButton" Click="AllReadButton_Click" x:Uid="Control_AllReadButton" VerticalAlignment="Center"/>
+                <Button Style="{StaticResource GhostCircleButtonStyle}" Margin="15,0,0,0" Name="RefreshButton" Click="RefreshButton_Click"  Content="&#xE9C4;" VerticalAlignment="Center"/>
                 <Button Style="{StaticResource GhostCircleButtonStyle}" Margin="15,0,0,0" Name="SwitchLayoutButton" Content="&#xE95E;" VerticalAlignment="Center">
                     <Button.Flyout>
                         <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource BasicMenuFlyoutStyle}">
@@ -131,6 +138,7 @@
                         </MenuFlyout>
                     </Button.Flyout>
                 </Button>
+                
             </StackPanel>
 
         </Grid>
@@ -173,6 +181,15 @@
                     >
             <TextBlock Text="&#xE96D;" Foreground="{ThemeResource TipTextColor}" FontSize="60" HorizontalAlignment="Center" FontFamily="{StaticResource Icon}"/>
             <TextBlock x:Uid="Control_NoDataTipBlock" Foreground="{ThemeResource TipTextColor}" HorizontalAlignment="Center" FontFamily="{StaticResource Basic}" FontSize="18" Margin="0,10,0,0"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Name="AllReadTipContainer"
+                    Visibility="Collapsed"
+                    >
+            <TextBlock Text="&#xE9DA;" Foreground="{ThemeResource TipTextColor}" FontSize="60" HorizontalAlignment="Center" FontFamily="{StaticResource Icon}"/>
+            <TextBlock x:Uid="Control_AllReadTipBlock" Foreground="{ThemeResource TipTextColor}" HorizontalAlignment="Center" FontFamily="{StaticResource Basic}" FontSize="18" Margin="0,10,0,0"/>
         </StackPanel>
         <ProgressRing Grid.Row="1" Style="{StaticResource BasicProgressRingStyle}" Name="LoadingRing"/>
     </Grid>

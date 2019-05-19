@@ -75,22 +75,30 @@ namespace RSS_Stalker.Pages
                         var PageList = await App.OneDrive.GetPageList();
                         await IOTools.ReplacePage(PageList);
                     });
+                    var read = Task.Run(async () =>
+                    {
+                        var ReadList = await App.OneDrive.GetReadList();
+                        await IOTools.ReplaceReadIds(ReadList);
+                    });
                     tasks.Add(cate);
                     tasks.Add(todo);
                     tasks.Add(star);
                     tasks.Add(toast);
                     tasks.Add(page);
+                    tasks.Add(read);
                     await Task.WhenAll(tasks.ToArray());
                     string basicUpdateTime = AppTools.GetRoamingSetting(AppSettings.BasicUpdateTime, "1");
                     string todoUpdateTime = AppTools.GetRoamingSetting(AppSettings.TodoUpdateTime, "1");
                     string starUpdateTime = AppTools.GetRoamingSetting(AppSettings.StarUpdateTime, "1");
                     string toastUpdateTime = AppTools.GetRoamingSetting(AppSettings.ToastUpdateTime, "1");
                     string pageUpdateTime = AppTools.GetRoamingSetting(AppSettings.PageUpdateTime, "1");
+                    string readUpdateTime = AppTools.GetRoamingSetting(AppSettings.ReadUpdateTime, "1");
                     AppTools.WriteLocalSetting(AppSettings.ToastUpdateTime, toastUpdateTime);
                     AppTools.WriteLocalSetting(AppSettings.StarUpdateTime, starUpdateTime);
                     AppTools.WriteLocalSetting(AppSettings.TodoUpdateTime, todoUpdateTime);
                     AppTools.WriteLocalSetting(AppSettings.BasicUpdateTime, basicUpdateTime);
                     AppTools.WriteLocalSetting(AppSettings.PageUpdateTime, pageUpdateTime);
+                    AppTools.WriteLocalSetting(AppSettings.PageUpdateTime, readUpdateTime);
                     AppTools.WriteLocalSetting(AppSettings.IsBindingOneDrive, "True");
                     var frame = Window.Current.Content as Frame;
                     frame.Navigate(typeof(MainPage));

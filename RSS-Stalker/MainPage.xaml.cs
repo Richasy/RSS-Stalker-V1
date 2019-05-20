@@ -212,6 +212,13 @@ namespace RSS_Stalker
             _isInit = true;
             CheckUpdateLocalData();
         }
+        public void SideHide()
+        {
+            PageListView.SelectedIndex = -1;
+            CategoryListView.SelectedIndex = -1;
+            SideChannelGrid.Visibility = Visibility.Collapsed;
+            AppSplitView.OpenPaneLength = 250;
+        }
         /// <summary>
         /// 快捷键注册
         /// </summary>

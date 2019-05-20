@@ -89,6 +89,7 @@ namespace RSS_Stalker.Pages
             AllFeeds.Clear();
             LastCacheTimeContainer.Visibility = Visibility.Collapsed;
             LoadingRing.IsActive = true;
+            AllReadButton.Visibility = Visibility.Collapsed;
             JustNoReadSwitch.IsEnabled = false;
             NoDataTipContainer.Visibility = Visibility.Collapsed;
             AllReadTipContainer.Visibility = Visibility.Collapsed;

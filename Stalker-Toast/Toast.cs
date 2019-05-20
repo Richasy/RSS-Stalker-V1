@@ -110,20 +110,6 @@ namespace StalkerToast
                             Text = GetLanguage("RSS 追踪", "RSS Stalker")
                         }
                     }
-                },
-                Actions = new ToastActionsCustom()
-                {
-                    Buttons =
-                    {
-                        new ToastButton(GetLanguage("打开看看","Open it"),$"id={WebUtility.UrlEncode(schema.InternalID)}&summary={WebUtility.UrlEncode(schema.Summary)}&date={WebUtility.UrlEncode(schema.PublishDate.ToString("yyyy/MM/dd HH:mm"))}&img={WebUtility.UrlEncode(schema.ImageUrl)}&url={WebUtility.UrlDecode(schema.FeedUrl)}&title={WebUtility.UrlEncode(schema.Title)}&content={WebUtility.UrlEncode(schema.Content)}")
-                        {
-                            ActivationType=ToastActivationType.Foreground
-                        },
-                        new ToastButton(GetLanguage("稍后阅读","Read Later"),$"id={WebUtility.UrlEncode(schema.InternalID)}&summary={WebUtility.UrlEncode(schema.Summary)}&date={WebUtility.UrlEncode(schema.PublishDate.ToString("yyyy/MM/dd HH:mm"))}&img={WebUtility.UrlEncode(schema.ImageUrl)}&url={WebUtility.UrlDecode(schema.FeedUrl)}&title={WebUtility.UrlEncode(schema.Title)}&content={WebUtility.UrlEncode(schema.Content)}")
-                        {
-                            ActivationType=ToastActivationType.Background
-                        },
-                    }
                 }
             };
             if (!string.IsNullOrEmpty(schema.ImageUrl))

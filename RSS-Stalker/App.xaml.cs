@@ -132,15 +132,6 @@ namespace RSS_Stalker
                             OpenContentFromTimeline(query);
                         }
                     }
-                    else if (args.Kind == ActivationKind.ToastNotification)
-                    {
-                        var uriArgs = args as ToastNotificationActivatedEventArgs;
-                        if (uriArgs != null)
-                        {
-                            string[] query = uriArgs.Argument.Split('&');
-                            OpenContentFromTimeline(query);
-                        }
-                    }
                 };
                 // 将框架放在当前窗口中
                 Window.Current.Content = rootFrame;

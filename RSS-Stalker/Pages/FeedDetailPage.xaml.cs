@@ -102,6 +102,7 @@ namespace RSS_Stalker.Pages
                     SideListButton.Visibility = Visibility.Collapsed;
                     FeedListView.Visibility = Visibility.Collapsed;
                     Grid.SetColumn(SideControlContainer, 1);
+                    MainPage.Current.SideHide();
                     SideControlContainer.HorizontalAlignment = HorizontalAlignment.Right;
                     SideControlContainer.Margin = new Thickness(0, 0, 10, 0);
                     DetailSplitView.IsPaneOpen = false;

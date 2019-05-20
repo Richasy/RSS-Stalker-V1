@@ -117,7 +117,7 @@ namespace RSS_Stalker
                     rootFrame.Navigate(typeof(MainPage),"Timeline");
                 else
                 {
-                    rootFrame.Navigate(typeof(Pages.OneDrivePage));
+                    rootFrame.Navigate(typeof(OneDrivePage));
                     return;
                 }
                 rootFrame.NavigationFailed += OnNavigationFailed;
@@ -129,6 +129,15 @@ namespace RSS_Stalker
                         if (uriArgs != null)
                         {
                             string[] query = uriArgs.Uri.Query.Split('&');
+                            OpenContentFromTimeline(query);
+                        }
+                    }
+                    else if (args.Kind == ActivationKind.ToastNotification)
+                    {
+                        var uriArgs = args as ToastNotificationActivatedEventArgs;
+                        if (uriArgs != null)
+                        {
+                            string[] query = uriArgs.Argument.Split('&');
                             OpenContentFromTimeline(query);
                         }
                     }

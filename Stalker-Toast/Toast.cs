@@ -1,11 +1,14 @@
 ﻿using CoreLib.Models;
 using CoreLib.Tools;
+using Microsoft.Toolkit.Uwp.Notifications;
 using Newtonsoft.Json;
+using Rss.Parsers.Rss;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
@@ -65,7 +68,7 @@ namespace StalkerToast
                             }
                             if (!string.IsNullOrEmpty(content))
                             {
-                                SendNotification(title, content);
+                                SendNotification(title, first);
                             }
                         }
                     }
@@ -75,21 +78,59 @@ namespace StalkerToast
                     }
                 }));
             }
-            Task.WaitAll(tasks.ToArray(),20000);
+            Task.WaitAll(tasks.ToArray(),24000);
             await ReplaceToastHistory(historyList);
             def.Complete();
         }
-        private void SendNotification(string title,string content)
+        private void SendNotification(string title,RssSchema content)
         {
-            if (!string.IsNullOrEmpty(title) && !string.IsNullOrEmpty(content))
+            if (!string.IsNullOrEmpty(title))
             {
-                var toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText02);
-                var elements = toastXml.GetElementsByTagName("text");
-                elements[0].AppendChild(toastXml.CreateTextNode(title));
-                elements[1].AppendChild(toastXml.CreateTextNode(content));
-                ToastNotification notification = new ToastNotification(toastXml);
+                var toast = GenerateToastContent(title, content);
+                ToastNotification notification = new ToastNotification(toast.GetXml());
                 ToastNotificationManager.CreateToastNotifier().Show(notification);
             }
+        }
+        private ToastContent GenerateToastContent(string title,RssSchema schema)
+        {
+            var content = new ToastContent()
+            {
+                Scenario = ToastScenario.Reminder,
+                Visual = new ToastVisual()
+                {
+                    BindingGeneric = new ToastBindingGeneric()
+                    {
+                        Children =
+                        {
+                            new AdaptiveText() { Text = title, HintMaxLines = 1 },
+                            new AdaptiveText() { Text = schema.Title }
+                        },
+                        Attribution = new ToastGenericAttributionText()
+                        {
+                            Text = GetLanguage("RSS 追踪", "RSS Stalker")
+                        }
+                    }
+                },
+                Actions = new ToastActionsCustom()
+                {
+                    Buttons =
+                    {
+                        new ToastButton(GetLanguage("打开看看","Open it"),$"id={WebUtility.UrlEncode(schema.InternalID)}&summary={WebUtility.UrlEncode(schema.Summary)}&date={WebUtility.UrlEncode(schema.PublishDate.ToString("yyyy/MM/dd HH:mm"))}&img={WebUtility.UrlEncode(schema.ImageUrl)}&url={WebUtility.UrlDecode(schema.FeedUrl)}&title={WebUtility.UrlEncode(schema.Title)}&content={WebUtility.UrlEncode(schema.Content)}")
+                        {
+                            ActivationType=ToastActivationType.Foreground
+                        },
+                        new ToastButton(GetLanguage("稍后阅读","Read Later"),$"id={WebUtility.UrlEncode(schema.InternalID)}&summary={WebUtility.UrlEncode(schema.Summary)}&date={WebUtility.UrlEncode(schema.PublishDate.ToString("yyyy/MM/dd HH:mm"))}&img={WebUtility.UrlEncode(schema.ImageUrl)}&url={WebUtility.UrlDecode(schema.FeedUrl)}&title={WebUtility.UrlEncode(schema.Title)}&content={WebUtility.UrlEncode(schema.Content)}")
+                        {
+                            ActivationType=ToastActivationType.Background
+                        },
+                    }
+                }
+            };
+            if (!string.IsNullOrEmpty(schema.ImageUrl))
+            {
+                content.Visual.BindingGeneric.HeroImage = new ToastGenericHeroImage() { Source = schema.ImageUrl };
+            }
+            return content;
         }
         /// <summary>
         /// 获取已读文章
@@ -106,6 +147,18 @@ namespace StalkerToast
             }
             var list = JsonConvert.DeserializeObject<List<string>>(text);
             return list;
+        }
+        private string GetLanguage(string zh,string en)
+        {
+            string lan = AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.Language, "en_US");
+            if (lan == "zh_CN")
+            {
+                return zh;
+            }
+            else
+            {
+                return en;
+            }
         }
         private async Task<List<Channel>> GetNeedToastChannels()
         {

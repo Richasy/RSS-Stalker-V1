@@ -151,7 +151,8 @@ namespace RSS_Stalker.Pages
                     var data = await IOTools.GetLocalCache(page);
                     feed = data.Item1;
                     _lastCacheTime = data.Item2;
-                    if (feed.Count == 0)
+                    int now = AppTools.DateToTimeStamp(DateTime.Now.ToLocalTime());
+                    if (feed.Count == 0 || now > _lastCacheTime + 1200)
                     {
                         isForceRefresh = true;
                         goto gg;

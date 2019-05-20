@@ -914,14 +914,16 @@ namespace RSS_Stalker.Tools
                     tasks.Add(Task.Run(async () =>
                     {
                         var articles = await AppTools.GetSchemaFromUrl(channel.Link);
+                        int now = AppTools.DateToTimeStamp(DateTime.Now.ToLocalTime());
                         if (results.Any(p => p.Channel.Link == channel.Link))
                         {
                             var target = results.Where(p => p.Channel.Link == channel.Link).First();
                             target.Feeds = articles;
+                            target.CacheTime = now;
                         }
                         else
                         {
-                            results.Add(new CacheModel() { Channel = channel, Feeds = articles });
+                            results.Add(new CacheModel() { Channel = channel, Feeds = articles,CacheTime=now });
                         }
                         completeCount += 1;
                         if (ProgressHandle != null)
@@ -959,15 +961,17 @@ namespace RSS_Stalker.Tools
                 {
                     tasks.Add(Task.Run(async () =>
                     {
+                        int now = AppTools.DateToTimeStamp(DateTime.Now.ToLocalTime());
                         var articles = await AppTools.GetSchemaFromPage(page);
                         if (results.Any(p => p.Page.Id == page.Id))
                         {
                             var target = results.Where(p => p.Page.Id == page.Id).First();
                             target.Feeds = articles;
+                            target.CacheTime = now;
                         }
                         else
                         {
-                            results.Add(new CacheModel() { Page = page, Feeds = articles });
+                            results.Add(new CacheModel() { Page = page, Feeds = articles,CacheTime=now });
                         }
                         completeCount += 1;
                         if (ProgressHandle != null)
@@ -986,10 +990,11 @@ namespace RSS_Stalker.Tools
         /// </summary>
         /// <param name="channel">频道</param>
         /// <returns></returns>
-        public static async Task<List<Feed>>GetLocalCache(Channel channel)
+        public static async Task<Tuple<List<Feed>,int>>GetLocalCache(Channel channel)
         {
             var list = await GetCacheChannels();
             var results = new List<Feed>();
+            int time = 0;
             if (list.Count > 0)
             {
                 var cache = list.Where(p => p.Channel.Link == channel.Link).FirstOrDefault();
@@ -999,19 +1004,21 @@ namespace RSS_Stalker.Tools
                     {
                         results.Add(new Feed(item));
                     }
+                    time = cache.CacheTime;
                 }
             }
-            return results;
+            return new Tuple<List<Feed>, int>(results,time);
         }
         /// <summary>
         /// 获取本地的页面缓存
         /// </summary>
         /// <param name="page">页面</param>
         /// <returns></returns>
-        public static async Task<List<Feed>> GetLocalCache(CustomPage page)
+        public static async Task<Tuple<List<Feed>,int>> GetLocalCache(CustomPage page)
         {
             var list = await GetCachePages();
             var results = new List<Feed>();
+            int time = 0;
             if (list.Count > 0)
             {
                 var cache = list.Where(p => p.Page.Id == page.Id).FirstOrDefault();
@@ -1021,9 +1028,11 @@ namespace RSS_Stalker.Tools
                     {
                         results.Add(new Feed(item));
                     }
+                    time = cache.CacheTime;
                 }
+                
             }
-            return results;
+            return new Tuple<List<Feed>,int>(results,time);
         }
 
         /// <summary>

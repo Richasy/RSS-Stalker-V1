@@ -657,4 +657,13 @@
   <data name="Control_JustNoReadTipBlock.Text" xml:space="preserve">
     <value>只看未读</value>
   </data>
+  <data name="Control_FirstCacheTipBlock.Text" xml:space="preserve">
+    <value>主动缓存</value>
+  </data>
+  <data name="Control_LastCacheTimeBlock.Text" xml:space="preserve">
+    <value>上次缓存时间：</value>
+  </data>
+  <data name="Control_WhatIsFirstCacheTipBlock.Text" xml:space="preserve">
+    <value>软件会在空闲时以15分钟的间隔刷新后台订阅源的缓存数据，开启此项后，软件将默认优先读取缓存内容，可极大提高内容载入速度。但请在Wifi或有线网络中开启功能，避免流量损耗。</value>
+  </data>
 </root>

@@ -240,6 +240,10 @@ namespace RSS_Stalker
                                     new TimeTrigger(15, true),
                                     false, true,
                                     new SystemCondition(SystemConditionType.InternetAvailable));
+            BackgroundTaskHelper.Register(typeof(AutoCache.Main),
+                                    new TimeTrigger(15, true),
+                                    false, true,
+                                    new SystemCondition(SystemConditionType.FreeNetworkAvailable));
         }
         /// <summary>
         /// 暂时弃用

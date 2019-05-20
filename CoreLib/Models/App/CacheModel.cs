@@ -12,5 +12,6 @@ namespace CoreLib.Models.App
         public Channel Channel { get; set; }
         public CustomPage Page { get; set; }
         public List<RssSchema> Feeds { get; set; }
+        public int CacheTime { get; set; }
     }
 }

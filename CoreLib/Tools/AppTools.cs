@@ -347,12 +347,14 @@ namespace CoreLib.Tools
         /// </summary>
         /// <param name="url">地址</param>
         /// <returns></returns>
-        public static async Task<List<RssSchema>> GetSchemaFromUrl(string url)
+        public static async Task<List<RssSchema>> GetSchemaFromUrl(string url,bool isLimit=false)
         {
             string feed = null;
 
             using (var client = new HttpClient())
             {
+                if (isLimit)
+                    client.Timeout = new TimeSpan(0, 0, 20);
                 try
                 {
                     feed = await client.GetStringAsync(url);
@@ -360,7 +362,7 @@ namespace CoreLib.Tools
                 catch { }
             }
             var list = new List<RssSchema>();
-            if (feed != null)
+            if (!string.IsNullOrEmpty(feed))
             {
                 try
                 {
@@ -384,7 +386,7 @@ namespace CoreLib.Tools
         /// </summary>
         /// <param name="page">地址</param>
         /// <returns></returns>
-        public static async Task<List<RssSchema>> GetSchemaFromPage(CustomPage page)
+        public static async Task<List<RssSchema>> GetSchemaFromPage(CustomPage page,bool isLimit=false)
         {
             var allList = new List<RssSchema>();
             var tasks = new List<Task>();
@@ -394,7 +396,7 @@ namespace CoreLib.Tools
                 {
                     tasks.Add(Task.Run(async () =>
                     {
-                        var schemas = await GetSchemaFromUrl(item.Link);
+                        var schemas = await GetSchemaFromUrl(item.Link,isLimit);
                         if (page.Rules.Count > 0)
                         {
                             foreach (var rule in page.Rules)

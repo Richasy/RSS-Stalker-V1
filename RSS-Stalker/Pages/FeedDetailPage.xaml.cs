@@ -22,9 +22,6 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using RSS_Stalker.Dialog;
 using Windows.Storage.Streams;
-using Windows.Media.SpeechSynthesis;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Animation;
 using Microsoft.Toolkit.Uwp.Connectivity;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -239,6 +236,7 @@ namespace RSS_Stalker.Pages
             {
                 DetailSplitView.IsPaneOpen = false;
             }
+            MainPage.Current.AddReadId(_sourceFeed.InternalID);
             await GenerateActivityAsync(_sourceFeed);
         }
         private void GridViewButton_Click(object sender, RoutedEventArgs e)

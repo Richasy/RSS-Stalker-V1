@@ -3,21 +3,14 @@
 The new version has been revised as follows:
 
 ===
-Join the new level "page"
-The new page function allows you to integrate existing feeds and attach simple rules to filter content.
-Right click on the page item (long press on the touch screen) to pop up the menu, you can set it as the home page, or you can cache the page.
+Join the ability to actively update feeds
+The previous feed was a passive refresh (you started requesting feed data when you opened the channel), and now you can turn on proactive caching in Settings -> Data Settings.
+After the active cache is turned on, the software reads the cached content first, and the background is turned on, and the feed is refreshed every 15 minutes, which ensures timeliness and greatly increases the loading speed of the article.
+However, the background is only opened in the network state of non-billing traffic (such as WIFI or wired network).
 ===
 
-===
-Add the "read/unread" flag.
-Unlike other software, the read unread flags here are implicit. You cannot manually change the reading flag of each article. As long as you open the article, the article will be automatically marked as read.
-The read records will be synchronized by the OneDrive and will also allow for merge export.
-===
-
-1. Make a series of adaptations to the "page" to better integrate it into the overall architecture of the software (but not to mention that there will still be bugs, if any, please email me)
-2. Improve the problem of the card when jumping between the article details and the article list
-3. fix OPML file import and output.
-4. Repair of other minor problems
+1. Adjust the display UI of the sidebar of the article details page
+2. Optimize the operational logic of the switch reading state
 
 If the software makes you feel great, don't forget to give me praise and recommend it to your friends. 
 

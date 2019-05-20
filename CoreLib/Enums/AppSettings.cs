@@ -40,6 +40,8 @@ namespace CoreLib.Enums
         IsStarChangeInOffline,
         AutoCacheWhenOpenChannel,
         IsPageChangeInOffline,
-        IsJustUnread
+        IsJustUnread,
+        IsCacheFirst,
+        LastCacheTime
     }
 }

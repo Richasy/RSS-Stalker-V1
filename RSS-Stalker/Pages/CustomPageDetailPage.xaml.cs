@@ -40,6 +40,7 @@ namespace RSS_Stalker.Pages
         private Feed _shareData = null;
         public static CustomPageDetailPage Current;
         private bool _isInit = false;
+        private int _lastCacheTime = 0;
         public CustomPageDetailPage()
         {
             this.InitializeComponent();
@@ -58,6 +59,7 @@ namespace RSS_Stalker.Pages
                 // 当传入源为文章列表时（说明是上一级返回，不获取最新资讯）
                 else if (e.Parameter is List<Feed>)
                 {
+                    LastCacheTimeContainer.Visibility = Visibility.Collapsed;
                     _sourceData = MainPage.Current.PageListView.SelectedItem as CustomPage;
                     if (_sourceData != null)
                     {
@@ -95,7 +97,7 @@ namespace RSS_Stalker.Pages
                     {
                         foreach (var item in AllFeeds)
                         {
-                            if (!MainPage.Current.ReadIds.Contains(item.InternalID))
+                            if (!MainPage.Current.ReadIds.Contains(item.InternalID) && !MainPage.Current.TodoList.Any(p=>p.InternalID==item.InternalID))
                             {
                                 FeedCollection.Add(item);
                             }
@@ -129,11 +131,12 @@ namespace RSS_Stalker.Pages
         /// </summary>
         /// <param name="page">频道数据</param>
         /// <returns></returns>
-        public async Task UpdateLayout(CustomPage page)
+        public async Task UpdateLayout(CustomPage page,bool isForceRefresh=false)
         {
             AllFeeds.Clear();
             LoadingRing.IsActive = true;
             JustNoReadSwitch.IsEnabled = false;
+            LastCacheTimeContainer.Visibility = Visibility.Collapsed;
             NoDataTipContainer.Visibility = Visibility.Collapsed;
             AllReadTipContainer.Visibility = Visibility.Collapsed;
             _sourceData = page;
@@ -142,15 +145,38 @@ namespace RSS_Stalker.Pages
             var feed = new List<Feed>();
             if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
-                var schema = await AppTools.GetSchemaFromPage(_sourceData);
-                foreach (var item in schema)
+                bool isCacheFirst = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsCacheFirst, "False"));
+                gg: if (isCacheFirst && !isForceRefresh)
                 {
-                    feed.Add(new Feed(item));
+                    var data = await IOTools.GetLocalCache(page);
+                    feed = data.Item1;
+                    _lastCacheTime = data.Item2;
+                    if (feed.Count == 0)
+                    {
+                        isForceRefresh = true;
+                        goto gg;
+                    }
+                    else
+                    {
+                        if (_lastCacheTime > 0)
+                        {
+                            LastCacheTimeContainer.Visibility = Visibility.Visible;
+                            LastCacheTimeBlock.Text = AppTools.TimeStampToDate(_lastCacheTime).ToString("HH:mm");
+                        }
+                    }
                 }
-                bool isAutoCache = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.AutoCacheWhenOpenChannel, "False"));
-                if (isAutoCache && feed.Count > 0)
+                else
                 {
-                    await IOTools.AddCachePage(null, page);
+                    var schema = await AppTools.GetSchemaFromPage(_sourceData);
+                    foreach (var item in schema)
+                    {
+                        feed.Add(new Feed(item));
+                    }
+                    bool isAutoCache = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.AutoCacheWhenOpenChannel, "False"));
+                    if (isAutoCache && feed.Count > 0)
+                    {
+                        await IOTools.AddCachePage(null, page);
+                    }
                 }
             }
             else
@@ -160,9 +186,14 @@ namespace RSS_Stalker.Pages
                     new PopupToast(AppTools.GetReswLanguage("Tip_WatchingCache")).ShowPopup();
                     MainPage.Current._isCacheAlert = false;
                 }
-
-                feed = await IOTools.GetLocalCache(page);
-
+                var data = await IOTools.GetLocalCache(page);
+                feed = data.Item1;
+                _lastCacheTime = data.Item2;
+                if (_lastCacheTime > 0)
+                {
+                    LastCacheTimeContainer.Visibility = Visibility.Visible;
+                    LastCacheTimeBlock.Text = AppTools.TimeStampToDate(_lastCacheTime).ToString("HH:mm");
+                }
             }
             if (feed != null && feed.Count > 0)
             {
@@ -223,7 +254,7 @@ namespace RSS_Stalker.Pages
 
         private async void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            await UpdateLayout(_sourceData);
+            await UpdateLayout(_sourceData, true);
         }
         private void ChangeLayout()
         {
@@ -299,7 +330,7 @@ namespace RSS_Stalker.Pages
         {
             if (MainPage.Current.MinsizeHeaderContainer.Visibility == Visibility.Visible)
             {
-                HeaderContainer.Height = 60;
+                HeaderContainer.Height = 50;
             }
             else
             {

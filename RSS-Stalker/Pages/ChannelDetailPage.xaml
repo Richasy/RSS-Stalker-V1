@@ -100,6 +100,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,0,1">
             <Grid.ColumnDefinitions>
@@ -107,7 +108,14 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <StackPanel Padding="30,15">
-                <TextBlock Name="ChannelNameTextBlock" x:FieldModifier="Public" FontFamily="{StaticResource Title}" FontWeight="Bold" MaxLines="2" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource ImportantTextColor}" FontSize="20"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Name="ChannelNameTextBlock" x:FieldModifier="Public" FontFamily="{StaticResource Title}" FontWeight="Bold" MaxLines="2" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource ImportantTextColor}" FontSize="18"/>
+                    <TextBlock Foreground="{ThemeResource TipTextColor}" Name="LastCacheTimeContainer" FontSize="12" Margin="10,0,0,0" VerticalAlignment="Bottom" FontFamily="{StaticResource Basic}">
+                <Run x:Uid="Control_LastCacheTimeBlock" FontWeight="Bold"/>
+                <Run x:Name="LastCacheTimeBlock"/>
+                    </TextBlock>
+                </StackPanel>
+                
                 <TextBlock Name="ChannelDescriptionTextBlock" MaxLines="2" x:FieldModifier="Public" Margin="0,10,0,0" LineHeight="20" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource NormalTextColor}" TextTrimming="CharacterEllipsis" FontSize="13" TextWrapping="Wrap"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,0,30,10" VerticalAlignment="Bottom" Grid.Column="1">

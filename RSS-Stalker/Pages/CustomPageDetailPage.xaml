@@ -101,16 +101,24 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid BorderBrush="{ThemeResource LineColor}" Height="70" Name="HeaderContainer" BorderThickness="0,0,0,1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Grid Padding="30,0">
-                <TextBlock Name="PageNameTextBlock" VerticalAlignment="Center" x:FieldModifier="Public" FontFamily="{StaticResource Title}" FontWeight="Bold" MaxLines="2" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource ImportantTextColor}" FontSize="20"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Name="PageNameTextBlock" VerticalAlignment="Center" x:FieldModifier="Public" FontFamily="{StaticResource Title}" FontWeight="Bold" MaxLines="2" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource ImportantTextColor}" FontSize="18"/>
+                    <TextBlock Foreground="{ThemeResource TipTextColor}" Name="LastCacheTimeContainer" FontSize="12" Margin="10,10,0,0" VerticalAlignment="Center" FontFamily="{StaticResource Basic}">
+                <Run x:Uid="Control_LastCacheTimeBlock" FontWeight="Bold"/>
+                <Run x:Name="LastCacheTimeBlock"/>
+                    </TextBlock>
+                </StackPanel>
+                
             </Grid>
-            <StackPanel Orientation="Horizontal" Margin="0,0,30,0" Grid.Column="1" VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal" Margin="0,0,30,5" Grid.Column="1" VerticalAlignment="Bottom">
                 <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
                     <TextBlock Style="{StaticResource BasicTipTextStyle}" Margin="0,0,10,0" x:Uid="Control_JustNoReadTipBlock" VerticalAlignment="Center"/>
                     <ToggleSwitch Name="JustNoReadSwitch" VerticalAlignment="Center" Toggled="JustNoReadSwitch_Toggled" Style="{StaticResource BasicSwitchStyle}"/>

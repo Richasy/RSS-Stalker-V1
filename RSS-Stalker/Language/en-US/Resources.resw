@@ -657,4 +657,13 @@
   <data name="Control_JustNoReadTipBlock.Text" xml:space="preserve">
     <value>Look unread</value>
   </data>
+  <data name="Control_FirstCacheTipBlock.Text" xml:space="preserve">
+    <value>Proactive caching</value>
+  </data>
+  <data name="Control_LastCacheTimeBlock.Text" xml:space="preserve">
+    <value>Last cache time: </value>
+  </data>
+  <data name="Control_WhatIsFirstCacheTipBlock.Text" xml:space="preserve">
+    <value>The software will refresh the cached data of the background feed at 15 minutes when idle. When this option is enabled, the software will read the cached content by default, which can greatly improve the content loading speed. However, please turn on the function in Wifi or wired network to avoid loss of traffic.</value>
+  </data>
 </root>

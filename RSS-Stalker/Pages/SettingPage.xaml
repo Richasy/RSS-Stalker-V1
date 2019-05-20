@@ -70,6 +70,7 @@
                                     <ComboBoxItem x:Uid="Control_CustomPageComboItem"/>
                                 </ComboBox>
                             </StackPanel>
+                            
                             <StackPanel Margin="0,10,0,0">
                                 <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_SearchEngineSettingTipBlock" Margin="0,0,0,5"/>
                                 <ComboBox Style="{StaticResource BasicComboBoxStyle}"
@@ -125,6 +126,19 @@
                             <StackPanel Margin="0,10,0,0">
                                 <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_AutoCacheTipBlock" Margin="0,0,0,5"/>
                                 <ToggleSwitch Name="AutoCacheChannel" Style="{StaticResource BasicSwitchStyle}" Toggled="AutoCacheChannel_Toggled" HorizontalAlignment="Left"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,10,0,0">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                                    <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_FirstCacheTipBlock" VerticalAlignment="Center"/>
+                                    <Button Style="{StaticResource TransparentButtonStyle}" Content="&#xE97B;" VerticalAlignment="Center" FontFamily="{StaticResource Icon}">
+                                        <Button.Flyout>
+                                            <Flyout FlyoutPresenterStyle="{StaticResource BasicFlyoutStyle}">
+                                                <TextBlock x:Uid="Control_WhatIsFirstCacheTipBlock" Margin="12,5" Foreground="{ThemeResource NormalTextColor}" FontFamily="{StaticResource Basic}" FontSize="14" LineHeight="22" TextWrapping="Wrap" MaxWidth="200"/>
+                                            </Flyout>
+                                        </Button.Flyout>
+                                    </Button>
+                                </StackPanel>
+                                <ToggleSwitch Name="FirstCacheChannel" Style="{StaticResource BasicSwitchStyle}" Toggled="FirstCacheChannel_Toggled"  HorizontalAlignment="Left"/>
                             </StackPanel>
                             <StackPanel Margin="0,10,0,0">
                                 <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_ImportOpmlTipBlock" Margin="0,0,0,5"/>

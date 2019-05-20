@@ -58,6 +58,7 @@ namespace RSS_Stalker.Pages
                 else if(e.Parameter is List<Feed>)
                 {
                     LoadingRing.IsActive = true;
+                    LastCacheTimeContainer.Visibility = Visibility.Collapsed;
                     _sourceData = MainPage.Current.ChannelListView.SelectedItem as Channel;
                     if (_sourceData != null)
                     {
@@ -83,9 +84,10 @@ namespace RSS_Stalker.Pages
         /// </summary>
         /// <param name="channel">频道数据</param>
         /// <returns></returns>
-        public async Task UpdateLayout(Channel channel)
+        public async Task UpdateLayout(Channel channel,bool isForceRefresh=false)
         {
             AllFeeds.Clear();
+            LastCacheTimeContainer.Visibility = Visibility.Collapsed;
             LoadingRing.IsActive = true;
             JustNoReadSwitch.IsEnabled = false;
             NoDataTipContainer.Visibility = Visibility.Collapsed;
@@ -97,11 +99,34 @@ namespace RSS_Stalker.Pages
             var feed = new List<Feed>();
             if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
-                feed = await AppTools.GetFeedsFromUrl(_sourceData.Link);
-                bool isAutoCache = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.AutoCacheWhenOpenChannel, "False"));
-                if (isAutoCache && feed.Count > 0)
+                bool isCacheFirst = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsCacheFirst, "False"));
+                gg: if (isCacheFirst && !isForceRefresh)
                 {
-                    await IOTools.AddCacheChannel(null, channel);
+                    var data = await IOTools.GetLocalCache(channel);
+                    feed = data.Item1;
+                    int cacheTime = data.Item2;
+                    if (feed.Count == 0)
+                    {
+                        isForceRefresh = true;
+                        goto gg;
+                    }
+                    else
+                    {
+                        if (cacheTime > 0)
+                        {
+                            LastCacheTimeContainer.Visibility = Visibility.Visible;
+                            LastCacheTimeBlock.Text = AppTools.TimeStampToDate(cacheTime).ToString("HH:mm");
+                        }
+                    }
+                }
+                else
+                {
+                    feed = await AppTools.GetFeedsFromUrl(_sourceData.Link);
+                    bool isAutoCache = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.AutoCacheWhenOpenChannel, "False"));
+                    if (isAutoCache && feed.Count > 0)
+                    {
+                        await IOTools.AddCacheChannel(null, channel);
+                    }
                 }
             }
             else
@@ -111,7 +136,14 @@ namespace RSS_Stalker.Pages
                     new PopupToast(AppTools.GetReswLanguage("Tip_WatchingCache")).ShowPopup();
                     MainPage.Current._isCacheAlert = false;
                 }
-                feed = await IOTools.GetLocalCache(channel);
+                var data= await IOTools.GetLocalCache(channel);
+                feed = data.Item1;
+                int cacheTime = data.Item2;
+                if (cacheTime > 0)
+                {
+                    LastCacheTimeContainer.Visibility = Visibility.Visible;
+                    LastCacheTimeBlock.Text = AppTools.TimeStampToDate(cacheTime).ToString("HH:mm");
+                }
             }
             if (feed != null && feed.Count > 0)
             {
@@ -184,7 +216,7 @@ namespace RSS_Stalker.Pages
 
         private async void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            await UpdateLayout(_sourceData);
+            await UpdateLayout(_sourceData,true);
         }
         private void ChangeLayout()
         {
@@ -269,7 +301,7 @@ namespace RSS_Stalker.Pages
                     {
                         foreach (var item in AllFeeds)
                         {
-                            if (!MainPage.Current.ReadIds.Contains(item.InternalID))
+                            if (!MainPage.Current.ReadIds.Contains(item.InternalID) && !MainPage.Current.TodoList.Any(p => p.InternalID == item.InternalID))
                             {
                                 FeedCollection.Add(item);
                             }

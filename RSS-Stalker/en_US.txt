@@ -9,10 +9,9 @@ After the active cache is turned on, the software reads the cached content first
 However, the background is only opened in the network state of non-billing traffic (such as WIFI or wired network).
 ===
 
-1. Adjust the display UI of the sidebar of the article details page
-2. Optimize the operational logic of the switch reading state
-
-If the software makes you feel great, don't forget to give me praise and recommend it to your friends. 
+===
+Adjust UI for Toast alert
+===
 
 Thank you :)
 

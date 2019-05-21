@@ -446,7 +446,12 @@ namespace RSS_Stalker.Pages
                 LoadingRing.IsActive = false;
             }
         }
-
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            DetailWebView.NavigateToString("");
+            this.UnloadObject(this);
+            base.OnNavigatedFrom(e);
+        }
         private async void DetailWebView_ScriptNotify(object sender, NotifyEventArgs e)
         {
             try

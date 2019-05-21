@@ -24,6 +24,21 @@ body {
     -ms-overflow-style: none;
     overflow: auto;
 }
+video {
+    width: 100%;
+    max-width: 100% !important;
+    height: auto !important;
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+}
+
+iframe {
+    max-width:100%;
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+}
 button {
     background-color: #208CF7;
     border: none;

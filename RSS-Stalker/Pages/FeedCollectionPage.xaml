@@ -24,7 +24,7 @@
                 </Grid.RowDefinitions>
                 <controls:HoldImage Visibility="{x:Bind ImgVisibility,Mode=OneWay}" ImageLink="{x:Bind ImageUrl}" Height="150" HorizontalAlignment="Stretch"/>
                 <StackPanel Grid.Row="1" Margin="10,0,20,0" Padding="0,20,0,10" BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,0,1">
-                    <TextBlock Margin="0,0,0,0" Text="{x:Bind Title}" LineHeight="20" ToolTipService.ToolTip="{x:Bind Title}" TextWrapping="Wrap" Foreground="{ThemeResource ImportantTextColor}" TextTrimming="CharacterEllipsis" FontSize="14" FontWeight="Bold" FontFamily="{StaticResource Title}"/>
+                    <TextBlock Margin="0,0,0,0" Text="{x:Bind Title}" Name="HeaderTitle" LineHeight="20" ToolTipService.ToolTip="{x:Bind Title}" TextWrapping="Wrap" Foreground="{ThemeResource ImportantTextColor}" TextTrimming="CharacterEllipsis" FontSize="14" FontWeight="Bold" FontFamily="{StaticResource Title}"/>
                     <TextBlock Margin="0,5" Text="{x:Bind Date}" Foreground="{ThemeResource TipTextColor}" FontSize="9" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource Basic}"/>
                     <TextBlock Margin="0,0,0,10" Text="{x:Bind Summary}" MaxLines="6" Foreground="{ThemeResource NormalTextColor}" FontSize="12" FontFamily="{StaticResource Basic}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
                     <ListView ItemTemplate="{StaticResource TagItemTemplate}"

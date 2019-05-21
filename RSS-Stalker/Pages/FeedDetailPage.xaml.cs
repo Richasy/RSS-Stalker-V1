@@ -23,6 +23,8 @@ using Newtonsoft.Json;
 using RSS_Stalker.Dialog;
 using Windows.Storage.Streams;
 using Microsoft.Toolkit.Uwp.Connectivity;
+using Windows.UI.Xaml.Media.Animation;
+using CoreLib.Models.App;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -54,6 +56,7 @@ namespace RSS_Stalker.Pages
             ToolTipService.SetToolTip(AddStarButton, AppTools.GetReswLanguage("Tip_AddStarList"));
             ToolTipService.SetToolTip(RemoveStarButton, AppTools.GetReswLanguage("Tip_DeleteStarList"));
             ToolTipService.SetToolTip(ReadabilityButton, AppTools.GetReswLanguage("Tip_Readability"));
+            
         }
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -62,9 +65,16 @@ namespace RSS_Stalker.Pages
                 // 这种情况表明入口点为频道
                 if(e.Parameter is Tuple<Feed, List<Feed>>)
                 {
+                    
+                    var anim = ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation");
+                    if (anim != null)
+                    {
+                        anim.TryStart(TitleTextBlock);
+                    }
                     var data = e.Parameter as Tuple<Feed, List<Feed>>;
                     bool isUnread = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsJustUnread, "False"));
                     _sourceFeed = data.Item1;
+                    TitleTextBlock.Text = _sourceFeed.Title;
                     _sourceContent = _sourceFeed.Content;
                     AllFeeds = data.Item2;
                     foreach (var item in AllFeeds)
@@ -111,6 +121,11 @@ namespace RSS_Stalker.Pages
                 TitleTextBlock.Text = _sourceFeed.Title;
                 string html = await PackageHTML(_sourceFeed.Content??_sourceFeed.Summary);
                 DetailWebView.NavigateToString(html);
+                string fontFamily = AppTools.GetLocalSetting(AppSettings.ReadFontFamily, "Tw Cen MT");
+                string fontSize = AppTools.GetLocalSetting(AppSettings.ReadFontSize, "16");
+                var selectFontFamily = MainPage.Current.SystemFonts.Where(p => p.Name == fontFamily).FirstOrDefault();
+                FontFamilyComboBox.SelectedItem = selectFontFamily;
+                FontSizeTextBox.Text = fontSize;
                 _isInit = true;
             }
         }
@@ -166,6 +181,9 @@ namespace RSS_Stalker.Pages
             string html = await FileIO.ReadTextAsync(await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Template/ShowPage.html")));
             string theme = AppTools.GetRoamingSetting(AppSettings.Theme,"Light");
             string css = await FileIO.ReadTextAsync(await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Template/{theme}.css")));
+            string fontFamily = AppTools.GetLocalSetting(AppSettings.ReadFontFamily, "Tw Cen MT");
+            string fontSize = AppTools.GetLocalSetting(AppSettings.ReadFontSize, "16");
+            css = css.Replace("$FontFamily$", fontFamily).Replace("FontSize", fontSize);
             string result = html.Replace("$theme$", theme.ToLower()).Replace("$style$", css).Replace("$body$", content);
             return result;
         }
@@ -639,6 +657,65 @@ namespace RSS_Stalker.Pages
         private void DetailWebView_DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
         {
             LoadingRing.IsActive = false;
+        }
+
+        private void SettingButton_Click(object sender, RoutedEventArgs e)
+        {
+            FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
+        }
+
+        private async void FontFamilyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!_isInit)
+                return;
+            string name = (FontFamilyComboBox.SelectedItem as SystemFont).Name;
+            AppTools.WriteLocalSetting(AppSettings.ReadFontFamily, name);
+            await DetailWebView.InvokeScriptAsync("setFontFamily", new string[] { name });
+        }
+
+        private async void FontSizeTextBox_LosingFocus(UIElement sender, Windows.UI.Xaml.Input.LosingFocusEventArgs args)
+        {
+            await SetFontSize();
+        }
+        private async Task SetFontSize()
+        {
+            if (!_isInit)
+                return;
+            string oldSize = AppTools.GetLocalSetting(AppSettings.ReadFontSize, "16");
+            string size = FontSizeTextBox.Text?.Trim();
+            if (oldSize == size)
+            {
+                return;
+            }
+            if (string.IsNullOrEmpty(size))
+            {
+                FontSizeTextBox.Text = oldSize;
+                return;
+            }
+            try
+            {
+                int s = Convert.ToInt32(size);
+                if (s > 0)
+                {
+                    await DetailWebView.InvokeScriptAsync("setFontSize", new string[] { s.ToString() });
+                    AppTools.WriteLocalSetting(AppSettings.ReadFontSize, s.ToString());
+                    FontSizeTextBox.Text = s.ToString();
+                    return;
+                }
+            }
+            catch (Exception)
+            {
+            }
+            FontSizeTextBox.Text = oldSize;
+            return;
+        }
+
+        private async void FontSizeTextBox_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Enter)
+            {
+                await SetFontSize();
+            }
         }
     }
 }

@@ -42,6 +42,8 @@ namespace CoreLib.Enums
         IsPageChangeInOffline,
         IsJustUnread,
         IsCacheFirst,
-        LastCacheTime
+        LastCacheTime,
+        ReadFontFamily,
+        ReadFontSize
     }
 }

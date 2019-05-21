@@ -190,7 +190,7 @@
     <value>Sorry. Something wrong...</value>
   </data>
   <data name="Control_OneDriveButton.Content" xml:space="preserve">
-    <value>Link to OneDrive</value>
+    <value>OneDrive</value>
   </data>
   <data name="Control_OneDriveSettingTipBlock.Text" xml:space="preserve">
     <value>Current user for OneDrive</value>
@@ -316,7 +316,7 @@
     <value>Imported!</value>
   </data>
   <data name="Tip_LinkToOneDrive" xml:space="preserve">
-    <value>Link to OneDrive</value>
+    <value>OneDrive</value>
   </data>
   <data name="Tip_LogoutWarning" xml:space="preserve">
     <value>Logout</value>
@@ -665,5 +665,11 @@
   </data>
   <data name="Control_WhatIsFirstCacheTipBlock.Text" xml:space="preserve">
     <value>The software will refresh the cached data of the background feed at 15 minutes when idle. When this option is enabled, the software will read the cached content by default, which can greatly improve the content loading speed. However, please turn on the function in Wifi or wired network to avoid loss of traffic.</value>
+  </data>
+  <data name="Control_FontFamilyTipBlock.Text" xml:space="preserve">
+    <value>Font Family</value>
+  </data>
+  <data name="Control_FontSizeTipBlock.Text" xml:space="preserve">
+    <value>Font Size</value>
   </data>
 </root>

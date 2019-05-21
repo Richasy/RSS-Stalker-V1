@@ -9,9 +9,26 @@
 
     <Grid Background="{ThemeResource PageBackground}">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock HorizontalAlignment="Center" Foreground="{ThemeResource NormalTextColor}" FontFamily="{StaticResource Icon}" FontSize="80" Text="&#xEA88;"/>
-            <Button Style="{StaticResource PrimaryButtonStyle}" x:Uid="Control_OneDriveButton" Name="OneDirveButton" Click="OneDirveButton_Click" HorizontalAlignment="Center" Margin="0,20,0,0"/>
-            <HyperlinkButton x:Uid="Cotrol_LocalAccountButton" Foreground="{ThemeResource PrimaryColor}" HorizontalAlignment="Center" FontFamily="{StaticResource Basic}" FontSize="15" Margin="0,10,0,0" Name="LocalButton" Click="LocalButton_Click"/>
+            <TextBlock HorizontalAlignment="Center" Foreground="{ThemeResource NormalTextColor}" Name="TitleIcon" FontFamily="{StaticResource Icon}" FontSize="90" Text="&#xEA14;"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0" Name="ControlContainer">
+                <Button Style="{StaticResource PrimaryButtonStyle}" Width="120" x:Uid="Control_OneDriveButton" Name="OneDirveButton" Click="OneDirveButton_Click"/>
+                <Button Style="{StaticResource DefaultButtonStyle}" Width="120" x:Uid="Cotrol_LocalAccountButton" Margin="15,0,0,0" Name="LocalButton" Click="LocalButton_Click"/>
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,20,0,0" Name="WaitingContainer" Visibility="Collapsed">
+                <Grid VerticalAlignment="Center">
+                    <ProgressRing Style="{StaticResource BasicProgressRingStyle}" IsActive="True" Width="60" Height="60" Name="LinkLoadingRing"/>
+                    <Border Name="LinkLoadingContainer" Background="{ThemeResource PrimaryColor}" Width="40" Height="40" CornerRadius="20" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="&#xEA88;" FontFamily="{StaticResource Icon}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Foreground="{ThemeResource PrimaryInsideColor}"/>
+                    </Border>
+                </Grid>
+                <Line X1="0" Y1="0" X2="100" Y2="0" VerticalAlignment="Center" Stroke="{ThemeResource LineColor}" StrokeThickness="2" Margin="20,0"/>
+                <Grid VerticalAlignment="Center">
+                    <ProgressRing Style="{StaticResource BasicProgressRingStyle}" Width="60" Height="60" Name="SyncLoadingRing"/>
+                    <Border Name="SyncLoadingContainer" Background="{ThemeResource LineColor}" Width="40" Height="40" CornerRadius="20" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="&#xE956;" Name="SyncLoadingText" FontFamily="{StaticResource Icon}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Foreground="{ThemeResource NormalTextColor}"/>
+                    </Border>
+                </Grid>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Page>

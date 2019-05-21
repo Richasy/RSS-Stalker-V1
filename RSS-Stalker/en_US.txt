@@ -2,16 +2,10 @@
 
 The new version has been revised as follows:
 
-===
-Join the ability to actively update feeds
-The previous feed was a passive refresh (you started requesting feed data when you opened the channel), and now you can turn on proactive caching in Settings -> Data Settings.
-After the active cache is turned on, the software reads the cached content first, and the background is turned on, and the feed is refreshed every 15 minutes, which ensures timeliness and greatly increases the loading speed of the article.
-However, the background is only opened in the network state of non-billing traffic (such as WIFI or wired network).
-===
-
-===
-Adjust UI for Toast alert
-===
+1. The article can now customize the font family and font size. The entry is in the settings button on the sidebar of the article details page.
+2. Push notification UI adjustment, support picture display
+3. Entry page (Binding OneDrive) UI adjustment
+4. Adjust the cache display logic. The cache that has been stored for more than 20 minutes is considered as expired cache and will not be displayed first.
 
 Thank you :)
 

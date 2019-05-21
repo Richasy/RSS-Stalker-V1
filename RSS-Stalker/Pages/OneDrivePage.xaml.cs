@@ -41,13 +41,18 @@ namespace RSS_Stalker.Pages
         }
         private async void OneDirveButton_Click(object sender, RoutedEventArgs e)
         {
-            OneDirveButton.IsEnabled = false;
-            OneDirveButton.Content = AppTools.GetReswLanguage("Tip_Waiting");
+            ControlContainer.Visibility = Visibility.Collapsed;
+            WaitingContainer.Visibility = Visibility.Visible;
+            TitleIcon.Text = "";
             bool result=await App.OneDrive.OneDriveAuthorize();
             try
             {
                 if (result)
                 {
+                    LinkLoadingRing.IsActive = false;
+                    SyncLoadingContainer.Background = AppTools.GetThemeSolidColorBrush(ColorType.PrimaryColor);
+                    SyncLoadingText.Foreground = AppTools.GetThemeSolidColorBrush(ColorType.PrimaryInsideColor);
+                    SyncLoadingRing.IsActive = true;
                     new PopupToast(AppTools.GetReswLanguage("Tip_BindingOneDriveSuccess")).ShowPopup();
                     var tasks = new List<Task>();
                     var cate = Task.Run(async () =>
@@ -105,15 +110,21 @@ namespace RSS_Stalker.Pages
                 }
                 else
                 {
-                    OneDirveButton.IsEnabled = true;
-                    OneDirveButton.Content = AppTools.GetReswLanguage("Tip_LinkToOneDrive");
+                    TitleIcon.Text = "";
+                    ControlContainer.Visibility = Visibility.Visible;
+                    WaitingContainer.Visibility = Visibility.Collapsed;
                     new PopupToast(AppTools.GetReswLanguage("Tip_BindingOneDriveFailed"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
                 }
             }
             catch (Exception ex)
             {
-                OneDirveButton.IsEnabled = true;
-                OneDirveButton.Content = AppTools.GetReswLanguage("Tip_LinkToOneDrive");
+                TitleIcon.Text = "";
+                ControlContainer.Visibility = Visibility.Visible;
+                WaitingContainer.Visibility = Visibility.Collapsed;
+                LinkLoadingRing.IsActive = true;
+                SyncLoadingRing.IsActive = false;
+                SyncLoadingContainer.Background = AppTools.GetThemeSolidColorBrush(ColorType.LineColor);
+                SyncLoadingText.Foreground = AppTools.GetThemeSolidColorBrush(ColorType.NormalTextColor);
                 new PopupToast(ex.Message,AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
         }

@@ -34,6 +34,7 @@ namespace RSS_Stalker
         public ObservableCollection<Category> Categories = new ObservableCollection<Category>();
         public ObservableCollection<Channel> Channels = new ObservableCollection<Channel>();
         public ObservableCollection<CustomPage> CustomPages = new ObservableCollection<CustomPage>();
+        public List<SystemFont> SystemFonts = new List<SystemFont>();
         public List<Feed> TodoList = new List<Feed>();
         public List<Feed> StarList = new List<Feed>();
         public List<Channel> ToastList = new List<Channel>();
@@ -208,7 +209,7 @@ namespace RSS_Stalker
             await CheckVersion();
             // 注册快捷键
             Window.Current.Dispatcher.AcceleratorKeyActivated += AccelertorKeyActivedHandle;
-            
+            SystemFonts = SystemFont.GetFonts();
             _isInit = true;
             CheckUpdateLocalData();
         }

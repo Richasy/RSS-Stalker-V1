@@ -190,7 +190,7 @@
     <value>抱歉，数据获取失败</value>
   </data>
   <data name="Control_OneDriveButton.Content" xml:space="preserve">
-    <value>连接到OneDrive</value>
+    <value>OneDrive</value>
   </data>
   <data name="Control_OneDriveSettingTipBlock.Text" xml:space="preserve">
     <value>当前OneDrive用户</value>
@@ -316,7 +316,7 @@
     <value>导入成功</value>
   </data>
   <data name="Tip_LinkToOneDrive" xml:space="preserve">
-    <value>连接到OneDrive</value>
+    <value>OneDrive</value>
   </data>
   <data name="Tip_LogoutWarning" xml:space="preserve">
     <value>退出提醒</value>
@@ -665,5 +665,11 @@
   </data>
   <data name="Control_WhatIsFirstCacheTipBlock.Text" xml:space="preserve">
     <value>软件会在空闲时以15分钟的间隔刷新后台订阅源的缓存数据，开启此项后，软件将默认优先读取缓存内容，可极大提高内容载入速度。但请在Wifi或有线网络中开启功能，避免流量损耗。</value>
+  </data>
+  <data name="Control_FontFamilyTipBlock.Text" xml:space="preserve">
+    <value>字体</value>
+  </data>
+  <data name="Control_FontSizeTipBlock.Text" xml:space="preserve">
+    <value>字号</value>
   </data>
 </root>

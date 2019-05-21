@@ -20,6 +20,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using CoreLib.Enums;
+using Windows.UI.Xaml.Media.Animation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -83,6 +84,8 @@ namespace RSS_Stalker.Pages
         {
             var item = e.ClickedItem as Feed;
             var t = new Tuple<Feed, List<Feed>>(item, FeedCollection.ToList());
+            var text = AppTools.GetChildObject<TextBlock>(sender as FrameworkElement, "HeaderTitle");
+            ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", text);
             MainPage.Current.MainFrame.Navigate(typeof(FeedDetailPage), t);
         }
 

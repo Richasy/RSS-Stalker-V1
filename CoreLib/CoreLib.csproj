@@ -127,6 +127,7 @@
     <Compile Include="Models\App\ExportModel.cs" />
     <Compile Include="Models\App\CacheModel.cs" />
     <Compile Include="Models\App\FilterRule.cs" />
+    <Compile Include="Models\App\SystemFont.cs" />
     <Compile Include="Models\OPML\Body.cs" />
     <Compile Include="Models\App\Category.cs" />
     <Compile Include="Models\App\Channel.cs" />
@@ -154,6 +155,9 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="SharpDX.Direct2D1">
+      <Version>4.0.1</Version>
     </PackageReference>
     <PackageReference Include="System.Net.Http">
       <Version>4.3.4</Version>

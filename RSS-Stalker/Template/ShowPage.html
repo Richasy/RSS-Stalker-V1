@@ -21,6 +21,12 @@
         var setMark = function () {
             window.getSelection().getRangeAt(0).surroundContents(document.createElement("mark"));
         }
+        var setFontFamily = function (fontfamily) {
+            document.body.style.fontFamily = fontfamily;
+        }
+        var setFontSize = function (fontSize) {
+            document.getElementsByTagName('html')[0].style.fontSize=fontSize+'px';
+        }
     </script>
     <script>
         // 文本选中事件封装

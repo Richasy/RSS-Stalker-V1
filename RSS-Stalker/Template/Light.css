@@ -4,12 +4,13 @@
     width: 90vw;
     max-width:700px;
     margin:0 auto;
+    font-size:$FontSize$px;
 }
 
 body {
     margin: 0 auto;
     color: #2c3e50;
-    font-family: 'Tw Cen MT';
+    font-family: '$FontFamily$';
     padding-top: 30px;
     padding-bottom: 30px;
     -ms-scroll-chaining: chained;
@@ -92,7 +93,7 @@ ol, ul {
 }
 
 li {
-    margin-left: 5px;
+    margin-left: .5rem;
 }
 
 ul, menu, dir {
@@ -130,22 +131,22 @@ mark {
 }
 
 code, pre {
-    border-radius: 3px;
+    border-radius: .2rem;
     background-color: #F8F8F8;
     color: inherit;
 }
 
 code {
     border: 1px solid #EAEAEA;
-    margin: 0 2px;
-    padding: 0 5px;
+    margin: 0 .1rem;
+    padding: 0 .4rem;
 }
 
 pre {
     border: 1px solid #CCCCCC;
-    line-height: 1.25em;
+    line-height: 1.25;
     overflow: auto;
-    padding: 6px 10px;
+    padding: .5rem .8rem;
     white-space: pre-wrap;
     word-wrap: break-word
 }
@@ -158,13 +159,13 @@ pre {
 
 table {
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 1.3rem;
     border-right: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
 }
 
 blockquote {
-    padding: 10px 15px;
+    padding: .8rem 1rem;
     border-left-style: solid;
     border-left-width: 10px;
     border-color: #D6DBDF;
@@ -173,8 +174,8 @@ blockquote {
 }
 
 table th, table td {
-    padding: 8px;
-    line-height: 20px;
+    padding: .5rem;
+    line-height: 1.3;
     text-align: left;
     vertical-align: top;
     border-top: 1px solid #ddd;

@@ -3,11 +3,13 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:RSS_Stalker.Pages"
+    xmlns:root="using:RSS_Stalker"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:CoreLib.Models"
     xmlns:controls="using:RSS_Stalker.Controls"
     xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:app="using:CoreLib.Models.App"
     SizeChanged="Page_SizeChanged"
     mc:Ignorable="d">
     <Page.Resources>
@@ -72,6 +74,33 @@
                 </MenuFlyoutItem.Icon>
             </MenuFlyoutItem>
         </MenuFlyout>
+        <DataTemplate x:DataType="app:SystemFont" x:Key="FontFamilyItemTemplate">
+            <Border Padding="10,5">
+                <TextBlock Text="{x:Bind Name}" FontFamily="{x:Bind FontFamily}" FontSize="13" HorizontalAlignment="Left"/>
+            </Border>
+        </DataTemplate>
+        <Flyout FlyoutPresenterStyle="{StaticResource BasicFlyoutStyle}" x:Key="SettingFlyout" Placement="Left">
+            <StackPanel Margin="20,10">
+                <TextBlock x:Uid="Control_FontFamilyTipBlock" Style="{StaticResource BasicTipTextStyle}" Margin="0,0,0,5"/>
+                <ComboBox ItemsSource="{x:Bind root:MainPage.Current.SystemFonts}"
+                          Style="{StaticResource BasicComboBoxStyle}"
+                          ItemContainerStyle="{StaticResource BasicComboBoxItemContainerStyle}"
+                          HorizontalAlignment="Stretch"
+                          x:Name="FontFamilyComboBox"
+                          ItemTemplate="{StaticResource FontFamilyItemTemplate}"
+                          SelectionChanged="FontFamilyComboBox_SelectionChanged"
+                          />
+                <TextBlock x:Uid="Control_FontSizeTipBlock" Style="{StaticResource BasicTipTextStyle}" Margin="0,15,0,5"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Style="{StaticResource BasicTextBoxStyle}" KeyDown="FontSizeTextBox_KeyDown" LosingFocus="FontSizeTextBox_LosingFocus" x:Name="FontSizeTextBox" HorizontalAlignment="Stretch"/>
+                    <TextBlock Text="px" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource ImportantTextColor}" Grid.Column="1" Margin="15,0,0,0" VerticalAlignment="Center"/>
+                </Grid>
+            </StackPanel>
+        </Flyout>
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -124,7 +153,8 @@
                                 <Button Style="{StaticResource GhostCircleButtonStyle}" Margin="0,10,0,0" Name="ReadabilityButton" Click="ReadabilityButton_Click"  Width="40" Height="40" FontFamily="{StaticResource Icon}" Content="&#xE956;"/>
                                 <Button Style="{StaticResource GhostCircleButtonStyle}" Margin="0,10,0,0" Name="ShareButton" Click="ShareButton_Click"  Width="40" Height="40" FontFamily="{StaticResource Icon}" Content="&#xE9CC;"/>
                             </StackPanel>
-                            <Button Style="{StaticResource GhostCircleButtonStyle}" RelativePanel.AlignHorizontalCenterWithPanel="True" FlyoutBase.AttachedFlyout="{StaticResource MoreMenuFlyout}" Name="MoreButton" Click="MoreButton_Click" Width="40" Height="40" FontFamily="{StaticResource Icon}" Content="&#xE9A1;" RelativePanel.AlignBottomWithPanel="True" Margin="0,0,0,20"/>
+                            <Button Style="{StaticResource GhostCircleButtonStyle}" RelativePanel.AlignHorizontalCenterWithPanel="True" FlyoutBase.AttachedFlyout="{StaticResource MoreMenuFlyout}" Name="MoreButton" Click="MoreButton_Click" Width="40" Height="40" FontFamily="{StaticResource Icon}" Content="&#xE9A1;" RelativePanel.AlignBottomWithPanel="True" Margin="0,0,0,10"/>
+                            <Button Style="{StaticResource GhostCircleButtonStyle}" FlyoutBase.AttachedFlyout="{StaticResource SettingFlyout}" RelativePanel.Above="MoreButton" Width="40" Height="40" RelativePanel.AlignHorizontalCenterWithPanel="True" Name="SettingButton" Click="SettingButton_Click" FontFamily="{StaticResource Icon}" Content="&#xE9CB;" Margin="0,0,0,20"/>
                         </RelativePanel>
                         
                         <ListView ItemTemplate="{StaticResource FeedItemTemplate}"

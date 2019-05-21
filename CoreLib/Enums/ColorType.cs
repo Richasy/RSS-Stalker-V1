@@ -17,6 +17,7 @@ namespace CoreLib.Enums
         ImportantTextColor,
         NormalTextColor,
         TipTextColor,
-        LineColor
+        LineColor,
+        PrimaryInsideColor
     }
 }

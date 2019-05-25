@@ -2,10 +2,7 @@
 
 The new version has been revised as follows:
 
-1. The article can now customize the font family and font size. The entry is in the settings button on the sidebar of the article details page.
-2. Push notification UI adjustment, support picture display
-3. Entry page (Binding OneDrive) UI adjustment
-4. Adjust the cache display logic. The cache that has been stored for more than 20 minutes is considered as expired cache and will not be displayed first.
+1. Icon adaptation to the 1903 white taskbar
 
 Thank you :)
 

@@ -21,7 +21,7 @@
     <PackageCertificateThumbprint>99B45ABA0CF05A6B62BC563342390299397CAF65</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-    <AppxPackageDir>D:\Package\RSS Stalker\</AppxPackageDir>
+    <AppxPackageDir>E:\Package\RSS Stalker\</AppxPackageDir>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm|arm64</AppxBundlePlatforms>
     <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
@@ -195,6 +195,8 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="Assets\Dark.png" />
+    <Content Include="Assets\Light.png" />
     <Content Include="Assets\Logo\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
     <Content Include="Assets\Logo\Square44x44Logo.altform-lightunplated_targetsize-24.png" />
     <Content Include="Assets\Logo\Square44x44Logo.altform-lightunplated_targetsize-256.png" />

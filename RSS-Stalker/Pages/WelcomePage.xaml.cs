@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -32,6 +33,9 @@ namespace RSS_Stalker.Pages
         {
             this.InitializeComponent();
             Current = this;
+            string theme = AppTools.GetRoamingSetting(CoreLib.Enums.AppSettings.Theme, "Light");
+            var image = new BitmapImage(new Uri($"ms-appx:///Assets/{theme}.png"));
+            AppIcon.Source = image;
             string name = AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.UserName, "");
             if (string.IsNullOrEmpty(name))
                 WelcomeTextBlock.Text = AppTools.GetReswLanguage("Tip_WelcomeText");

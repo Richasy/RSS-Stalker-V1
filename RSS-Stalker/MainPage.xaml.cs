@@ -21,6 +21,7 @@ using Windows.Storage;
 using Windows.ApplicationModel;
 using Microsoft.Toolkit.Uwp.Connectivity;
 using CoreLib.Models.App;
+using Windows.UI.Xaml.Media.Imaging;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -147,6 +148,10 @@ namespace RSS_Stalker
         {
             AppTools.SetTitleBarColor();
             LoadingRing.IsActive = true;
+            string theme = AppTools.GetRoamingSetting(AppSettings.Theme, "Light");
+            var icon = new BitmapImage();
+            icon.UriSource = new Uri($"ms-appx:///Assets/{theme}.png");
+            AppIcon.Source = icon;
             bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsBindingOneDrive, "False"));
             AppTitleBlock.Text = AppTools.GetReswLanguage("DisplayName");
             // 监听集合变化

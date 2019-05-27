@@ -10,7 +10,8 @@
 
     <Grid>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock Text="&#xEA14;" FontFamily="{StaticResource Icon}" Foreground="White" FontSize="90"/>
+            <!--<TextBlock Text="&#xEA14;" FontFamily="{StaticResource Icon}" Foreground="White" FontSize="90"/>-->
+            <Image Name="AppIcon" HorizontalAlignment="Center" Width="90"/>
             <ProgressRing Foreground="White" Width="40" Height="40" Margin="0,20,0,0" IsActive="True" HorizontalAlignment="Center"/>
         </StackPanel>
     </Grid>

@@ -9,7 +9,7 @@
   <Identity
     Name="60520B029E250.RSSStalker"
     Publisher="CN=9EFA2047-A580-400B-A5B2-0C7ABB0DB5C0"
-    Version="1.1.3.0" />
+    Version="1.1.4.0" />
 
   <mp:PhoneIdentity PhoneProductId="7a0da50b-a63f-49ac-b507-4ef2cc9f1714" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -45,7 +45,7 @@
             <uap:ShowOn Tile="square310x310Logo"/>
           </uap:ShowNameOnTiles>
         </uap:DefaultTile >
-        <uap:SplashScreen Image="Assets\Logo\SplashScreen.png" />
+        <uap:SplashScreen Image="Assets\Logo\SplashScreen.png"  BackgroundColor="transparent"/>
       </uap:VisualElements>
       <Extensions>
         <uap:Extension Category="windows.protocol">

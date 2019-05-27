@@ -133,7 +133,8 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Horizontal" Margin="0,30" HorizontalAlignment="Center">
-                            <TextBlock FontFamily="{StaticResource Icon}" Text="&#xEA14;" Foreground="{ThemeResource PrimaryColor}" FontSize="22" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <!--<TextBlock FontFamily="{StaticResource Icon}" Text="&#xEA14;" Foreground="{ThemeResource PrimaryColor}" FontSize="22" VerticalAlignment="Center" Margin="0,0,10,0"/>-->
+                            <Image Name="AppIcon" VerticalAlignment="Center" Width="20" Margin="0,0,10,0"/>
                             <TextBlock Name="AppTitleBlock" Foreground="{ThemeResource ImportantTextColor}" FontFamily="{ThemeResource English}" VerticalAlignment="Center" FontSize="15"/>
                         </StackPanel>
                         <Grid Grid.Row="1">

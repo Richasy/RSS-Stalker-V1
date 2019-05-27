@@ -65,7 +65,6 @@ namespace RSS_Stalker.Pages
                 // 这种情况表明入口点为频道
                 if(e.Parameter is Tuple<Feed, List<Feed>>)
                 {
-                    
                     var anim = ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation");
                     if (anim != null)
                     {
@@ -73,6 +72,7 @@ namespace RSS_Stalker.Pages
                     }
                     var data = e.Parameter as Tuple<Feed, List<Feed>>;
                     bool isUnread = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsJustUnread, "False"));
+                    bool isCollection = Convert.ToBoolean(MainPage.Current.TodoButton.IsChecked) || Convert.ToBoolean(MainPage.Current.StarButton.IsChecked);
                     _sourceFeed = data.Item1;
                     TitleTextBlock.Text = _sourceFeed.Title;
                     _sourceContent = _sourceFeed.Content;
@@ -81,9 +81,9 @@ namespace RSS_Stalker.Pages
                     {
                         if (item.InternalID != _sourceFeed.InternalID)
                         {
-                            if (isUnread && !MainPage.Current.ReadIds.Contains(item.InternalID))
+                            if (isUnread && !isCollection && !MainPage.Current.ReadIds.Contains(item.InternalID))
                                 ShowFeeds.Add(item);
-                            else if (!isUnread)
+                            else if (!isUnread || isCollection)
                                 ShowFeeds.Add(item);
                         }
                     }
@@ -271,11 +271,15 @@ namespace RSS_Stalker.Pages
             {
                 MainPage.Current.MainFrame.Navigate(typeof(CustomPageDetailPage), AllFeeds);
             }
-            else
+            else if(MainPage.Current.CategoryListView.SelectedIndex != -1)
             {
                 MainPage.Current.MainFrame.Navigate(typeof(ChannelDetailPage), AllFeeds);
             }
-           
+            else
+            {
+                string title = Convert.ToBoolean(MainPage.Current.StarButton.IsChecked)?AppTools.GetReswLanguage("Tip_StarList"): AppTools.GetReswLanguage("Tip_TodoList");
+                MainPage.Current.MainFrame.Navigate(typeof(FeedCollectionPage), new Tuple<List<Feed>, string>(AllFeeds, title));
+            }
         }
 
         private void MoreButton_Click(object sender, RoutedEventArgs e)

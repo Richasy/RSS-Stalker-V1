@@ -187,8 +187,8 @@
                         </Grid>
                         <ProgressBar Grid.Row="3" Background="{ThemeResource LineColor}" Foreground="{ThemeResource PrimaryColor}" Name="CacheProgressBar" Margin="30,0" Height="3" Visibility="Collapsed"/>
                         <StackPanel Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Center" Margin="0,15">
-                            <ToggleButton Style="{StaticResource CircleToggleButtonStyle}"  Name="TodoButton" Click="TodoButton_Click" Content="&#xE924;"/>
-                            <ToggleButton Style="{StaticResource CircleToggleButtonStyle}" Margin="15,0" Name="StarButton" Click="StarButton_Click" Content="&#xE9DD;"/>
+                            <ToggleButton Style="{StaticResource CircleToggleButtonStyle}" x:FieldModifier="Public" Name="TodoButton" Click="TodoButton_Click" Content="&#xE924;"/>
+                            <ToggleButton Style="{StaticResource CircleToggleButtonStyle}" x:FieldModifier="Public" Margin="15,0" Name="StarButton" Click="StarButton_Click" Content="&#xE9DD;"/>
                             <ToggleButton Style="{StaticResource CircleToggleButtonStyle}" Content="&#xE9CB;" Name="SettingButton" Click="SettingButton_Click"/>
                         </StackPanel>
                     </Grid>

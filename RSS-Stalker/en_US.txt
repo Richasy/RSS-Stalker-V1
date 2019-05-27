@@ -2,7 +2,8 @@
 
 The new version has been revised as follows:
 
-1. Icon adaptation to the 1903 white taskbar
+1. Fix navigate issues between read later and favorite lists and article details
+2. change side bar which in article detail page, it will not refresh after click.
 
 Thank you :)
 

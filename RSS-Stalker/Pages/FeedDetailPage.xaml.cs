@@ -229,23 +229,30 @@ namespace RSS_Stalker.Pages
         private async void FeedListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var data = e.ClickedItem as Feed;
+            
+            bool isUnread = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsJustUnread, "False"));
+            if (!isUnread)
+            {
+                ShowFeeds.Insert(0, _sourceFeed);
+            }
+            ShowFeeds.Remove(data);
             _sourceFeed = data;
             await UpdateFeed();
         }
         private async Task UpdateFeed()
         {
-            ShowFeeds.Clear();
-            bool isUnread = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsJustUnread, "False"));
-            foreach (var item in AllFeeds)
-            {
-                if (item.InternalID != _sourceFeed.InternalID)
-                {
-                    if (isUnread && !MainPage.Current.ReadIds.Contains(item.InternalID))
-                        ShowFeeds.Add(item);
-                    else if (!isUnread)
-                        ShowFeeds.Add(item);
-                }
-            }
+            //ShowFeeds.Clear();
+            //bool isUnread = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsJustUnread, "False"));
+            //foreach (var item in AllFeeds)
+            //{
+            //    if (item.InternalID != _sourceFeed.InternalID)
+            //    {
+            //        if (isUnread && !MainPage.Current.ReadIds.Contains(item.InternalID))
+            //            ShowFeeds.Add(item);
+            //        else if (!isUnread)
+            //            ShowFeeds.Add(item);
+            //    }
+            //}
             ButtonStatusCheck();
             TitleTextBlock.Text = _sourceFeed.Title;
             string html = await PackageHTML(_sourceFeed.Content);

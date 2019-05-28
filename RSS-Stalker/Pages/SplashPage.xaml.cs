@@ -100,6 +100,11 @@ namespace RSS_Stalker.Pages
                 var frame = Window.Current.Content as Frame;
                 frame.Navigate(typeof(MainPage));
             }
+            else
+            {
+                var frame = Window.Current.Content as Frame;
+                frame.Navigate(typeof(MainPage));
+            }
         }
     }
 }

@@ -225,6 +225,44 @@ namespace CoreLib.Tools
             }
         }
         /// <summary>
+        /// 获取OneDrive中存储的全文列表数据
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<Channel>> GetReadableList()
+        {
+            if (_appFolder == null)
+            {
+                throw new UnauthorizedAccessException("You need to complete OneDrive authorization before you can get this file");
+            }
+            try
+            {
+                var file = await _appFolder.GetFileAsync("ReadableList.json");
+                using (var stream = (await file.StorageFilePlatformService.OpenAsync()) as IRandomAccessStream)
+                {
+                    Stream st = WindowsRuntimeStreamExtensions.AsStreamForRead(stream);
+                    st.Position = 0;
+                    StreamReader sr = new StreamReader(st, Encoding.UTF8);
+                    string result = sr.ReadToEnd();
+                    result = result.Replace("\0", "");
+                    if (string.IsNullOrEmpty(result))
+                    {
+                        result = "[]";
+                    }
+                    var list = JsonConvert.DeserializeObject<List<Channel>>(result);
+                    return list;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.ToLower().Contains("itemnotfound"))
+                {
+                    await _appFolder.StorageFolderPlatformService.CreateFileAsync("ReadableList.json", CreationCollisionOption.ReplaceExisting);
+                    return new List<Channel>();
+                }
+                throw;
+            }
+        }
+        /// <summary>
         /// 获取OneDrive中存储的收藏列表数据
         /// </summary>
         /// <returns></returns>
@@ -423,6 +461,32 @@ namespace CoreLib.Tools
                     double time = AppTools.DateToTimeStamp(DateTime.Now.ToLocalTime());
                     AppTools.WriteRoamingSetting(Enums.AppSettings.ToastUpdateTime, time.ToString());
                     AppTools.WriteLocalSetting(Enums.AppSettings.ToastUpdateTime, time.ToString());
+                }
+            }
+            catch (Exception)
+            {
+                return;
+            }
+        }
+        /// <summary>
+        /// 更新OneDrive中存储的全文频道列表
+        /// </summary>
+        /// <param name="localFile">列表</param>
+        /// <returns></returns>
+        public async Task UpdateReadableList(StorageFile localFile)
+        {
+            if (_appFolder == null)
+            {
+                throw new UnauthorizedAccessException("You need to complete OneDrive authorization before you can get this file");
+            }
+            try
+            {
+                using (var stream = await localFile.OpenReadAsync())
+                {
+                    await _appFolder.StorageFolderPlatformService.CreateFileAsync("ReadableList.json", CreationCollisionOption.ReplaceExisting, stream);
+                    double time = AppTools.DateToTimeStamp(DateTime.Now.ToLocalTime());
+                    AppTools.WriteRoamingSetting(Enums.AppSettings.ReadableUpdateTime, time.ToString());
+                    AppTools.WriteLocalSetting(Enums.AppSettings.ReadableUpdateTime, time.ToString());
                 }
             }
             catch (Exception)

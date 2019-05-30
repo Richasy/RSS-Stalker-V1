@@ -357,7 +357,7 @@ namespace Rss.Parsers.Rss
                 {
                     var heightValue = matchHeight.Groups["height"].Value;
                     int size = 0;
-                    if (int.TryParse(heightValue, out size) && size < 10)
+                    if (int.TryParse(heightValue, out size) && size < 50)
                     {
                         include = false;
                     }
@@ -368,7 +368,7 @@ namespace Rss.Parsers.Rss
                 {
                     var widthValue = matchWidth.Groups["width"].Value;
                     int size = 0;
-                    if (int.TryParse(widthValue, out size) && size < 10)
+                    if (int.TryParse(widthValue, out size) && size < 50)
                     {
                         include = false;
                     }

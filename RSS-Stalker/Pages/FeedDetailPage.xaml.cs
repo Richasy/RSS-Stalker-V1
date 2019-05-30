@@ -70,13 +70,15 @@ namespace RSS_Stalker.Pages
                     {
                         anim.TryStart(TitleTextBlock);
                     }
+                    LoadingRing.IsActive = true;
                     var data = e.Parameter as Tuple<Feed, List<Feed>>;
                     bool isUnread = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsJustUnread, "False"));
                     bool isCollection = Convert.ToBoolean(MainPage.Current.TodoButton.IsChecked) || Convert.ToBoolean(MainPage.Current.StarButton.IsChecked);
+                    
                     _sourceFeed = data.Item1;
-                    TitleTextBlock.Text = _sourceFeed.Title;
-                    _sourceContent = _sourceFeed.Content;
                     AllFeeds = data.Item2;
+                    TitleTextBlock.Text = _sourceFeed.Title;
+                    MainPage.Current.AddReadId(_sourceFeed.InternalID);
                     foreach (var item in AllFeeds)
                     {
                         if (item.InternalID != _sourceFeed.InternalID)
@@ -87,8 +89,23 @@ namespace RSS_Stalker.Pages
                                 ShowFeeds.Add(item);
                         }
                     }
-                    LoadingRing.IsActive = true;
-                    MainPage.Current.AddReadId(_sourceFeed.InternalID);
+                    if (MainPage.Current.ChannelListView.SelectedItem != null)
+                    {
+                        var selectChannel = MainPage.Current.ChannelListView.SelectedItem as Channel;
+                        if (MainPage.Current.ReadableList.Any(c => c.Id == selectChannel.Id))
+                        {
+                            SmartReader.Article article = await SmartReader.Reader.ParseArticleAsync(_sourceFeed.FeedUrl);
+                            if (article.IsReadable || !string.IsNullOrEmpty(article.TextContent))
+                            {
+                                _sourceFeed.Content = article.Content;
+                            }
+                            else
+                            {
+                                new PopupToast(AppTools.GetReswLanguage("Tip_ReadError"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+                            }
+                        }
+                    }
+                    _sourceContent = _sourceFeed.Content;
                     await GenerateActivityAsync(_sourceFeed);
                 }
                 // 这种情况表明入口点是动态卡片
@@ -237,7 +254,28 @@ namespace RSS_Stalker.Pages
             }
             ShowFeeds.Remove(data);
             _sourceFeed = data;
+            LoadingRing.IsActive = true;
+            if (MainPage.Current.ChannelListView.SelectedItem != null)
+            {
+                var selectChannel = MainPage.Current.ChannelListView.SelectedItem as Channel;
+                if (MainPage.Current.ReadableList.Any(c => c.Id == selectChannel.Id))
+                {
+                    DetailWebView.NavigateToString("");
+                    
+                    SmartReader.Article article = await SmartReader.Reader.ParseArticleAsync(_sourceFeed.FeedUrl);
+                    if (article.IsReadable || !string.IsNullOrEmpty(article.TextContent))
+                    {
+                        _sourceFeed.Content = article.Content;
+                    }
+                    else
+                    {
+                        new PopupToast(AppTools.GetReswLanguage("Tip_ReadError"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+                    }
+                    
+                }
+            }
             await UpdateFeed();
+            LoadingRing.IsActive = false;
         }
         private async Task UpdateFeed()
         {

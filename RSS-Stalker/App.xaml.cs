@@ -21,6 +21,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using RSS_Stalker.Pages;
+using Microsoft.Toolkit.Uwp.Connectivity;
 
 namespace RSS_Stalker
 {
@@ -44,10 +45,17 @@ namespace RSS_Stalker
             UnhandledException += UnhandleExceptionHandle;
         }
 
-        private void UnhandleExceptionHandle(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+        private async void UnhandleExceptionHandle(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
             e.Handled = true;
             string msg = e.Exception.Message;
+            if(e.Exception is UnauthorizedAccessException)
+            {
+                if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+                {
+                   await OneDrive.OneDriveAuthorize();
+                }
+            }
             new PopupToast(msg, AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
         }
         /// <summary>

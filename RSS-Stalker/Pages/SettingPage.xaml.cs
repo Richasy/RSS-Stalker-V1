@@ -37,6 +37,7 @@ namespace RSS_Stalker.Pages
     {
         private bool _isInit = false;
         public ObservableCollection<Channel> ToastChannels = new ObservableCollection<Channel>();
+        public ObservableCollection<Channel> ReadableChannels = new ObservableCollection<Channel>();
         public static SettingPage Current;
         public SettingPage()
         {
@@ -103,6 +104,22 @@ namespace RSS_Stalker.Pages
                 {
                     ToastChannels.Add(item);
                 }
+            }
+            else
+            {
+                ToastGridView.Visibility = Visibility.Collapsed;
+            }
+            var readableList = await IOTools.GetNeedReadableChannels();
+            if (readableList.Count > 0)
+            {
+                foreach (var item in readableList)
+                {
+                    ReadableChannels.Add(item);
+                }
+            }
+            else
+            {
+                ReadableGridView.Visibility = Visibility.Collapsed;
             }
             if (isScreenChannel)
                 ScreenChannelComboBox.SelectedIndex = 1;
@@ -219,9 +236,18 @@ namespace RSS_Stalker.Pages
             var data = (sender as Button).DataContext as Channel;
             if (data != null)
             {
-                await IOTools.RemoveNeedToastChannel(data);
-                ToastChannels.Remove(data);
-                MainPage.Current.ToastList.RemoveAll(p => p.Id == data.Id);
+                if (SettingPivot.SelectedIndex == 3)
+                {
+                    await IOTools.RemoveNeedToastChannel(data);
+                    ToastChannels.Remove(data);
+                    MainPage.Current.ToastList.RemoveAll(p => p.Id == data.Id);
+                }
+                else if(SettingPivot.SelectedIndex==4)
+                {
+                    await IOTools.RemoveNeedReadableChannel(data);
+                    ReadableChannels.Remove(data);
+                    MainPage.Current.ReadableList.RemoveAll(p => p.Id == data.Id);
+                }
                 new PopupToast(AppTools.GetReswLanguage("Tip_Removed")).ShowPopup();
             }
             (sender as Button).IsEnabled = true;
@@ -524,6 +550,12 @@ namespace RSS_Stalker.Pages
                 return;
             AppTools.WriteLocalSetting(AppSettings.IsCacheFirst, FirstCacheChannel.IsOn.ToString());
 
+        }
+
+        private async void TranslateOptionButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new BaiduTranslateDialog();
+            await dialog.ShowAsync();
         }
     }
 }

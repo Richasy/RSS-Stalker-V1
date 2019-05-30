@@ -39,6 +39,7 @@ namespace RSS_Stalker
         public List<Feed> TodoList = new List<Feed>();
         public List<Feed> StarList = new List<Feed>();
         public List<Channel> ToastList = new List<Channel>();
+        public List<Channel> ReadableList = new List<Channel>();
         public List<string> ReadIds = new List<string>();
         public bool _isFromTimeline = false;
         public static MainPage Current;
@@ -205,9 +206,7 @@ namespace RSS_Stalker
             if(isOneDrive && NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
                 await App.OneDrive.OneDriveAuthorize();
             // TimerInit();
-            TodoList = await IOTools.GetLocalTodoReadList();
-            StarList = await IOTools.GetLocalStarList();
-            ToastList = await IOTools.GetNeedToastChannels();
+            OtherListInit();
             // 注册后台
             RegisterBackground();
             // 检查版本更新
@@ -217,6 +216,13 @@ namespace RSS_Stalker
             SystemFonts = SystemFont.GetFonts();
             _isInit = true;
             CheckUpdateLocalData();
+        }
+        private async void OtherListInit()
+        {
+            TodoList = await IOTools.GetLocalTodoReadList();
+            StarList = await IOTools.GetLocalStarList();
+            ToastList = await IOTools.GetNeedToastChannels();
+            ReadableList = await IOTools.GetNeedReadableChannels();
         }
         public void SideHide()
         {
@@ -1058,6 +1064,20 @@ namespace RSS_Stalker
             if (isAdd)
             {
                 await IOTools.ReplaceReadIds(ReadIds);
+            }
+        }
+
+        private async void ReadableChannelMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (ReadableList.Any(p => p.Link == _tempChannel.Link || p.Id == _tempChannel.Id))
+            {
+                new PopupToast(AppTools.GetReswLanguage("Tip_ReadableRepeat"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+            }
+            else
+            {
+                await IOTools.AddNeedReadableChannel(_tempChannel);
+                ReadableList.Add(_tempChannel);
+                new PopupToast(AppTools.GetReswLanguage("Tip_Added")).ShowPopup();
             }
         }
     }

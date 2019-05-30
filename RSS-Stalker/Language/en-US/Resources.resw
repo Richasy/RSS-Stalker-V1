@@ -145,7 +145,7 @@
     <value>Channel name</value>
   </data>
   <data name="Control_ChannelSearchBox.PlaceholderText" xml:space="preserve">
-    <value>Serch channel...</value>
+    <value>Search channel...</value>
   </data>
   <data name="Control_DarkComboItem.Content" xml:space="preserve">
     <value>Dark</value>
@@ -671,5 +671,20 @@
   </data>
   <data name="Control_FontSizeTipBlock.Text" xml:space="preserve">
     <value>Font Size</value>
+  </data>
+  <data name="Control_OptionButton.Content" xml:space="preserve">
+    <value>Configure</value>
+  </data>
+  <data name="Control_ReadableListTipBlock.Text" xml:space="preserve">
+    <value>Full content channels</value>
+  </data>
+  <data name="Control_TranslateOptionTipBlock.Text" xml:space="preserve">
+    <value>Translate Option</value>
+  </data>
+  <data name="Control_ReadableMenuItem.Text" xml:space="preserve">
+    <value>Add to Full content List</value>
+  </data>
+  <data name="Tip_ReadableRepeat" xml:space="preserve">
+    <value>Full content list already has this channel</value>
   </data>
 </root>

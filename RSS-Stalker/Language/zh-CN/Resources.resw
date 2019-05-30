@@ -672,4 +672,19 @@
   <data name="Control_FontSizeTipBlock.Text" xml:space="preserve">
     <value>字号</value>
   </data>
+  <data name="Control_OptionButton.Content" xml:space="preserve">
+    <value>配置</value>
+  </data>
+  <data name="Control_ReadableListTipBlock.Text" xml:space="preserve">
+    <value>获取全文频道列表</value>
+  </data>
+  <data name="Control_TranslateOptionTipBlock.Text" xml:space="preserve">
+    <value>翻译配置</value>
+  </data>
+  <data name="Control_ReadableMenuItem.Text" xml:space="preserve">
+    <value>加入全文列表</value>
+  </data>
+  <data name="Tip_ReadableRepeat" xml:space="preserve">
+    <value>全文列表已有该频道</value>
+  </data>
 </root>

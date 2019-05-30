@@ -77,12 +77,18 @@ namespace RSS_Stalker.Pages
                     var ReadList = await App.OneDrive.GetReadList();
                     await IOTools.ReplaceReadIds(ReadList);
                 });
+                var readable = Task.Run(async () =>
+                {
+                    var ReadList = await App.OneDrive.GetReadableList();
+                    await IOTools.ReplaceToast(ReadList);
+                });
                 tasks.Add(cate);
                 tasks.Add(todo);
                 tasks.Add(star);
                 tasks.Add(toast);
                 tasks.Add(page);
                 tasks.Add(read);
+                tasks.Add(readable);
                 await Task.WhenAll(tasks.ToArray());
                 string basicUpdateTime = AppTools.GetRoamingSetting(AppSettings.BasicUpdateTime, "1");
                 string todoUpdateTime = AppTools.GetRoamingSetting(AppSettings.TodoUpdateTime, "1");
@@ -90,12 +96,14 @@ namespace RSS_Stalker.Pages
                 string toastUpdateTime = AppTools.GetRoamingSetting(AppSettings.ToastUpdateTime, "1");
                 string pageUpdateTime = AppTools.GetRoamingSetting(AppSettings.PageUpdateTime, "1");
                 string readUpdateTime = AppTools.GetRoamingSetting(AppSettings.ReadUpdateTime, "1");
+                string readableUpdateTime = AppTools.GetRoamingSetting(AppSettings.ReadableUpdateTime, "1");
                 AppTools.WriteLocalSetting(AppSettings.ToastUpdateTime, toastUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.StarUpdateTime, starUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.TodoUpdateTime, todoUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.BasicUpdateTime, basicUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.PageUpdateTime, pageUpdateTime);
-                AppTools.WriteLocalSetting(AppSettings.PageUpdateTime, readUpdateTime);
+                AppTools.WriteLocalSetting(AppSettings.ReadUpdateTime, readUpdateTime);
+                AppTools.WriteLocalSetting(AppSettings.ReadableUpdateTime, readableUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.LastSyncTime, now.ToString());
                 var frame = Window.Current.Content as Frame;
                 frame.Navigate(typeof(MainPage));

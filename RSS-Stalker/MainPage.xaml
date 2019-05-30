@@ -26,6 +26,11 @@
                     <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE996;"/>
                 </MenuFlyoutItem.Icon>
             </MenuFlyoutItem>
+            <MenuFlyoutItem x:Uid="Control_ReadableMenuItem" FontFamily="{StaticResource Basic}" Name="ReadableChannelMenuItem" Click="ReadableChannelMenuItem_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE956;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
             <MenuFlyoutItem x:Uid="Control_HomeChannelMenuItem" FontFamily="{StaticResource Basic}" Name="HomeChannelMenuItem" Click="HomeChannelMenuItem_Click">
                 <MenuFlyoutItem.Icon>
                     <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE97C;"/>

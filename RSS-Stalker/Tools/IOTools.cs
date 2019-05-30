@@ -319,7 +319,29 @@ namespace RSS_Stalker.Tools
                 await FileIO.WriteTextAsync(file, text);
                 bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
                 if (isUpdate && isOneDrive)
-                    await App.OneDrive.UpdateStarList(file);
+                    await App.OneDrive.UpdateToastList(file);
+            }
+            catch (Exception)
+            {
+                return;
+            }
+        }
+        /// <summary>
+        /// 完全替换全文列表
+        /// </summary>
+        /// <param name="channels">标签列表</param>
+        /// <returns></returns>
+        public async static Task ReplaceReadable(List<Channel> channels, bool isUpdate = false)
+        {
+            try
+            {
+                var localFolder = ApplicationData.Current.LocalFolder;
+                var file = await localFolder.CreateFileAsync("ReadableChannels.json", CreationCollisionOption.OpenIfExists);
+                string text = JsonConvert.SerializeObject(channels);
+                await FileIO.WriteTextAsync(file, text);
+                bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
+                if (isUpdate && isOneDrive)
+                    await App.OneDrive.UpdateReadableList(file);
             }
             catch (Exception)
             {
@@ -641,6 +663,74 @@ namespace RSS_Stalker.Tools
             }
         }
         /// <summary>
+        /// 获取需要全文的频道列表
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<List<Channel>> GetNeedReadableChannels()
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("ReadableChannels.json", CreationCollisionOption.OpenIfExists);
+            string text = await FileIO.ReadTextAsync(file);
+            if (string.IsNullOrEmpty(text))
+            {
+                text = "[]";
+            }
+            var list = JsonConvert.DeserializeObject<List<Channel>>(text);
+            return list;
+        }
+        /// <summary>
+        /// 添加需要全文的频道
+        /// </summary>
+        /// <returns></returns>
+        public static async Task AddNeedReadableChannel(Channel channel)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("ReadableChannels.json", CreationCollisionOption.OpenIfExists);
+            string text = await FileIO.ReadTextAsync(file);
+            if (string.IsNullOrEmpty(text))
+            {
+                text = "[]";
+            }
+            var list = JsonConvert.DeserializeObject<List<Channel>>(text);
+            list.Add(channel);
+            text = JsonConvert.SerializeObject(list);
+            await FileIO.WriteTextAsync(file, text);
+            bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
+            if (isOneDrive)
+            {
+                if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+                    await App.OneDrive.UpdateReadableList(file);
+                else
+                    AppTools.WriteLocalSetting(CoreLib.Enums.AppSettings.IsReadableChangeInOffline, "True");
+            }
+        }
+        /// <summary>
+        /// 移除需要全文的频道
+        /// </summary>
+        /// <returns></returns>
+        public static async Task RemoveNeedReadableChannel(Channel channel)
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var file = await localFolder.CreateFileAsync("ReadableChannels.json", CreationCollisionOption.OpenIfExists);
+            string text = await FileIO.ReadTextAsync(file);
+            if (string.IsNullOrEmpty(text))
+            {
+                text = "[]";
+            }
+            var list = JsonConvert.DeserializeObject<List<Channel>>(text);
+            list.RemoveAll(p => p.Id == channel.Id);
+            text = JsonConvert.SerializeObject(list);
+            await FileIO.WriteTextAsync(file, text);
+            bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));
+            if (isOneDrive)
+            {
+                if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+                    await App.OneDrive.UpdateReadableList(file);
+                else
+                    AppTools.WriteLocalSetting(CoreLib.Enums.AppSettings.IsReadableChangeInOffline, "True");
+            }
+        }
+        /// <summary>
         /// 将本地的收藏列表、待读列表、推送列表、自定义页面和阅读记录导出
         /// </summary>
         /// <param name="file">文件</param>
@@ -676,11 +766,17 @@ namespace RSS_Stalker.Tools
                 var l = await GetReadIds();
                 export.Reads = l;
             });
+            var task6 = Task.Run(async () =>
+            {
+                var l = await GetNeedReadableChannels();
+                export.Toast = l;
+            });
             tasks.Add(task1);
             tasks.Add(task2);
             tasks.Add(task3);
             tasks.Add(task4);
             tasks.Add(task5);
+            tasks.Add(task6);
             await Task.WhenAll(tasks.ToArray());
             string json = JsonConvert.SerializeObject(export);
             await FileIO.WriteTextAsync(file, json);
@@ -790,11 +886,29 @@ namespace RSS_Stalker.Tools
                     await ReplaceReadIds(l);
                 }
             });
+            var task6 = Task.Run(async () =>
+            {
+                var l = await GetNeedReadableChannels();
+                bool isChanged = false;
+                foreach (var item in export.Readable)
+                {
+                    if (!l.Any(p => p.Link == item.Link))
+                    {
+                        isChanged = true;
+                        l.Add(item);
+                    }
+                }
+                if (isChanged)
+                {
+                    await ReplaceToast(l, true);
+                }
+            });
             tasks.Add(task1);
             tasks.Add(task2);
             tasks.Add(task3);
             tasks.Add(task4);
             tasks.Add(task5);
+            tasks.Add(task6);
             await Task.WhenAll(tasks.ToArray());
         }
         /// <summary>

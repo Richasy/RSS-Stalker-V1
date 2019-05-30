@@ -15,6 +15,7 @@ namespace CoreLib.Enums
         TodoUpdateTime,
         StarUpdateTime,
         ToastUpdateTime,
+        ReadableUpdateTime,
         ReadUpdateTime,
         IsBindingOneDrive,
         IsLocalAccount,
@@ -44,6 +45,7 @@ namespace CoreLib.Enums
         IsCacheFirst,
         LastCacheTime,
         ReadFontFamily,
-        ReadFontSize
+        ReadFontSize,
+        IsReadableChangeInOffline
     }
 }

@@ -16,5 +16,6 @@ namespace CoreLib.Models.App
         public List<Channel> Toast { get; set; }
         public List<CustomPage> Pages { get; set; }
         public List<string> Reads { get; set; }
+        public IEnumerable<Channel> Readable { get; set; }
     }
 }

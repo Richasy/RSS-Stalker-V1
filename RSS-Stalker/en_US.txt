@@ -2,9 +2,14 @@
 
 The new version has been revised as follows:
 
-1. Fix navigate issues between read later and favorite lists and article details
-2. change side bar which in article detail page, it will not refresh after click.
-3. Replace app icon.
+===
+Increase the default full-text list.
+In the channel menu, you can add the current channel to the full-text list. This way, each time you open an article in the channel, it will crawl the page data and convert it into readable text by default.
+===
+
+1. Improve option switching for the settings page, adding push lists and full-text lists to the pivot
+2. Add configuration entry for Baidu translation in the settings
+3. English text correction and partial style fine-tuning
 
 Thank you :)
 

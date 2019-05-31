@@ -59,11 +59,14 @@ namespace CoreLib.Models
         {
             Name = feed.Title.Text;
             Link = url;
-            Description = feed.Subtitle.Text;
-            var link = feed.Links.FirstOrDefault();
-            if (link != null)
+            Description = feed.Subtitle==null?feed.Title.Text:feed.Subtitle.Text;
+            foreach (var t in feed.Links)
             {
-                SourceUrl = link.Uri.ToString();
+                if (t.Uri != null)
+                {
+                    SourceUrl = t.Uri.ToString();
+                    break;
+                }
             }
         }
         public Channel(FeedlyResult feedly):this()

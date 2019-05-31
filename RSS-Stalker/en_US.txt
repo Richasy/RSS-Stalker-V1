@@ -2,14 +2,8 @@
 
 The new version has been revised as follows:
 
-===
-Increase the default full-text list.
-In the channel menu, you can add the current channel to the full-text list. This way, each time you open an article in the channel, it will crawl the page data and convert it into readable text by default.
-===
-
-1. Improve option switching for the settings page, adding push lists and full-text lists to the pivot
-2. Add configuration entry for Baidu translation in the settings
-3. English text correction and partial style fine-tuning
+1.Fixed an exception when creating a channel that caused the feed in atom format to not be parsed correctly
+2.Fix the issue of forcing a sync unsynchronized full-text list
 
 Thank you :)
 

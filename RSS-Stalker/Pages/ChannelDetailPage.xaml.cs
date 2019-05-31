@@ -186,6 +186,17 @@ namespace RSS_Stalker.Pages
             var data = (sender as FrameworkElement).DataContext as Feed;
             if (!string.IsNullOrEmpty(data.FeedUrl))
             {
+                if (data.FeedUrl.Contains("www.ithome.com"))
+                {
+                    string link = data.FeedUrl.Replace("https://www.ithome.com/0/", "").Replace(".htm", "");
+                    link = link.Replace("/", "");
+                    link = $"ithome://news?id={link}";
+                    bool result = await Launcher.LaunchUriAsync(new Uri(link));
+                    if (result)
+                    {
+                        return;
+                    }
+                }
                 await Launcher.LaunchUriAsync(new Uri(data.FeedUrl));
             }
             else

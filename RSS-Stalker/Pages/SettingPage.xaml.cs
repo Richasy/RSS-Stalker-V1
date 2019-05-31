@@ -268,6 +268,7 @@ namespace RSS_Stalker.Pages
             var toastList = new List<Channel>();
             var pageList = new List<CustomPage>();
             var readList = new List<string>();
+            var readableList = new List<Channel>();
             var cate = Task.Run(async () =>
             {
                 cateList = await App.OneDrive.GetCategoryList();
@@ -299,12 +300,18 @@ namespace RSS_Stalker.Pages
                 readList = await App.OneDrive.GetReadList();
                 await IOTools.ReplaceReadIds(readList);
             });
+            var readable = Task.Run(async () =>
+            {
+                readableList = await App.OneDrive.GetReadableList();
+                await IOTools.ReplaceReadable(readableList);
+            });
             tasks.Add(cate);
             tasks.Add(todo);
             tasks.Add(star);
             tasks.Add(toast);
             tasks.Add(page);
             tasks.Add(read);
+            tasks.Add(readable);
             try
             {
                 await Task.WhenAll(tasks.ToArray());
@@ -314,25 +321,34 @@ namespace RSS_Stalker.Pages
                 string toastUpdateTime = AppTools.GetRoamingSetting(AppSettings.ToastUpdateTime, "1");
                 string pageUpdateTime = AppTools.GetRoamingSetting(AppSettings.PageUpdateTime, "1");
                 string readUpdateTime = AppTools.GetRoamingSetting(AppSettings.ReadUpdateTime, "1");
+                string readableUpdateTime = AppTools.GetRoamingSetting(AppSettings.ReadableUpdateTime, "1");
                 AppTools.WriteLocalSetting(AppSettings.BasicUpdateTime, basicUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.TodoUpdateTime, todoUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.StarUpdateTime, starUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.ToastUpdateTime, toastUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.PageUpdateTime, pageUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.ReadUpdateTime, readUpdateTime);
+                AppTools.WriteLocalSetting(AppSettings.ReadableUpdateTime, readableUpdateTime);
                 AppTools.WriteLocalSetting(AppSettings.IsChannelsChangeInOffline, "False");
                 AppTools.WriteLocalSetting(AppSettings.IsTodoChangeInOffline, "False");
                 AppTools.WriteLocalSetting(AppSettings.IsStarChangeInOffline, "False");
                 AppTools.WriteLocalSetting(AppSettings.IsToastChangeInOffline, "False");
                 AppTools.WriteLocalSetting(AppSettings.IsPageChangeInOffline, "False");
                 AppTools.WriteLocalSetting(AppSettings.IsReadChangeInOffline, "False");
+                AppTools.WriteLocalSetting(AppSettings.IsReadableChangeInOffline, "False");
                 MainPage.Current.ReplaceList(cateList);
                 MainPage.Current.ReplacePageList(pageList);
                 MainPage.Current.ReadIds = readList;
+                MainPage.Current.ReadableList = readableList;
                 ToastChannels.Clear();
                 foreach (var item in toastList)
                 {
                     ToastChannels.Add(item);
+                }
+                ReadableChannels.Clear();
+                foreach (var item in readableList)
+                {
+                    ReadableChannels.Add(item);
                 }
                 btn.IsEnabled = true;
                 btn.Content = AppTools.GetReswLanguage("Tip_ForceSync");

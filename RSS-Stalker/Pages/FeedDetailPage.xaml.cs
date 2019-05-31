@@ -624,6 +624,17 @@ namespace RSS_Stalker.Pages
 
         private async void WebButton_Click(object sender, RoutedEventArgs e)
         {
+            if (_sourceFeed.FeedUrl.Contains("www.ithome.com"))
+            {
+                string link = _sourceFeed.FeedUrl.Replace("https://www.ithome.com/0/", "").Replace(".htm", "");
+                link = link.Replace("/", "");
+                link = $"ithome://news?id={link}";
+                bool result = await Launcher.LaunchUriAsync(new Uri(link));
+                if (result)
+                {
+                    return;
+                }
+            }
             await Launcher.LaunchUriAsync(new Uri(_sourceFeed.FeedUrl));
         }
 

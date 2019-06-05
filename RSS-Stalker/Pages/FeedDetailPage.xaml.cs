@@ -305,18 +305,22 @@ namespace RSS_Stalker.Pages
         }
         private void GridViewButton_Click(object sender, RoutedEventArgs e)
         {
-            if (MainPage.Current.PageListView.SelectedIndex != -1)
+            //if (MainPage.Current.PageListView.SelectedIndex != -1)
+            //{
+            //    MainPage.Current.MainFrame.Navigate(typeof(CustomPageDetailPage), AllFeeds);
+            //}
+            //else if(MainPage.Current.CategoryListView.SelectedIndex != -1)
+            //{
+            //    MainPage.Current.MainFrame.Navigate(typeof(ChannelDetailPage), AllFeeds);
+            //}
+            //else
+            //{
+            //    string title = Convert.ToBoolean(MainPage.Current.StarButton.IsChecked)?AppTools.GetReswLanguage("Tip_StarList"): AppTools.GetReswLanguage("Tip_TodoList");
+            //    MainPage.Current.MainFrame.Navigate(typeof(FeedCollectionPage), new Tuple<List<Feed>, string>(AllFeeds, title));
+            //}
+            if (MainPage.Current.MainFrame.CanGoBack)
             {
-                MainPage.Current.MainFrame.Navigate(typeof(CustomPageDetailPage), AllFeeds);
-            }
-            else if(MainPage.Current.CategoryListView.SelectedIndex != -1)
-            {
-                MainPage.Current.MainFrame.Navigate(typeof(ChannelDetailPage), AllFeeds);
-            }
-            else
-            {
-                string title = Convert.ToBoolean(MainPage.Current.StarButton.IsChecked)?AppTools.GetReswLanguage("Tip_StarList"): AppTools.GetReswLanguage("Tip_TodoList");
-                MainPage.Current.MainFrame.Navigate(typeof(FeedCollectionPage), new Tuple<List<Feed>, string>(AllFeeds, title));
+                MainPage.Current.MainFrame.GoBack();
             }
         }
 

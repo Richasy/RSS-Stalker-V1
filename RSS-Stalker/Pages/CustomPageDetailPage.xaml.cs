@@ -45,10 +45,15 @@ namespace RSS_Stalker.Pages
         public CustomPageDetailPage()
         {
             this.InitializeComponent();
+            NavigationCacheMode = NavigationCacheMode.Enabled;
             Current = this;
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
+            if (e.NavigationMode == NavigationMode.Back)
+            {
+                return;
+            }
             if (e.Parameter != null)
             {
                 // 当传入源为频道数据时（获取当前频道最新资讯）

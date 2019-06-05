@@ -41,10 +41,15 @@ namespace RSS_Stalker.Pages
         public FeedCollectionPage()
         {
             this.InitializeComponent();
+            NavigationCacheMode = NavigationCacheMode.Enabled;
             Current = this;
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            if (e.NavigationMode == NavigationMode.Back)
+            {
+                return;
+            }
             if (e.Parameter != null)
             {
                 if (e.Parameter is Tuple<List<Feed>,string>)

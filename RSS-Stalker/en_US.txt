@@ -2,8 +2,7 @@
 
 The new version has been revised as follows:
 
-1.Fixed an exception when creating a channel that caused the feed in atom format to not be parsed correctly
-2.Fix the issue of forcing a sync unsynchronized full-text list
+1.Fixed an issue where the read article was not removed when returning the article list
 
 Thank you :)
 

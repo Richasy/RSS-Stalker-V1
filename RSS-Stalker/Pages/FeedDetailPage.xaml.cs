@@ -25,6 +25,7 @@ using Windows.Storage.Streams;
 using Microsoft.Toolkit.Uwp.Connectivity;
 using Windows.UI.Xaml.Media.Animation;
 using CoreLib.Models.App;
+using Windows.UI.Xaml.Input;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -56,9 +57,8 @@ namespace RSS_Stalker.Pages
             ToolTipService.SetToolTip(AddStarButton, AppTools.GetReswLanguage("Tip_AddStarList"));
             ToolTipService.SetToolTip(RemoveStarButton, AppTools.GetReswLanguage("Tip_DeleteStarList"));
             ToolTipService.SetToolTip(ReadabilityButton, AppTools.GetReswLanguage("Tip_Readability"));
-            
-        }
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+    }
+    protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             if(e.Parameter!=null)
             {
@@ -305,19 +305,6 @@ namespace RSS_Stalker.Pages
         }
         private void GridViewButton_Click(object sender, RoutedEventArgs e)
         {
-            //if (MainPage.Current.PageListView.SelectedIndex != -1)
-            //{
-            //    MainPage.Current.MainFrame.Navigate(typeof(CustomPageDetailPage), AllFeeds);
-            //}
-            //else if(MainPage.Current.CategoryListView.SelectedIndex != -1)
-            //{
-            //    MainPage.Current.MainFrame.Navigate(typeof(ChannelDetailPage), AllFeeds);
-            //}
-            //else
-            //{
-            //    string title = Convert.ToBoolean(MainPage.Current.StarButton.IsChecked)?AppTools.GetReswLanguage("Tip_StarList"): AppTools.GetReswLanguage("Tip_TodoList");
-            //    MainPage.Current.MainFrame.Navigate(typeof(FeedCollectionPage), new Tuple<List<Feed>, string>(AllFeeds, title));
-            //}
             if (MainPage.Current.MainFrame.CanGoBack)
             {
                 MainPage.Current.MainFrame.GoBack();
@@ -786,5 +773,6 @@ namespace RSS_Stalker.Pages
                 await SetFontSize();
             }
         }
+
     }
 }

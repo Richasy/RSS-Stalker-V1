@@ -52,6 +52,18 @@ namespace RSS_Stalker.Pages
         {
             if (e.NavigationMode == NavigationMode.Back)
             {
+                if (FeedCollection.Count > 0 && JustNoReadSwitch.IsOn)
+                {
+                    foreach (var temp in MainPage.Current.ReadIds)
+                    {
+                        FeedCollection.Remove(FeedCollection.Where(p => p.InternalID == temp).FirstOrDefault());
+                    }
+                    if (FeedCollection.Count == 0)
+                    {
+                        AllReadTipContainer.Visibility = Visibility.Visible;
+                        AllReadButton.Visibility = Visibility.Collapsed;
+                    }
+                }
                 return;
             }
             if (e.Parameter != null)

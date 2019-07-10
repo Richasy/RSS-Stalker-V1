@@ -153,8 +153,10 @@
                                 <Button Style="{StaticResource GhostCircleButtonStyle}" Margin="0,10,0,0" Name="ReadabilityButton" Click="ReadabilityButton_Click"  Width="40" Height="40" FontFamily="{StaticResource Icon}" Content="&#xE956;"/>
                                 <Button Style="{StaticResource GhostCircleButtonStyle}" Margin="0,10,0,0" Name="ShareButton" Click="ShareButton_Click"  Width="40" Height="40" FontFamily="{StaticResource Icon}" Content="&#xE9CC;"/>
                             </StackPanel>
+                            
                             <Button Style="{StaticResource GhostCircleButtonStyle}" RelativePanel.AlignHorizontalCenterWithPanel="True" FlyoutBase.AttachedFlyout="{StaticResource MoreMenuFlyout}" Name="MoreButton" Click="MoreButton_Click" Width="40" Height="40" FontFamily="{StaticResource Icon}" Content="&#xE9A1;" RelativePanel.AlignBottomWithPanel="True" Margin="0,0,0,20"/>
                             <Button Style="{StaticResource GhostCircleButtonStyle}" FlyoutBase.AttachedFlyout="{StaticResource SettingFlyout}" RelativePanel.Above="MoreButton" Width="40" Height="40" RelativePanel.AlignHorizontalCenterWithPanel="True" Name="SettingButton" Click="SettingButton_Click" FontFamily="{StaticResource Icon}" Content="&#xE9CB;" Margin="0,0,0,10"/>
+                            <Button Style="{StaticResource TransparentButtonStyle}" RelativePanel.Above="SettingButton" x:Name="LockButton" ToolTipService.ToolTip="Lock" Click="LockButton_Click" Width="40" Height="40" FontFamily="{StaticResource Icon}" Content="&#xE909;" Margin="0,0,0,10"/>
                         </RelativePanel>
                         
                         <ListView ItemTemplate="{StaticResource FeedItemTemplate}"

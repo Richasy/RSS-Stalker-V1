@@ -483,6 +483,8 @@ namespace CoreLib.Tools
             {
                 try
                 {
+                    //client.DefaultRequestHeaders.Add("Referrer Policy", "no-referrer-when-downgrade");
+                    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3837.0 Safari/537.36 Edg/77.0.211.2");
                     feed = await client.GetStringAsync(url);
                 }
                 catch { }

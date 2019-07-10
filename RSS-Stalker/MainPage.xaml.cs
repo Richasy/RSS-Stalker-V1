@@ -1063,7 +1063,14 @@ namespace RSS_Stalker
             }
             if (isAdd)
             {
-                await IOTools.ReplaceReadIds(ReadIds);
+                try
+                {
+                    await IOTools.ReplaceReadIds(ReadIds);
+                }
+                catch (Exception)
+                {
+
+                }
             }
         }
 

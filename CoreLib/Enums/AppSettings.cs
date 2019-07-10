@@ -46,6 +46,7 @@ namespace CoreLib.Enums
         LastCacheTime,
         ReadFontFamily,
         ReadFontSize,
-        IsReadableChangeInOffline
+        IsReadableChangeInOffline,
+        SideListLocked
     }
 }

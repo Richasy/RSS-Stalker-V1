@@ -2,7 +2,8 @@
 
 The new version has been revised as follows:
 
-1.Fixed an issue where the read article was not removed when returning the article list
+1. Fix some data source parsing errors
+2. An "anchor" button is added to the sidebar of the article details page to fix the sidebar
 
 Thank you :)
 

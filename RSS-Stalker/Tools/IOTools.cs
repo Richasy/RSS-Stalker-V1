@@ -934,7 +934,7 @@ namespace RSS_Stalker.Tools
         public static async Task ReplaceReadIds(List<string> articleIds)
         {
             var localFolder = ApplicationData.Current.LocalFolder;
-            var file = await localFolder.CreateFileAsync("ReadIds.json", CreationCollisionOption.OpenIfExists);
+            var file = await localFolder.CreateFileAsync("ReadIds.json", CreationCollisionOption.ReplaceExisting);
             string text = JsonConvert.SerializeObject(articleIds);
             await FileIO.WriteTextAsync(file, text);
             bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(CoreLib.Enums.AppSettings.IsBindingOneDrive, "False"));

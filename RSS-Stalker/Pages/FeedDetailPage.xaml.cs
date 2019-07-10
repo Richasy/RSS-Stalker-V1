@@ -52,14 +52,28 @@ namespace RSS_Stalker.Pages
         {
             this.InitializeComponent();
             Current = this;
+            NavigationCacheMode = NavigationCacheMode.Enabled;
             ToolTipService.SetToolTip(AddTodoButton, AppTools.GetReswLanguage("Tip_AddTodoList"));
             ToolTipService.SetToolTip(RemoveTodoButton, AppTools.GetReswLanguage("Tip_DeleteTodoList"));
             ToolTipService.SetToolTip(AddStarButton, AppTools.GetReswLanguage("Tip_AddStarList"));
             ToolTipService.SetToolTip(RemoveStarButton, AppTools.GetReswLanguage("Tip_DeleteStarList"));
             ToolTipService.SetToolTip(ReadabilityButton, AppTools.GetReswLanguage("Tip_Readability"));
-    }
+            bool isSideLocked = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.SideListLocked, "False"));
+            if (!isSideLocked)
+            {
+                LockButton.Foreground = AppTools.GetThemeSolidColorBrush(ColorType.ImportantTextColor);
+            }
+            else
+            {
+                LockButton.Foreground = AppTools.GetThemeSolidColorBrush(ColorType.PrimaryColor);
+            }
+        }
     protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            if (e.NavigationMode == NavigationMode.Back)
+            {
+                return;
+            }
             if(e.Parameter!=null)
             {
                 // 这种情况表明入口点为频道
@@ -296,7 +310,8 @@ namespace RSS_Stalker.Pages
             string html = await PackageHTML(_sourceFeed.Content);
             LoadingRing.IsActive = true;
             DetailWebView.NavigateToString(html);
-            if (MainPage.Current.MinsizeHeaderContainer.Visibility == Visibility.Visible)
+            bool isSideLocked = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.SideListLocked, "False"));
+            if (MainPage.Current.MinsizeHeaderContainer.Visibility == Visibility.Visible && !isSideLocked)
             {
                 DetailSplitView.IsPaneOpen = false;
             }
@@ -365,16 +380,33 @@ namespace RSS_Stalker.Pages
             {
                 if (DetailSplitView != null && (width<1000 || ShowFeeds.Count==0))
                 {
-                    DetailSplitView.IsPaneOpen = false;
-                    FeedListView.Visibility = Visibility.Collapsed;
-                    Grid.SetColumn(SideControlContainer, 1);
-                    SideControlContainer.HorizontalAlignment = HorizontalAlignment.Right;
-                    SideControlContainer.Margin = new Thickness(0, 0, 10, 0);
+                    LockButton.Visibility = Visibility.Visible;
+                    bool isSideLocked = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.SideListLocked, "False"));
+                    if (!isSideLocked)
+                    {
+                        DetailSplitView.IsPaneOpen = false;
+                        FeedListView.Visibility = Visibility.Collapsed;
+                        Grid.SetColumn(SideControlContainer, 1);
+                        SideControlContainer.HorizontalAlignment = HorizontalAlignment.Right;
+                        SideControlContainer.Margin = new Thickness(0, 0, 10, 0);
+                    }
                 }
                 else
                 {
+                    LockButton.Visibility = Visibility.Collapsed;
                     DetailSplitView.IsPaneOpen = true;
                 } 
+            }
+            if (_isInit)
+            {
+                if (DetailSplitView != null && width < 1400)
+                {
+                    LockButton.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    LockButton.Visibility = Visibility.Collapsed;
+                }
             }
         }
 
@@ -774,5 +806,18 @@ namespace RSS_Stalker.Pages
             }
         }
 
+        private void LockButton_Click(object sender, RoutedEventArgs e)
+        {
+            bool isSideLocked = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.SideListLocked, "False"));
+            if (isSideLocked)
+            {
+                LockButton.Foreground = AppTools.GetThemeSolidColorBrush(ColorType.ImportantTextColor);
+            }
+            else
+            {
+                LockButton.Foreground = AppTools.GetThemeSolidColorBrush(ColorType.PrimaryColor);
+            }
+            AppTools.WriteLocalSetting(AppSettings.SideListLocked, (!isSideLocked).ToString());
+        }
     }
 }

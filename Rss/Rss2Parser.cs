@@ -40,7 +40,6 @@ namespace Rss.Parsers.Rss
             bool isRDF = false;
             var feed = new Collection<RssSchema>();
             XNamespace defaultNamespace = string.Empty;
-
             if (doc.Root != null)
             {
                 isRDF = doc.Root.Name == (NsRdfNamespaceUri + "RDF");
@@ -50,6 +49,7 @@ namespace Rss.Parsers.Rss
             foreach (var item in doc.Descendants(defaultNamespace + "item"))
             {
                 var rssItem = isRDF ? ParseRDFItem(item) : ParseRssItem(item);
+                rssItem.Encoding = doc.Declaration.Encoding;
                 feed.Add(rssItem);
             }
 

@@ -351,7 +351,11 @@ namespace CoreLib.Tools
         {
             string feed = null;
 
-            using (var client = new HttpClient())
+            using (var client = new HttpClient(new HttpClientHandler
+            {
+                AutomaticDecompression = DecompressionMethods.GZip
+                                     | DecompressionMethods.Deflate
+            }))
             {
                 if (isLimit)
                     client.Timeout = new TimeSpan(0, 0, 20);
@@ -470,6 +474,13 @@ namespace CoreLib.Tools
             }
             return results;
         }
+        private static string GetCharSet(string content)
+        {
+            var match = Regex.Match(content, @"encoding=""(?<charset>.+?)""", RegexOptions.IgnoreCase);
+            if (!match.Success)
+                return "";
+            return match.Groups["charset"].Value;
+        }
         /// <summary>
         /// 从URL获取解析后的文章的信息
         /// </summary>
@@ -479,13 +490,28 @@ namespace CoreLib.Tools
         {
             string feed = null;
 
-            using (var client = new HttpClient())
+            using (var client = new HttpClient(new HttpClientHandler
+            {
+                AutomaticDecompression = DecompressionMethods.GZip
+                                     | DecompressionMethods.Deflate
+            }))
             {
                 try
                 {
+                    var encode = Encoding.Default;
                     //client.DefaultRequestHeaders.Add("Referrer Policy", "no-referrer-when-downgrade");
                     client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3837.0 Safari/537.36 Edg/77.0.211.2");
-                    feed = await client.GetStringAsync(url);
+                    var message = await client.GetAsync(url);
+                    var c = GetCharSet(await message.Content.ReadAsStringAsync());
+                    if (c != "")
+                    {
+                        encode = Encoding.GetEncoding(c);
+                    }
+                    using (var stream = await message.Content.ReadAsStreamAsync())
+                    {
+                        var sr = new StreamReader(stream, encode);
+                        feed = await sr.ReadToEndAsync();
+                    }
                 }
                 catch { }
             }

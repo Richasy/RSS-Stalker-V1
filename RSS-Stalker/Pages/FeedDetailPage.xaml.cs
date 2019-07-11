@@ -376,37 +376,24 @@ namespace RSS_Stalker.Pages
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             double width = e.NewSize.Width;
-            if (!_isInit)
+            if (DetailSplitView != null && (width < 1300 || ShowFeeds.Count == 0))
             {
-                if (DetailSplitView != null && (width<1000 || ShowFeeds.Count==0))
+                LockButton.Visibility = Visibility.Visible;
+                bool isSideLocked = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.SideListLocked, "False"));
+                DetailSplitView.IsPaneOpen = isSideLocked;
+                if (!isSideLocked)
                 {
-                    LockButton.Visibility = Visibility.Visible;
-                    bool isSideLocked = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.SideListLocked, "False"));
-                    if (!isSideLocked)
-                    {
-                        DetailSplitView.IsPaneOpen = false;
-                        FeedListView.Visibility = Visibility.Collapsed;
-                        Grid.SetColumn(SideControlContainer, 1);
-                        SideControlContainer.HorizontalAlignment = HorizontalAlignment.Right;
-                        SideControlContainer.Margin = new Thickness(0, 0, 10, 0);
-                    }
+                    
+                    FeedListView.Visibility = Visibility.Collapsed;
+                    Grid.SetColumn(SideControlContainer, 1);
+                    SideControlContainer.HorizontalAlignment = HorizontalAlignment.Right;
+                    SideControlContainer.Margin = new Thickness(0, 0, 10, 0);
                 }
-                else
-                {
-                    LockButton.Visibility = Visibility.Collapsed;
-                    DetailSplitView.IsPaneOpen = true;
-                } 
             }
-            if (_isInit)
+            else
             {
-                if (DetailSplitView != null && width < 1400)
-                {
-                    LockButton.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    LockButton.Visibility = Visibility.Collapsed;
-                }
+                LockButton.Visibility = Visibility.Collapsed;
+                DetailSplitView.IsPaneOpen = true;
             }
         }
 

@@ -22,6 +22,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using RSS_Stalker.Pages;
 using Microsoft.Toolkit.Uwp.Connectivity;
+using System.Text;
 
 namespace RSS_Stalker
 {
@@ -40,6 +41,7 @@ namespace RSS_Stalker
         {
             ChangeLanguage();
             this.InitializeComponent();
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             this.Suspending += OnSuspending;
             RequestedTheme = AppTools.GetRoamingSetting(AppSettings.Theme,"Light") == "Light" ? ApplicationTheme.Light : ApplicationTheme.Dark;
             UnhandledException += UnhandleExceptionHandle;

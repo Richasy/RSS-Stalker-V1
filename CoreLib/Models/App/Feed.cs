@@ -44,9 +44,9 @@ namespace CoreLib.Models
         public Feed() { }
         public Feed(RssSchema schema)
         {
-            Title = schema.Title??"";
-            Summary = schema.Summary??"";
-            Content = schema.Content??"";
+            Title = schema.Title ?? "";
+            Summary = schema.Summary ?? "";
+            Content = schema.Content ?? "";
             string theme = AppTools.GetLocalSetting(Enums.AppSettings.Theme, "Light").ToLower();
             ImageUrl = schema.ImageUrl;
             if (string.IsNullOrEmpty(ImageUrl))
@@ -64,6 +64,7 @@ namespace CoreLib.Models
             Author = schema.Author??AppTools.GetReswLanguage("App_NoAuthor");
             Date = schema.PublishDate.ToString(AppTools.GetReswLanguage("App_DateFormat"));
             Categories = schema.Categories;
+            Encoding = schema.Encoding;
             if(Categories==null || Categories.Count() == 0)
             {
                 TagVisibility = Visibility.Collapsed;

@@ -2,8 +2,8 @@
 
 The new version has been revised as follows:
 
-1. Fix some data source parsing errors
-2. An "anchor" button is added to the sidebar of the article details page to fix the sidebar
+1. Fix the garbled exception of the data source caused by the encoding
+2. Fix details page sidebar shows abnormal
 
 Thank you :)
 

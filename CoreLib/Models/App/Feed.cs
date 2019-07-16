@@ -64,7 +64,6 @@ namespace CoreLib.Models
             Author = schema.Author??AppTools.GetReswLanguage("App_NoAuthor");
             Date = schema.PublishDate.ToString(AppTools.GetReswLanguage("App_DateFormat"));
             Categories = schema.Categories;
-            Encoding = schema.Encoding;
             if(Categories==null || Categories.Count() == 0)
             {
                 TagVisibility = Visibility.Collapsed;

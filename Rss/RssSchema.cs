@@ -61,6 +61,5 @@ namespace Rss.Parsers.Rss
         /// Gets or sets item's categories.
         /// </summary>
         public IEnumerable<string> Categories { get; set; }
-        public string Encoding { get; set; }
     }
 }

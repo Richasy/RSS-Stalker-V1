@@ -76,6 +76,7 @@ namespace RSS_Stalker.Pages
             }
             if(e.Parameter!=null)
             {
+                ShowFeeds.Clear();
                 // 这种情况表明入口点为频道
                 if(e.Parameter is Tuple<Feed, List<Feed>>)
                 {

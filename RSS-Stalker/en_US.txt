@@ -2,8 +2,8 @@
 
 The new version has been revised as follows:
 
-1. Fix the garbled exception of the data source caused by the encoding
-2. Fix details page sidebar shows abnormal
+1. Fix some problems that the source can't load
+2. Fix article details side list loading exception
 
 Thank you :)
 

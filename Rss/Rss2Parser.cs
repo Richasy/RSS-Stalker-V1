@@ -49,7 +49,6 @@ namespace Rss.Parsers.Rss
             foreach (var item in doc.Descendants(defaultNamespace + "item"))
             {
                 var rssItem = isRDF ? ParseRDFItem(item) : ParseRssItem(item);
-                rssItem.Encoding = doc.Declaration.Encoding;
                 feed.Add(rssItem);
             }
 

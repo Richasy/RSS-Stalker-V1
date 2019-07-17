@@ -22,6 +22,7 @@ using Windows.ApplicationModel;
 using Microsoft.Toolkit.Uwp.Connectivity;
 using CoreLib.Models.App;
 using Windows.UI.Xaml.Media.Imaging;
+using System.Text;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -148,6 +149,7 @@ namespace RSS_Stalker
         private async void PageInit()
         {
             AppTools.SetTitleBarColor();
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             LoadingRing.IsActive = true;
             string theme = AppTools.GetRoamingSetting(AppSettings.Theme, "Light");
             var icon = new BitmapImage();

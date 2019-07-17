@@ -41,7 +41,7 @@ namespace RSS_Stalker
         {
             ChangeLanguage();
             this.InitializeComponent();
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            
             this.Suspending += OnSuspending;
             RequestedTheme = AppTools.GetRoamingSetting(AppSettings.Theme,"Light") == "Light" ? ApplicationTheme.Light : ApplicationTheme.Dark;
             UnhandledException += UnhandleExceptionHandle;

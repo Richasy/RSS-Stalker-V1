@@ -502,7 +502,9 @@ namespace CoreLib.Tools
                     //client.DefaultRequestHeaders.Add("Referrer Policy", "no-referrer-when-downgrade");
                     client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3837.0 Safari/537.36 Edg/77.0.211.2");
                     var message = await client.GetAsync(url);
-                    var c = GetCharSet(await message.Content.ReadAsStringAsync());
+                    var content = await message.Content.ReadAsByteArrayAsync();
+                    string con = Encoding.Default.GetString(content);
+                    var c = GetCharSet(con);
                     if (c != "")
                     {
                         encode = Encoding.GetEncoding(c);

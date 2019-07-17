@@ -3,7 +3,6 @@
 The new version has been revised as follows:
 
 1. Fix some problems that the source can't load
-2. Fix article details side list loading exception
 
 Thank you :)
 

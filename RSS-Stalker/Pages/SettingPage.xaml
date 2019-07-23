@@ -105,6 +105,10 @@
                                     <MediaElement Width="5" Height="5" Name="VoiceMediaElement" Visibility="Collapsed"/>
                                 </StackPanel>
                             </StackPanel>
+                            <StackPanel Margin="0,10,0,0">
+                                <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_ShowFeedDescriptionTipBlock" Margin="0,0,0,5"/>
+                                <ToggleSwitch Style="{StaticResource BasicSwitchStyle}" Name="ShowFeedDescriptionSwitch" Toggled="ShowFeedDescriptionSwitch_Toggled"/>
+                            </StackPanel>
                         </StackPanel>
                     </PivotItem>
                     <PivotItem>

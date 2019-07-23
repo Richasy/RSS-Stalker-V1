@@ -2,7 +2,7 @@
 
 The new version has been revised as follows:
 
-1. Fix some problems that the source can't load
+1. Improve data source loading speed
 
 Thank you :)
 

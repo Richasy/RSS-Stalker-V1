@@ -47,6 +47,7 @@ namespace CoreLib.Enums
         ReadFontFamily,
         ReadFontSize,
         IsReadableChangeInOffline,
-        SideListLocked
+        SideListLocked,
+        IsShowFeedDescription
     }
 }

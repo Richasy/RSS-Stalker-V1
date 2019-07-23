@@ -7,9 +7,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:CoreLib.Models"
     xmlns:models1="using:CoreLib.Models.App"
+    xmlns:converter="using:CoreLib.Models.Converter"
     SizeChanged="Page_SizeChanged"
     mc:Ignorable="d">
     <Page.Resources>
+        <converter:ShowFeedDescriptionConverter x:Key="FeedDescShowConverter"/>
         <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource BasicMenuFlyoutStyle}" x:Name="ChannelMenuFlyout" x:Key="ChannelMenuFlyout">
             <MenuFlyoutItem x:Uid="Control_UpdateMenuItem" FontFamily="{StaticResource Basic}" Name="UpdateChannelMenuItem" Click="UpdateChannelMenuItem_Click">
                 <MenuFlyoutItem.Icon>
@@ -116,7 +118,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Text="{x:Bind Name,Mode=OneWay}" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource Title}" Foreground="{ThemeResource ImportantTextColor}" FontWeight="Bold" FontSize="15"/>
-                <TextBlock Text="{x:Bind Description,Mode=OneWay}" Grid.Row="1" Margin="0,5,0,0" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource TipTextColor}" FontSize="11" TextWrapping="Wrap" MaxLines="1" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Text="{x:Bind Description}" Visibility="{Binding Description,Converter={StaticResource FeedDescShowConverter}}" Grid.Row="1" Margin="0,5,0,0" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource TipTextColor}" FontSize="11" TextWrapping="Wrap" MaxLines="1" TextTrimming="CharacterEllipsis"/>
             </Grid>
         </DataTemplate>
     </Page.Resources>

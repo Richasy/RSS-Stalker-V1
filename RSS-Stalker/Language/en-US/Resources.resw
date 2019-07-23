@@ -687,4 +687,7 @@
   <data name="Tip_ReadableRepeat" xml:space="preserve">
     <value>Full content list already has this channel</value>
   </data>
+  <data name="Control_ShowFeedDescriptionTipBlock.Text" xml:space="preserve">
+    <value>Show feed description in side list</value>
+  </data>
 </root>

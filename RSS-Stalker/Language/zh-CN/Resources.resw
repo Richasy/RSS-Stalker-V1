@@ -687,4 +687,7 @@
   <data name="Tip_ReadableRepeat" xml:space="preserve">
     <value>全文列表已有该频道</value>
   </data>
+  <data name="Control_ShowFeedDescriptionTipBlock.Text" xml:space="preserve">
+    <value>显示订阅源列表项描述</value>
+  </data>
 </root>

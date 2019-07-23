@@ -128,6 +128,7 @@
     <Compile Include="Models\App\CacheModel.cs" />
     <Compile Include="Models\App\FilterRule.cs" />
     <Compile Include="Models\App\SystemFont.cs" />
+    <Compile Include="Models\Converter\ShowFeedDescriptionConverter.cs" />
     <Compile Include="Models\OPML\Body.cs" />
     <Compile Include="Models\App\Category.cs" />
     <Compile Include="Models\App\Channel.cs" />

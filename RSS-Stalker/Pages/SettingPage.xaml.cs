@@ -59,6 +59,8 @@ namespace RSS_Stalker.Pages
             string gender = AppTools.GetLocalSetting(AppSettings.VoiceGender, "Female");
             bool isAutoCache = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.AutoCacheWhenOpenChannel, "False"));
             bool isFirstCache = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsCacheFirst, "False"));
+            bool isShowFeedDescription = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsShowFeedDescription, "True"));
+
             if (!isOneDrive)
             {
                 ForceSyncContainer.Visibility = Visibility.Collapsed;
@@ -89,6 +91,7 @@ namespace RSS_Stalker.Pages
                 default:
                     break;
             }
+            ShowFeedDescriptionSwitch.IsOn = isShowFeedDescription;
             AutoCacheChannel.IsOn = isAutoCache;
             FirstCacheChannel.IsOn = isFirstCache;
             CacheSizeTextBlock.Text = await IOTools.GetCacheSize();
@@ -572,6 +575,13 @@ namespace RSS_Stalker.Pages
         {
             var dialog = new BaiduTranslateDialog();
             await dialog.ShowAsync();
+        }
+
+        private void ShowFeedDescriptionSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (!_isInit)
+                return;
+            AppTools.WriteLocalSetting(AppSettings.IsShowFeedDescription, ShowFeedDescriptionSwitch.IsOn.ToString());
         }
     }
 }

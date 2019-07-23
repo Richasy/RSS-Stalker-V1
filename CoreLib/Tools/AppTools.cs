@@ -30,6 +30,7 @@ namespace CoreLib.Tools
 {
     public class AppTools
     {
+        public static List<HttpClient> ClientCollection = new List<HttpClient>();
         /// <summary>
         /// 写入本地设置
         /// </summary>
@@ -274,19 +275,37 @@ namespace CoreLib.Tools
                 return await client.GetStreamAsync(url);
             }
         }
+        public static HttpClient GetClient(string url)
+        {
+            HttpClient client;
+            client = ClientCollection.Where(p => p.BaseAddress.ToString() == url).FirstOrDefault();
+            if (client == null)
+            {
+                client = new HttpClient(new HttpClientHandler
+                {
+                    AutomaticDecompression = DecompressionMethods.GZip
+                                 | DecompressionMethods.Deflate
+                })
+                { BaseAddress = new Uri(url) };
+                client.DefaultRequestHeaders.Connection.Add("keep-alive");
+                ClientCollection.Add(client);
+            }
+            return client;
+        }
         /// <summary>
         /// 从URL获取文本
         /// </summary>
         /// <param name="url">地址</param>
         /// <returns></returns>
-        public static async Task<string> GetTextFromUrl(string url)
+        public static async Task<string> GetTextFromUrl(string url,bool isLimit=false)
         {
             try
             {
-                using (var client = new HttpClient())
-                {
-                    return await client.GetStringAsync(url);
-                }
+                var client = GetClient(url);
+                if (isLimit)
+                    client.Timeout = TimeSpan.FromSeconds(20);
+                return await client.GetStringAsync(url);
+                
             }
             catch (Exception)
             {
@@ -350,20 +369,12 @@ namespace CoreLib.Tools
         public static async Task<List<RssSchema>> GetSchemaFromUrl(string url,bool isLimit=false)
         {
             string feed = null;
-
-            using (var client = new HttpClient(new HttpClientHandler
+            try
             {
-                AutomaticDecompression = DecompressionMethods.GZip
-                                     | DecompressionMethods.Deflate
-            }))
+                feed = await GetTextFromUrl(url,isLimit);
+            }
+            catch (Exception)
             {
-                if (isLimit)
-                    client.Timeout = new TimeSpan(0, 0, 20);
-                try
-                {
-                    feed = await client.GetStringAsync(url);
-                }
-                catch { }
             }
             var list = new List<RssSchema>();
             if (!string.IsNullOrEmpty(feed))
@@ -490,33 +501,27 @@ namespace CoreLib.Tools
         {
             string feed = null;
 
-            using (var client = new HttpClient(new HttpClientHandler
+            var client = GetClient(url);
+            try
             {
-                AutomaticDecompression = DecompressionMethods.GZip
-                                     | DecompressionMethods.Deflate
-            }))
-            {
-                try
+                var encode = Encoding.Default;
+                //client.DefaultRequestHeaders.Add("Referrer Policy", "no-referrer-when-downgrade");
+                client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3837.0 Safari/537.36 Edg/77.0.211.2");
+                var message = await client.GetAsync(url);
+                var content = await message.Content.ReadAsByteArrayAsync();
+                string con = Encoding.Default.GetString(content);
+                var c = GetCharSet(con);
+                if (c != "")
                 {
-                    var encode = Encoding.Default;
-                    //client.DefaultRequestHeaders.Add("Referrer Policy", "no-referrer-when-downgrade");
-                    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3837.0 Safari/537.36 Edg/77.0.211.2");
-                    var message = await client.GetAsync(url);
-                    var content = await message.Content.ReadAsByteArrayAsync();
-                    string con = Encoding.Default.GetString(content);
-                    var c = GetCharSet(con);
-                    if (c != "")
-                    {
-                        encode = Encoding.GetEncoding(c);
-                    }
-                    using (var stream = await message.Content.ReadAsStreamAsync())
-                    {
-                        var sr = new StreamReader(stream, encode);
-                        feed = await sr.ReadToEndAsync();
-                    }
+                    encode = Encoding.GetEncoding(c);
                 }
-                catch { }
+                using (var stream = await message.Content.ReadAsStreamAsync())
+                {
+                    var sr = new StreamReader(stream, encode);
+                    feed = await sr.ReadToEndAsync();
+                }
             }
+            catch { }
             var list = new List<Feed>();
             if (feed != null)
             {

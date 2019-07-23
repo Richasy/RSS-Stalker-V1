@@ -72,6 +72,7 @@ namespace RSS_Stalker.Pages
         {
             if (e.NavigationMode == NavigationMode.Back)
             {
+                ReadabilityButton.IsEnabled = true;
                 return;
             }
             if(e.Parameter!=null)
@@ -635,18 +636,20 @@ namespace RSS_Stalker.Pages
 
         private async void WebButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_sourceFeed.FeedUrl.Contains("www.ithome.com"))
-            {
-                string link = _sourceFeed.FeedUrl.Replace("https://www.ithome.com/0/", "").Replace(".htm", "");
-                link = link.Replace("/", "");
-                link = $"ithome://news?id={link}";
-                bool result = await Launcher.LaunchUriAsync(new Uri(link));
-                if (result)
-                {
-                    return;
-                }
-            }
-            await Launcher.LaunchUriAsync(new Uri(_sourceFeed.FeedUrl));
+            //if (_sourceFeed.FeedUrl.Contains("www.ithome.com"))
+            //{
+            //    string link = _sourceFeed.FeedUrl.Replace("https://www.ithome.com/0/", "").Replace(".htm", "");
+            //    link = link.Replace("/", "");
+            //    link = $"ithome://news?id={link}";
+            //    bool result = await Launcher.LaunchUriAsync(new Uri(link));
+            //    if (result)
+            //    {
+            //        return;
+            //    }
+            //}
+            var opt=new LauncherOptions();
+            opt.IgnoreAppUriHandlers = true;
+            await Launcher.LaunchUriAsync(new Uri(_sourceFeed.FeedUrl),opt);
         }
 
         private async void SelectMenu_Speech_Click(object sender, RoutedEventArgs e)

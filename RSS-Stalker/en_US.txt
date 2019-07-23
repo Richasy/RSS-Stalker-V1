@@ -3,6 +3,7 @@
 The new version has been revised as follows:
 
 1. Improve data source loading speed
+2. Allow to remove the secondary description of the feed list, compress the list display space
 
 Thank you :)
 

@@ -12,6 +12,7 @@ using Windows.Storage.Pickers;
 using CoreLib.Tools;
 using CoreLib.Models.App;
 using Microsoft.Toolkit.Uwp.Connectivity;
+using Rss.Parsers.Rss;
 
 namespace RSS_Stalker.Tools
 {
@@ -264,7 +265,7 @@ namespace RSS_Stalker.Tools
         /// </summary>
         /// <param name="categories">标签列表</param>
         /// <returns></returns>
-        public async static Task ReplaceTodo(List<Feed> feeds, bool isUpdate = false)
+        public async static Task ReplaceTodo(List<RssSchema> feeds, bool isUpdate = false)
         {
             try
             {
@@ -286,7 +287,7 @@ namespace RSS_Stalker.Tools
         /// </summary>
         /// <param name="feeds">标签列表</param>
         /// <returns></returns>
-        public async static Task ReplaceStar(List<Feed> feeds, bool isUpdate = false)
+        public async static Task ReplaceStar(List<RssSchema> feeds, bool isUpdate = false)
         {
             try
             {
@@ -352,7 +353,7 @@ namespace RSS_Stalker.Tools
         /// 获取本地保存的待阅读信息
         /// </summary>
         /// <returns></returns>
-        public async static Task<List<Feed>> GetLocalTodoReadList()
+        public async static Task<List<RssSchema>> GetLocalTodoReadList()
         {
             try
             {
@@ -363,12 +364,12 @@ namespace RSS_Stalker.Tools
                 {
                     text = "[]";
                 }
-                var list = JsonConvert.DeserializeObject<List<Feed>>(text);
+                var list = JsonConvert.DeserializeObject<List<RssSchema>>(text);
                 return list;
             }
             catch (Exception)
             {
-                return new List<Feed>();
+                return new List<RssSchema>();
             }
             
         }
@@ -377,7 +378,7 @@ namespace RSS_Stalker.Tools
         /// </summary>
         /// <param name="feed"></param>
         /// <returns></returns>
-        public async static Task AddTodoRead(Feed feed)
+        public async static Task AddTodoRead(RssSchema feed)
         {
             var localFolder = ApplicationData.Current.LocalFolder;
             var file = await localFolder.CreateFileAsync("TodoRead.json", CreationCollisionOption.OpenIfExists);
@@ -386,7 +387,7 @@ namespace RSS_Stalker.Tools
             {
                 text = "[]";
             }
-            var list = JsonConvert.DeserializeObject<List<Feed>>(text);
+            var list = JsonConvert.DeserializeObject<List<RssSchema>>(text);
             if (list.Any(p => p.FeedUrl.Equals(feed.FeedUrl, StringComparison.CurrentCultureIgnoreCase)))
             {
                 throw new Exception(AppTools.GetReswLanguage("Tip_TodoRepeat"));
@@ -408,7 +409,7 @@ namespace RSS_Stalker.Tools
         /// </summary>
         /// <param name="feed"></param>
         /// <returns></returns>
-        public async static Task DeleteTodoRead(Feed feed)
+        public async static Task DeleteTodoRead(RssSchema feed)
         {
             var localFolder = ApplicationData.Current.LocalFolder;
             var file = await localFolder.CreateFileAsync("TodoRead.json", CreationCollisionOption.OpenIfExists);
@@ -417,7 +418,7 @@ namespace RSS_Stalker.Tools
             {
                 text = "[]";
             }
-            var list = JsonConvert.DeserializeObject<List<Feed>>(text);
+            var list = JsonConvert.DeserializeObject<List<RssSchema>>(text);
             list.RemoveAll(p => p.Equals(feed));
             text = JsonConvert.SerializeObject(list);
             await FileIO.WriteTextAsync(file, text);
@@ -508,7 +509,7 @@ namespace RSS_Stalker.Tools
         /// 获取本地保存的收藏信息
         /// </summary>
         /// <returns></returns>
-        public async static Task<List<Feed>> GetLocalStarList()
+        public async static Task<List<RssSchema>> GetLocalStarList()
         {
             try
             {
@@ -519,12 +520,12 @@ namespace RSS_Stalker.Tools
                 {
                     text = "[]";
                 }
-                var list = JsonConvert.DeserializeObject<List<Feed>>(text);
+                var list = JsonConvert.DeserializeObject<List<RssSchema>>(text);
                 return list;
             }
             catch (Exception)
             {
-                return new List<Feed>();
+                return new List<RssSchema>();
             }
             
         }
@@ -533,7 +534,7 @@ namespace RSS_Stalker.Tools
         /// </summary>
         /// <param name="feed"></param>
         /// <returns></returns>
-        public async static Task AddStar(Feed feed)
+        public async static Task AddStar(RssSchema feed)
         {
             var localFolder = ApplicationData.Current.LocalFolder;
             var file = await localFolder.CreateFileAsync("Star.json", CreationCollisionOption.OpenIfExists);
@@ -542,7 +543,7 @@ namespace RSS_Stalker.Tools
             {
                 text = "[]";
             }
-            var list = JsonConvert.DeserializeObject<List<Feed>>(text);
+            var list = JsonConvert.DeserializeObject<List<RssSchema>>(text);
             if (list.Any(p => p.FeedUrl.Equals(feed.FeedUrl, StringComparison.CurrentCultureIgnoreCase)))
             {
                 throw new Exception(AppTools.GetReswLanguage("Tip_StarRepeat"));
@@ -564,7 +565,7 @@ namespace RSS_Stalker.Tools
         /// </summary>
         /// <param name="feed"></param>
         /// <returns></returns>
-        public async static Task DeleteStar(Feed feed)
+        public async static Task DeleteStar(RssSchema feed)
         {
             try
             {
@@ -575,7 +576,7 @@ namespace RSS_Stalker.Tools
                 {
                     text = "[]";
                 }
-                var list = JsonConvert.DeserializeObject<List<Feed>>(text);
+                var list = JsonConvert.DeserializeObject<List<RssSchema>>(text);
                 list.RemoveAll(p => p.Equals(feed));
                 text = JsonConvert.SerializeObject(list);
                 await FileIO.WriteTextAsync(file, text);
@@ -769,7 +770,7 @@ namespace RSS_Stalker.Tools
             var task6 = Task.Run(async () =>
             {
                 var l = await GetNeedReadableChannels();
-                export.Toast = l;
+                export.Readable = l;
             });
             tasks.Add(task1);
             tasks.Add(task2);
@@ -1104,10 +1105,10 @@ namespace RSS_Stalker.Tools
         /// </summary>
         /// <param name="channel">频道</param>
         /// <returns></returns>
-        public static async Task<Tuple<List<Feed>,int>>GetLocalCache(Channel channel)
+        public static async Task<Tuple<List<RssSchema>,int>>GetLocalCache(Channel channel)
         {
             var list = await GetCacheChannels();
-            var results = new List<Feed>();
+            var results = new List<RssSchema>();
             int time = 0;
             if (list.Count > 0)
             {
@@ -1116,22 +1117,22 @@ namespace RSS_Stalker.Tools
                 {
                     foreach (var item in cache.Feeds)
                     {
-                        results.Add(new Feed(item));
+                        results.Add(item);
                     }
                     time = cache.CacheTime;
                 }
             }
-            return new Tuple<List<Feed>, int>(results,time);
+            return new Tuple<List<RssSchema>, int>(results,time);
         }
         /// <summary>
         /// 获取本地的页面缓存
         /// </summary>
         /// <param name="page">页面</param>
         /// <returns></returns>
-        public static async Task<Tuple<List<Feed>,int>> GetLocalCache(CustomPage page)
+        public static async Task<Tuple<List<RssSchema>,int>> GetLocalCache(CustomPage page)
         {
             var list = await GetCachePages();
-            var results = new List<Feed>();
+            var results = new List<RssSchema>();
             int time = 0;
             if (list.Count > 0)
             {
@@ -1140,13 +1141,13 @@ namespace RSS_Stalker.Tools
                 {
                     foreach (var item in cache.Feeds)
                     {
-                        results.Add(new Feed(item));
+                        results.Add(item);
                     }
                     time = cache.CacheTime;
                 }
                 
             }
-            return new Tuple<List<Feed>,int>(results,time);
+            return new Tuple<List<RssSchema>,int>(results,time);
         }
 
         /// <summary>

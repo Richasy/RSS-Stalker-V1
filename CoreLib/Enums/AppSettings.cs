@@ -48,6 +48,7 @@ namespace CoreLib.Enums
         ReadFontSize,
         IsReadableChangeInOffline,
         SideListLocked,
-        IsShowFeedDescription
+        IsShowFeedDescription,
+        IsHidePage
     }
 }

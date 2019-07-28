@@ -127,6 +127,18 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Feed_Card.xaml.cs">
+      <DependentUpon>Feed_Card.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Feed_List.xaml.cs">
+      <DependentUpon>Feed_List.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Feed_SideList.xaml.cs">
+      <DependentUpon>Feed_SideList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Feed_Waterful.xaml.cs">
+      <DependentUpon>Feed_Waterful.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\HoldImage.xaml.cs">
       <DependentUpon>HoldImage.xaml</DependentUpon>
     </Compile>
@@ -286,6 +298,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\Feed_Card.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Feed_List.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Feed_SideList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Feed_Waterful.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\HoldImage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

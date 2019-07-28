@@ -89,8 +89,8 @@ namespace CoreLib.Models
             Type = "rss";
             Text = channel.Description;
             Title = channel.Name;
-            XMLUrl = channel.Link;
-            HTMLUrl = channel.SourceUrl;
+            XMLUrl = WebUtility.HtmlEncode(channel.Link);
+            HTMLUrl = WebUtility.HtmlEncode(channel.SourceUrl);
         }
 
         ///<summary>

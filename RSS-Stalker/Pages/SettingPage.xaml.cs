@@ -60,6 +60,7 @@ namespace RSS_Stalker.Pages
             bool isAutoCache = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.AutoCacheWhenOpenChannel, "False"));
             bool isFirstCache = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsCacheFirst, "False"));
             bool isShowFeedDescription = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsShowFeedDescription, "True"));
+            bool isHidePage = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsHidePage, "False"));
 
             if (!isOneDrive)
             {
@@ -92,6 +93,7 @@ namespace RSS_Stalker.Pages
                     break;
             }
             ShowFeedDescriptionSwitch.IsOn = isShowFeedDescription;
+            HidePageSwitch.IsOn = isHidePage;
             AutoCacheChannel.IsOn = isAutoCache;
             FirstCacheChannel.IsOn = isFirstCache;
             CacheSizeTextBlock.Text = await IOTools.GetCacheSize();
@@ -582,6 +584,17 @@ namespace RSS_Stalker.Pages
             if (!_isInit)
                 return;
             AppTools.WriteLocalSetting(AppSettings.IsShowFeedDescription, ShowFeedDescriptionSwitch.IsOn.ToString());
+        }
+
+        private void HidePageSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (!_isInit)
+                return;
+            AppTools.WriteLocalSetting(AppSettings.IsHidePage, HidePageSwitch.IsOn.ToString());
+            if (HidePageSwitch.IsOn)
+                MainPage.Current.PageContainer.Visibility = Visibility.Collapsed;
+            else
+                MainPage.Current.PageContainer.Visibility = Visibility.Visible;
         }
     }
 }

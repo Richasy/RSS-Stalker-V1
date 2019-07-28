@@ -8,10 +8,34 @@
     xmlns:models="using:CoreLib.Models"
     xmlns:models1="using:CoreLib.Models.App"
     xmlns:converter="using:CoreLib.Models.Converter"
+    xmlns:controls="using:RSS_Stalker.Controls"
     SizeChanged="Page_SizeChanged"
     mc:Ignorable="d">
     <Page.Resources>
         <converter:ShowFeedDescriptionConverter x:Key="FeedDescShowConverter"/>
+        <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource BasicMenuFlyoutStyle}" x:Name="PageMenuFlyout" x:Key="PageMenuFlyout">
+            <MenuFlyoutItem x:Uid="Control_HomeChannelMenuItem" FontFamily="{StaticResource Basic}" Name="HomePageMenuItem" Click="HomePageMenuItem_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE97C;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem x:Uid="Control_UpdateMenuItem" FontFamily="{StaticResource Basic}" Name="UpdatePageMenuItem" Click="UpdatePageMenuItem_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE95A;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem x:Uid="Control_CachePageMenuItem" FontFamily="{StaticResource Basic}" Name="CachePageMenuItem" Click="CachePageMenuItem_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE957;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem x:Uid="Control_DeleteMenuItem" FontFamily="{StaticResource Basic}" Name="DeletePageMenuItem" Click="DeletePageMenuItem_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE9EB;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+        </MenuFlyout>
         <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource BasicMenuFlyoutStyle}" x:Name="ChannelMenuFlyout" x:Key="ChannelMenuFlyout">
             <MenuFlyoutItem x:Uid="Control_UpdateMenuItem" FontFamily="{StaticResource Basic}" Name="UpdateChannelMenuItem" Click="UpdateChannelMenuItem_Click">
                 <MenuFlyoutItem.Icon>
@@ -68,31 +92,9 @@
                 </MenuFlyoutItem.Icon>
             </MenuFlyoutItem>
         </MenuFlyout>
-        <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource BasicMenuFlyoutStyle}" x:Name="PageMenuFlyout" x:Key="PageMenuFlyout">
-            <MenuFlyoutItem x:Uid="Control_HomeChannelMenuItem" FontFamily="{StaticResource Basic}" Name="HomePageMenuItem" Click="HomePageMenuItem_Click">
-                <MenuFlyoutItem.Icon>
-                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE97C;"/>
-                </MenuFlyoutItem.Icon>
-            </MenuFlyoutItem>
-            <MenuFlyoutItem x:Uid="Control_UpdateMenuItem" FontFamily="{StaticResource Basic}" Name="UpdatePageMenuItem" Click="UpdatePageMenuItem_Click">
-                <MenuFlyoutItem.Icon>
-                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE95A;"/>
-                </MenuFlyoutItem.Icon>
-            </MenuFlyoutItem>
-            <MenuFlyoutItem x:Uid="Control_CachePageMenuItem" FontFamily="{StaticResource Basic}" Name="CachePageMenuItem" Click="CachePageMenuItem_Click">
-                <MenuFlyoutItem.Icon>
-                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE957;"/>
-                </MenuFlyoutItem.Icon>
-            </MenuFlyoutItem>
-            <MenuFlyoutSeparator/>
-            <MenuFlyoutItem x:Uid="Control_DeleteMenuItem" FontFamily="{StaticResource Basic}" Name="DeletePageMenuItem" Click="DeletePageMenuItem_Click">
-                <MenuFlyoutItem.Icon>
-                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE9EB;"/>
-                </MenuFlyoutItem.Icon>
-            </MenuFlyoutItem>
-        </MenuFlyout>
+        
         <DataTemplate x:DataType="models1:CustomPage" x:Key="PageItemTemplate">
-            <Grid Padding="15,15,0,15" Background="{ThemeResource TransparentBackground}" RightTapped="PageItem_RightTapped" Holding="PageItem_Holding">
+            <Grid Padding="15,15,0,15" Background="{ThemeResource TransparentBackground}" ContextFlyout="{StaticResource PageMenuFlyout}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
@@ -102,7 +104,7 @@
             </Grid>
         </DataTemplate>
         <DataTemplate x:DataType="models:Category" x:Key="CategoryItemTemplate">
-            <Grid Padding="15,15,0,15" Background="{ThemeResource TransparentBackground}" RightTapped="CategoryItem_RightTapped" Holding="CategoryItem_Holding">
+            <Grid Padding="15,15,0,15" Background="{ThemeResource TransparentBackground}" ContextFlyout="{StaticResource CategoryMenuFlyout}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
@@ -112,7 +114,7 @@
             </Grid>
         </DataTemplate>
         <DataTemplate x:DataType="models:Channel" x:Key="ChannelItemTemplate">
-            <Grid Padding="20,10" Background="{ThemeResource TransparentBackground}" RightTapped="ChannelItem_RightTapped" Holding="ChannelItem_Holding" IsHoldingEnabled="True">
+            <Grid Padding="20,10" Background="{ThemeResource TransparentBackground}" ContextFlyout="{StaticResource ChannelMenuFlyout}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
@@ -144,7 +146,7 @@
                             <Image Name="AppIcon" VerticalAlignment="Center" Width="20" Margin="0,0,10,0"/>
                             <TextBlock Name="AppTitleBlock" Foreground="{ThemeResource ImportantTextColor}" FontFamily="{ThemeResource English}" VerticalAlignment="Center" FontSize="15"/>
                         </StackPanel>
-                        <Grid Grid.Row="1">
+                        <Grid Grid.Row="1" x:Name="PageContainer" x:FieldModifier="Public">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
@@ -193,7 +195,7 @@
                                   ItemClick="CategoryListView_ItemClick"
                                   />
                         </Grid>
-                        <ProgressBar Grid.Row="3" Background="{ThemeResource LineColor}" Foreground="{ThemeResource PrimaryColor}" Name="CacheProgressBar" Margin="30,0" Height="3" Visibility="Collapsed"/>
+                        <ProgressBar Grid.Row="3" Background="{ThemeResource LineColor}" Foreground="{ThemeResource PrimaryColor}" x:FieldModifier="Public" Name="CacheProgressBar" Margin="30,0" Height="3" Visibility="Collapsed"/>
                         <StackPanel Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Center" Margin="0,15">
                             <ToggleButton Style="{StaticResource CircleToggleButtonStyle}" x:FieldModifier="Public" Name="TodoButton" Click="TodoButton_Click" Content="&#xE924;"/>
                             <ToggleButton Style="{StaticResource CircleToggleButtonStyle}" x:FieldModifier="Public" Margin="15,0" Name="StarButton" Click="StarButton_Click" Content="&#xE9DD;"/>
@@ -241,7 +243,7 @@
                 <Frame Name="MainFrame" x:FieldModifier="Public" Grid.Row="1"/>
             </Grid>
         </SplitView>
-        <ProgressRing Style="{StaticResource BasicProgressRingStyle}" Name="LoadingRing"/>
+        <ProgressRing Style="{StaticResource BasicProgressRingStyle}" Name="LoadingRing" x:FieldModifier="Public"/>
         <StackPanel VerticalAlignment="Top" Height="20" Name="TitleBarControl" Background="{ThemeResource TransparentBackground}"/>
     </Grid>
 </Page>

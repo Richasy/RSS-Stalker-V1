@@ -4,7 +4,12 @@
     xmlns:local="using:RSS_Stalker.Theme">
     
     <SolidColorBrush x:Key="SideBackground" Color="#282828"/>
-    <SolidColorBrush x:Key="MaskBackground" Color="Black" Opacity="0.6"/>
+    <LinearGradientBrush x:Key="MaskBackground" StartPoint="0.5,0" EndPoint="0.5,0.7">
+        <GradientStopCollection>
+            <GradientStop Color="#30000000" Offset="0"/>
+            <GradientStop Color="#E8000000" Offset="0.7"/>
+        </GradientStopCollection>
+    </LinearGradientBrush>
     <AcrylicBrush x:Key="FlyoutBackground" BackgroundSource="Backdrop" TintColor="#1C1C1C" TintOpacity="0.5" FallbackColor="#1C1C1C"/>
     <SolidColorBrush x:Key="MediaControlsBackground" Color="#1C1C1C" Opacity="0.4"/>
     <AcrylicBrush x:Key="PageBackground" BackgroundSource="Backdrop" TintColor="#1C1C1C" TintOpacity="0.9" FallbackColor="#1C1C1C"/>

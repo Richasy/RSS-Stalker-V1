@@ -690,4 +690,13 @@
   <data name="Control_ShowFeedDescriptionTipBlock.Text" xml:space="preserve">
     <value>Show feed description in side list</value>
   </data>
+  <data name="Control_EmptyTipBlock.Text" xml:space="preserve">
+    <value>Here is nothing~</value>
+  </data>
+  <data name="Control_OpenWebMenuItem.Text" xml:space="preserve">
+    <value>Open web</value>
+  </data>
+  <data name="Control_HidePageTipBlock.Text" xml:space="preserve">
+    <value>Hide Custom page</value>
+  </data>
 </root>

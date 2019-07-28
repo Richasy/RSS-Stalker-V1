@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rss.Parsers.Rss;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +12,8 @@ namespace CoreLib.Models.App
     /// </summary>
     public class ExportModel
     {
-        public List<Feed> Todo { get; set; }
-        public List<Feed> Star { get; set; }
+        public List<RssSchema> Todo { get; set; }
+        public List<RssSchema> Star { get; set; }
         public List<Channel> Toast { get; set; }
         public List<CustomPage> Pages { get; set; }
         public List<string> Reads { get; set; }

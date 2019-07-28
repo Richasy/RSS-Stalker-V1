@@ -1,0 +1,62 @@
+﻿<UserControl
+    x:Class="RSS_Stalker.Controls.Feed_Waterful"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:RSS_Stalker.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <UserControl.Resources>
+        <DataTemplate x:DataType="x:String" x:Key="TagItemTemplate">
+            <Border CornerRadius="4" Padding="5,3" BorderBrush="{ThemeResource LineColor}" BorderThickness="1">
+                <TextBlock Text="{Binding}" FontFamily="{StaticResource Basic}" FontSize="11" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{ThemeResource TipTextColor}"/>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid Background="{ThemeResource CardBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <local:HoldImage x:Name="HoldImageControl" Height="150" HorizontalAlignment="Stretch"/>
+        <StackPanel Grid.Row="1" Margin="0,20,0,0" Padding="20,0,20,10" BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,0,1">
+            <TextBlock Margin="0,0,0,0" Name="TitleBlock" LineHeight="20" TextWrapping="Wrap" Foreground="{ThemeResource ImportantTextColor}" TextTrimming="CharacterEllipsis" FontSize="14" FontWeight="Bold" FontFamily="{StaticResource Title}"/>
+            <TextBlock Margin="0,5" x:Name="DateBlock" Foreground="{ThemeResource TipTextColor}" FontSize="9" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource Basic}"/>
+            <TextBlock Margin="0" x:Name="SummaryBlock" MaxLines="6" Foreground="{ThemeResource NormalTextColor}" FontSize="12" FontFamily="{StaticResource Basic}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
+            <ListView ItemTemplate="{StaticResource TagItemTemplate}"
+                      x:Name="TagListView"
+                              ItemsSource="{x:Bind Categories}"
+                              ItemContainerStyle="{StaticResource TransparentListItemContainer}"
+                              Style="{StaticResource BasicListView}"
+                              Margin="0,5,0,-5"
+                              >
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <controls1:WrapPanel
+                                                Padding="0,0,0,0"
+                                            HorizontalAlignment="Stretch"
+                                            Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ListView>
+        </StackPanel>
+        <Grid Row="2" Margin="0,10" Padding="20,0,15,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                <controls1:ImageEx x:Name="FavIconImage" CornerRadius="10" Width="20" Height="20" VerticalAlignment="Center" Background="White"/>
+                <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Name="AuthorNameBlock" MaxWidth="150" Margin="10,0,0,0" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Column="1">
+                <Button Style="{StaticResource TransparentButtonStyle}" Name="OpenFeedButton" Click="OpenFeedButton_Click" FontSize="15" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="{StaticResource Icon}" Content="&#xE975;"/>
+                <Button Margin="10,0,0,0" Style="{StaticResource TransparentButtonStyle}" Name="ShareFeedButton" Click="ShareFeedButton_Click" FontSize="15" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="{StaticResource Icon}" Content="&#xE9CC;"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

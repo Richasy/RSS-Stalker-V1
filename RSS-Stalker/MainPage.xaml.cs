@@ -23,6 +23,7 @@ using Microsoft.Toolkit.Uwp.Connectivity;
 using CoreLib.Models.App;
 using Windows.UI.Xaml.Media.Imaging;
 using System.Text;
+using Rss.Parsers.Rss;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -37,8 +38,8 @@ namespace RSS_Stalker
         public ObservableCollection<Channel> Channels = new ObservableCollection<Channel>();
         public ObservableCollection<CustomPage> CustomPages = new ObservableCollection<CustomPage>();
         public List<SystemFont> SystemFonts = new List<SystemFont>();
-        public List<Feed> TodoList = new List<Feed>();
-        public List<Feed> StarList = new List<Feed>();
+        public List<RssSchema> TodoList = new List<RssSchema>();
+        public List<RssSchema> StarList = new List<RssSchema>();
         public List<Channel> ToastList = new List<Channel>();
         public List<Channel> ReadableList = new List<Channel>();
         public List<string> ReadIds = new List<string>();
@@ -57,18 +58,6 @@ namespace RSS_Stalker
         /// 频道列表数量标识，在进行数据替换和拖放排序时作为参照。在清空列表前，一定要将该标识设为-1
         /// </summary>
         public int _channelListCount = -1;
-        /// <summary>
-        /// 呼出右键菜单时记录的目标频道
-        /// </summary>
-        private Channel _tempChannel;
-        /// <summary>
-        /// 呼出右键菜单时记录的目标分类
-        /// </summary>
-        private Category _tempCategory;
-        /// <summary>
-        /// 呼出右键菜单时记录的目标页面
-        /// </summary>
-        private CustomPage _tempPage;
         /// <summary>
         /// 检测同步的计时器（由于RoamingSettings的不即时性，当前已弃用该功能）
         /// </summary>
@@ -157,6 +146,7 @@ namespace RSS_Stalker
             AppIcon.Source = icon;
             bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsBindingOneDrive, "False"));
             AppTitleBlock.Text = AppTools.GetReswLanguage("DisplayName");
+            await OtherListInit();
             // 监听集合变化
             Categories.CollectionChanged += CategoryCollectionReordered;
             Channels.CollectionChanged += ChannelCollectionReordered;
@@ -200,6 +190,11 @@ namespace RSS_Stalker
                     AppSplitView.OpenPaneLength = 250;
                 }
             }
+            bool isHidePage = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsHidePage, "False"));
+            if (isHidePage)
+                PageContainer.Visibility = Visibility.Collapsed;
+            else
+                PageContainer.Visibility = Visibility.Visible;
             // 在完成列表装载后，将列表的数量重新赋值给标识符
             _categoryListCount = Categories.Count;
             _channelListCount = Channels.Count;
@@ -208,7 +203,7 @@ namespace RSS_Stalker
             if(isOneDrive && NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
                 await App.OneDrive.OneDriveAuthorize();
             // TimerInit();
-            OtherListInit();
+            
             // 注册后台
             RegisterBackground();
             // 检查版本更新
@@ -219,12 +214,26 @@ namespace RSS_Stalker
             _isInit = true;
             CheckUpdateLocalData();
         }
-        private async void OtherListInit()
+        private async Task OtherListInit()
         {
-            TodoList = await IOTools.GetLocalTodoReadList();
-            StarList = await IOTools.GetLocalStarList();
-            ToastList = await IOTools.GetNeedToastChannels();
-            ReadableList = await IOTools.GetNeedReadableChannels();
+            var tasks = new List<Task>();
+            tasks.Add(Task.Run(async () =>
+            {
+                TodoList = await IOTools.GetLocalTodoReadList();
+            }));
+            tasks.Add(Task.Run(async () =>
+            {
+                StarList = await IOTools.GetLocalStarList();
+            }));
+            tasks.Add(Task.Run(async () =>
+            {
+                ToastList = await IOTools.GetNeedToastChannels();
+            }));
+            tasks.Add(Task.Run(async () =>
+            {
+                ReadableList = await IOTools.GetNeedReadableChannels();
+            }));
+            await Task.WhenAll(tasks.ToArray());
         }
         public void SideHide()
         {
@@ -549,7 +558,8 @@ namespace RSS_Stalker
 
         private async void UpdateChannelMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new ModifyChannelDialog(_tempChannel);
+            var data = (sender as FrameworkElement).DataContext as Channel;
+            var dialog = new ModifyChannelDialog(data);
             await dialog.ShowAsync();
         }
         /// <summary>
@@ -559,6 +569,7 @@ namespace RSS_Stalker
         /// <param name="e"></param>
         private async void DeleteChannelMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            var data = (sender as FrameworkElement).DataContext as Channel;
             var confirmDialog = new ConfirmDialog(AppTools.GetReswLanguage("Tip_DeleteWarning"), AppTools.GetReswLanguage("Tip_DeleteChannelWarning"));
             confirmDialog.PrimaryButtonClick += async (_s, _e) =>
             {
@@ -567,18 +578,18 @@ namespace RSS_Stalker
                 var selectChannel = ChannelListView.SelectedItem as Channel;
                 if (category != null)
                 {
-                    if(selectChannel!=null && selectChannel.Id == _tempChannel.Id)
+                    if(selectChannel!=null && selectChannel.Id == data.Id)
                     {
                         MainFrame.Navigate(typeof(Pages.WelcomePage));
                     }
                     confirmDialog.IsPrimaryButtonEnabled = false;
                     confirmDialog.PrimaryButtonText = AppTools.GetReswLanguage("Tip_Waiting");
-                    category.Channels.RemoveAll(p => p.Id == _tempChannel.Id);
+                    category.Channels.RemoveAll(p => p.Id == data.Id);
                     await IOTools.UpdateCategory(category);
-                    Channels.Remove(_tempChannel);
+                    Channels.Remove(data);
                     _channelListCount -= 1;
                     new PopupToast(AppTools.GetReswLanguage("Tip_DeleteChannelSuccess")).ShowPopup();
-                    _tempChannel = null;
+                    data = null;
                     confirmDialog.Hide();
                 }
                 else
@@ -588,43 +599,101 @@ namespace RSS_Stalker
             };
             await confirmDialog.ShowAsync();
         }
-
-        private void ChannelItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        private void UpdatePageMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var data = (sender as FrameworkElement).DataContext as Channel;
-            _tempChannel = data;
-            ChannelMenuFlyout.ShowAt((FrameworkElement)sender,e.GetPosition((FrameworkElement)sender));
+            var data = (sender as FrameworkElement).DataContext as CustomPage;
+            CloseCategory();
+            MainFrame.Navigate(typeof(Pages.OperaterCustomPage), data);
+        }
+        private async void CachePageMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            LoadingRing.IsActive = true;
+            var data = (sender as FrameworkElement).DataContext as CustomPage;
+            CacheProgressBar.Visibility = Visibility.Visible;
+            try
+            {
+                CacheProgressBar.Maximum = 1;
+                await IOTools.AddCachePage(async (count) => {
+                    await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+                    {
+                        CacheProgressBar.Value = count;
+                    });
+                },
+                    data);
+                new PopupToast(AppTools.GetReswLanguage("Tip_CacheSuccess")).ShowPopup();
+            }
+            catch (Exception)
+            {
+                new PopupToast(AppTools.GetReswLanguage("Tip_CacheFailed"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+            }
+            CacheProgressBar.Visibility = Visibility.Collapsed;
+            LoadingRing.IsActive = false;
+        }
+
+        private async void DeletePageMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var data = (sender as FrameworkElement).DataContext as CustomPage;
+            var confirmDialog = new ConfirmDialog(AppTools.GetReswLanguage("Tip_DeleteWarning"), AppTools.GetReswLanguage("Tip_DeletePageWarning"));
+            confirmDialog.PrimaryButtonClick += async (_s, _e) =>
+            {
+                _e.Cancel = true;
+                var selectPage = PageListView.SelectedItem as CustomPage;
+                if (data != null)
+                {
+                    if (selectPage != null && selectPage.Id == data.Id)
+                    {
+                        MainFrame.Navigate(typeof(Pages.WelcomePage));
+                    }
+                    confirmDialog.IsPrimaryButtonEnabled = false;
+                    confirmDialog.PrimaryButtonText = AppTools.GetReswLanguage("Tip_Waiting");
+                    await IOTools.DeletePage(data);
+                    CustomPages.Remove(data);
+                    _pageListCount -= 1;
+                    new PopupToast(AppTools.GetReswLanguage("Tip_DeletePageSuccess")).ShowPopup();
+                    confirmDialog.Hide();
+                }
+                else
+                {
+                    new PopupToast(AppTools.GetReswLanguage("Tip_NoPageSelected"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+                }
+            };
+            await confirmDialog.ShowAsync();
+        }
+
+        private void HomePageMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var data = (sender as FrameworkElement).DataContext as CustomPage;
+            AppTools.WriteLocalSetting(AppSettings.ScreenPage, data.Id);
+            AppTools.WriteLocalSetting(AppSettings.IsScreenChannelCustom, "False");
+            AppTools.WriteLocalSetting(AppSettings.IsScreenPageCustom, "True");
+            new PopupToast(AppTools.GetReswLanguage("Tip_Saved")).ShowPopup();
         }
 
         private async void MoveChannelMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new MoveChannelDialog(_tempChannel);
-            await dialog.ShowAsync();
-        }
-
-        private void ChannelItem_Holding(object sender, HoldingRoutedEventArgs e)
-        {
             var data = (sender as FrameworkElement).DataContext as Channel;
-            _tempChannel = data;
-            ChannelMenuFlyout.ShowAt((FrameworkElement)sender, e.GetPosition((FrameworkElement)sender));
+            var dialog = new MoveChannelDialog(data);
+            await dialog.ShowAsync();
         }
 
         private async void UpdateCategoryMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new ModifyCategoryDialog(_tempCategory);
+            var data = (sender as FrameworkElement).DataContext as Category;
+            var dialog = new ModifyCategoryDialog(data);
             await dialog.ShowAsync();
         }
 
         private async void DeleteCategoryMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            var data = (sender as FrameworkElement).DataContext as Category;
             var confirmDialog = new ConfirmDialog(AppTools.GetReswLanguage("Tip_DeleteWarning"), AppTools.GetReswLanguage("Tip_DeleteCategoryWarning"));
             confirmDialog.PrimaryButtonClick += async (_s, _e) =>
             {
                 _e.Cancel = true;
                 var selectCategory = CategoryListView.SelectedItem as Category;
-                if (_tempCategory != null)
+                if (data != null)
                 {
-                    if (selectCategory != null && selectCategory.Id == _tempCategory.Id)
+                    if (selectCategory != null && selectCategory.Id == data.Id)
                     {
                         Channels.Clear();
                         _channelListCount = 0;
@@ -633,11 +702,11 @@ namespace RSS_Stalker
                     }
                     confirmDialog.IsPrimaryButtonEnabled = false;
                     confirmDialog.PrimaryButtonText = AppTools.GetReswLanguage("Tip_Waiting");
-                    await IOTools.DeleteCategory(_tempCategory);
-                    Categories.Remove(_tempCategory);
+                    await IOTools.DeleteCategory(data);
+                    Categories.Remove(data);
                     _categoryListCount -= 1;
                     new PopupToast(AppTools.GetReswLanguage("Tip_DeleteCategorySuccess")).ShowPopup();
-                    _tempCategory = null;
+                    data = null;
                     confirmDialog.Hide();
                 }
                 else
@@ -646,20 +715,6 @@ namespace RSS_Stalker
                 }
             };
             await confirmDialog.ShowAsync();
-        }
-
-        private void CategoryItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
-        {
-            var data = (sender as FrameworkElement).DataContext as Category;
-            _tempCategory = data;
-            CategoryMenuFlyout.ShowAt((FrameworkElement)sender, e.GetPosition((FrameworkElement)sender));
-        }
-
-        private void CategoryItem_Holding(object sender, HoldingRoutedEventArgs e)
-        {
-            var data = (sender as FrameworkElement).DataContext as Category;
-            _tempCategory = data;
-            CategoryMenuFlyout.ShowAt((FrameworkElement)sender, e.GetPosition((FrameworkElement)sender));
         }
 
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -704,7 +759,7 @@ namespace RSS_Stalker
             }
             else
             {
-                MainFrame.Navigate(typeof(Pages.FeedCollectionPage), new Tuple<List<Feed>, string>(TodoList, title));
+                MainFrame.Navigate(typeof(Pages.FeedCollectionPage), new Tuple<List<RssSchema>, string>(TodoList, title));
             }
             TodoButton.IsChecked = true;
         }
@@ -728,21 +783,22 @@ namespace RSS_Stalker
             }
             else
             {
-                MainFrame.Navigate(typeof(Pages.FeedCollectionPage), new Tuple<List<Feed>, string>(StarList, title));
+                MainFrame.Navigate(typeof(Pages.FeedCollectionPage), new Tuple<List<RssSchema>, string>(StarList, title));
             }
             StarButton.IsChecked = true;
         }
 
         private async void ToastChannelMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (ToastList.Any(p => p.Link == _tempChannel.Link || p.Id==_tempChannel.Id))
+            var data = (sender as FrameworkElement).DataContext as Channel;
+            if (ToastList.Any(p => p.Link == data.Link || p.Id==data.Id))
             {
                 new PopupToast(AppTools.GetReswLanguage("Tip_ToastRepeat"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
             else
             {
-                await IOTools.AddNeedToastChannel(_tempChannel);
-                ToastList.Add(_tempChannel);
+                await IOTools.AddNeedToastChannel(data);
+                ToastList.Add(data);
                 new PopupToast(AppTools.GetReswLanguage("Tip_Added")).ShowPopup();
             }
         }
@@ -868,7 +924,8 @@ namespace RSS_Stalker
 
         private void HomeChannelMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            AppTools.WriteLocalSetting(AppSettings.ScreenChannel, _tempChannel.Id);
+            var data = (sender as FrameworkElement).DataContext as Channel;
+            AppTools.WriteLocalSetting(AppSettings.ScreenChannel, data.Id);
             AppTools.WriteLocalSetting(AppSettings.IsScreenChannelCustom, "True");
             AppTools.WriteLocalSetting(AppSettings.IsScreenPageCustom, "False");
             new PopupToast(AppTools.GetReswLanguage("Tip_Saved")).ShowPopup();
@@ -876,10 +933,11 @@ namespace RSS_Stalker
 
         private async void CacheChannelMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            var data = (sender as FrameworkElement).DataContext as Channel;
             LoadingRing.IsActive = true;
             try
             {
-                await IOTools.AddCacheChannel(null,_tempChannel);
+                await IOTools.AddCacheChannel(null,data);
                 new PopupToast(AppTools.GetReswLanguage("Tip_CacheSuccess")).ShowPopup();
             }
             catch (Exception)
@@ -891,18 +949,19 @@ namespace RSS_Stalker
 
         private async void CacheCategoryMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            var data = (sender as FrameworkElement).DataContext as Category;
             LoadingRing.IsActive = true;
             CacheProgressBar.Visibility = Visibility.Visible;
             try
             {
-                CacheProgressBar.Maximum = _tempCategory.Channels.Count;
+                CacheProgressBar.Maximum = data.Channels.Count;
                 await IOTools.AddCacheChannel(async (count)=> {
                     await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
                     {
                         CacheProgressBar.Value = count;
                     });
                      },
-                    _tempCategory.Channels.ToArray());
+                    data.Channels.ToArray());
                 new PopupToast(AppTools.GetReswLanguage("Tip_CacheSuccess")).ShowPopup();
             }
             catch (Exception)
@@ -958,7 +1017,7 @@ namespace RSS_Stalker
                 MainFrame.Navigate(typeof(Pages.CustomPageDetailPage), item);
             }
         }
-        private void CloseCategory()
+        public void CloseCategory()
         {
             TodoButton.IsChecked = false;
             StarButton.IsChecked = false;
@@ -970,87 +1029,6 @@ namespace RSS_Stalker
             _channelListCount = -1;
             Channels.Clear();
             _channelListCount = 0;
-        }
-        private void PageItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
-        {
-            var data = (sender as FrameworkElement).DataContext as CustomPage;
-            _tempPage = data;
-            PageMenuFlyout.ShowAt((FrameworkElement)sender, e.GetPosition((FrameworkElement)sender));
-        }
-
-        private void UpdatePageMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            CloseCategory();
-            MainFrame.Navigate(typeof(Pages.OperaterCustomPage), _tempPage);
-        }
-
-        private async void CachePageMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            LoadingRing.IsActive = true;
-            CacheProgressBar.Visibility = Visibility.Visible;
-            try
-            {
-                CacheProgressBar.Maximum = 1;
-                await IOTools.AddCachePage(async (count) => {
-                    await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
-                    {
-                        CacheProgressBar.Value = count;
-                    });
-                },
-                    _tempPage);
-                new PopupToast(AppTools.GetReswLanguage("Tip_CacheSuccess")).ShowPopup();
-            }
-            catch (Exception)
-            {
-                new PopupToast(AppTools.GetReswLanguage("Tip_CacheFailed"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
-            }
-            CacheProgressBar.Visibility = Visibility.Collapsed;
-            LoadingRing.IsActive = false;
-        }
-
-        private async void DeletePageMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            var confirmDialog = new ConfirmDialog(AppTools.GetReswLanguage("Tip_DeleteWarning"), AppTools.GetReswLanguage("Tip_DeletePageWarning"));
-            confirmDialog.PrimaryButtonClick += async (_s, _e) =>
-            {
-                _e.Cancel = true;
-                var selectPage = PageListView.SelectedItem as CustomPage;
-                if (_tempPage != null)
-                {
-                    if (selectPage != null && selectPage.Id == _tempPage.Id)
-                    {
-                        MainFrame.Navigate(typeof(Pages.WelcomePage));
-                    }
-                    confirmDialog.IsPrimaryButtonEnabled = false;
-                    confirmDialog.PrimaryButtonText = AppTools.GetReswLanguage("Tip_Waiting");
-                    await IOTools.DeletePage(_tempPage);
-                    CustomPages.Remove(_tempPage);
-                    _pageListCount -= 1;
-                    new PopupToast(AppTools.GetReswLanguage("Tip_DeletePageSuccess")).ShowPopup();
-                    _tempPage = null;
-                    confirmDialog.Hide();
-                }
-                else
-                {
-                    new PopupToast(AppTools.GetReswLanguage("Tip_NoPageSelected"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
-                }
-            };
-            await confirmDialog.ShowAsync();
-        }
-
-        private void HomePageMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            AppTools.WriteLocalSetting(AppSettings.ScreenPage, _tempPage.Id);
-            AppTools.WriteLocalSetting(AppSettings.IsScreenChannelCustom, "False");
-            AppTools.WriteLocalSetting(AppSettings.IsScreenPageCustom, "True");
-            new PopupToast(AppTools.GetReswLanguage("Tip_Saved")).ShowPopup();
-        }
-
-        private void PageItem_Holding(object sender, HoldingRoutedEventArgs e)
-        {
-            var data = (sender as FrameworkElement).DataContext as CustomPage;
-            _tempPage = data;
-            PageMenuFlyout.ShowAt((FrameworkElement)sender, e.GetPosition((FrameworkElement)sender));
         }
         public async void AddReadId(params string[] ids)
         {
@@ -1078,14 +1056,15 @@ namespace RSS_Stalker
 
         private async void ReadableChannelMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (ReadableList.Any(p => p.Link == _tempChannel.Link || p.Id == _tempChannel.Id))
+            var data = (sender as FrameworkElement).DataContext as Channel;
+            if (ReadableList.Any(p => p.Link == data.Link || p.Id == data.Id))
             {
                 new PopupToast(AppTools.GetReswLanguage("Tip_ReadableRepeat"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
             else
             {
-                await IOTools.AddNeedReadableChannel(_tempChannel);
-                ReadableList.Add(_tempChannel);
+                await IOTools.AddNeedReadableChannel(data);
+                ReadableList.Add(data);
                 new PopupToast(AppTools.GetReswLanguage("Tip_Added")).ShowPopup();
             }
         }

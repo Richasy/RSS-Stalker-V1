@@ -18,6 +18,9 @@ namespace CoreLib.Enums
         NormalTextColor,
         TipTextColor,
         LineColor,
-        PrimaryInsideColor
+        PrimaryInsideColor,
+        CardBackground,
+        TransparentBackground,
+        MaskBackground
     }
 }

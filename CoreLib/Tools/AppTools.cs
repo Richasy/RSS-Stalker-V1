@@ -173,7 +173,7 @@ namespace CoreLib.Tools
         /// <param name="name">笔记名</param>
         /// <param name="markdown">笔记内容</param>
         /// <returns></returns>
-        public async static Task<string> CreateAdaptiveJson(Feed feed)
+        public async static Task<string> CreateAdaptiveJson(RssSchema feed)
         {
             var jsonFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Card.json"));
             string json = await FileIO.ReadTextAsync(jsonFile);
@@ -411,7 +411,7 @@ namespace CoreLib.Tools
                 {
                     tasks.Add(Task.Run(async () =>
                     {
-                        var schemas = await GetSchemaFromUrl(item.Link,isLimit);
+                        var schemas = await GetFeedsFromUrl(item.Link,isLimit);
                         if (page.Rules.Count > 0)
                         {
                             foreach (var rule in page.Rules)
@@ -497,11 +497,13 @@ namespace CoreLib.Tools
         /// </summary>
         /// <param name="url">地址</param>
         /// <returns></returns>
-        public static async Task<List<Feed>> GetFeedsFromUrl(string url)
+        public static async Task<List<RssSchema>> GetFeedsFromUrl(string url,bool isLimit=false)
         {
             string feed = null;
 
             var client = GetClient(url);
+            if (isLimit)
+                client.Timeout = TimeSpan.FromSeconds(20);
             try
             {
                 var encode = Encoding.Default;
@@ -522,7 +524,7 @@ namespace CoreLib.Tools
                 }
             }
             catch { }
-            var list = new List<Feed>();
+            var list = new List<RssSchema>();
             if (feed != null)
             {
                 try
@@ -532,7 +534,7 @@ namespace CoreLib.Tools
 
                     foreach (var item in rss)
                     {
-                        list.Add(new Feed(item));
+                        list.Add(item);
                     }
                 }
                 catch (Exception)
@@ -682,6 +684,12 @@ namespace CoreLib.Tools
                 stream = await synthesizer.SynthesizeTextToStreamAsync(text);
             }
             return (stream);
+        }
+        public static string GetFavIcon(string url)
+        {
+            var neUri = new Uri(url);
+            //string baseUrl = "http://statics.dnspod.cn/proxy_favicon/_/favicon?domain=";
+            return "http://"+neUri.Host+"/favicon.ico";
         }
     }
 }

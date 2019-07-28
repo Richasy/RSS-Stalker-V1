@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using CoreLib.Models.App;
+using Rss.Parsers.Rss;
 
 namespace CoreLib.Tools
 {
@@ -152,7 +153,7 @@ namespace CoreLib.Tools
         /// 获取OneDrive中存储的稍后阅读列表数据
         /// </summary>
         /// <returns></returns>
-        public async Task<List<Feed>> GetTodoList()
+        public async Task<List<RssSchema>> GetTodoList()
         {
             if (_appFolder == null)
             {
@@ -172,7 +173,7 @@ namespace CoreLib.Tools
                     {
                         result = "[]";
                     }
-                    var list = JsonConvert.DeserializeObject<List<Feed>>(result);
+                    var list = JsonConvert.DeserializeObject<List<RssSchema>>(result);
                     return list;
                 }
             }
@@ -181,7 +182,7 @@ namespace CoreLib.Tools
                 if (ex.Message.ToLower().Contains("itemnotfound"))
                 {
                     await _appFolder.StorageFolderPlatformService.CreateFileAsync("TodoList.json", CreationCollisionOption.ReplaceExisting);
-                    return new List<Feed>();
+                    return new List<RssSchema>();
                 }
                 throw;
             }
@@ -266,7 +267,7 @@ namespace CoreLib.Tools
         /// 获取OneDrive中存储的收藏列表数据
         /// </summary>
         /// <returns></returns>
-        public async Task<List<Feed>> GetStarList()
+        public async Task<List<RssSchema>> GetStarList()
         {
             if (_appFolder == null)
             {
@@ -286,7 +287,7 @@ namespace CoreLib.Tools
                     {
                         result = "[]";
                     }
-                    var list = JsonConvert.DeserializeObject<List<Feed>>(result);
+                    var list = JsonConvert.DeserializeObject<List<RssSchema>>(result);
                     return list;
                 }
             }
@@ -295,7 +296,7 @@ namespace CoreLib.Tools
                 if (ex.Message.ToLower().Contains("itemnotfound"))
                 {
                     await _appFolder.StorageFolderPlatformService.CreateFileAsync("StarList.json", CreationCollisionOption.ReplaceExisting);
-                    return new List<Feed>();
+                    return new List<RssSchema>();
                 }
                 throw;
             }

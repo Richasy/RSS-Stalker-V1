@@ -690,4 +690,13 @@
   <data name="Control_ShowFeedDescriptionTipBlock.Text" xml:space="preserve">
     <value>显示订阅源列表项描述</value>
   </data>
+  <data name="Control_EmptyTipBlock.Text" xml:space="preserve">
+    <value>这里空空如也呢~</value>
+  </data>
+  <data name="Control_OpenWebMenuItem.Text" xml:space="preserve">
+    <value>打开网页</value>
+  </data>
+  <data name="Control_HidePageTipBlock.Text" xml:space="preserve">
+    <value>隐藏自定义页面</value>
+  </data>
 </root>

@@ -24,6 +24,7 @@ using Microsoft.Toolkit.Uwp.Connectivity;
 using RSS_Stalker.Tools;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Windows.UI.Xaml.Media.Animation;
+using Rss.Parsers.Rss;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -35,9 +36,8 @@ namespace RSS_Stalker.Pages
     public sealed partial class ChannelDetailPage : Page
     {
         public Channel _sourceData = null;
-        private ObservableCollection<Feed> FeedCollection = new ObservableCollection<Feed>();
-        private List<Feed> AllFeeds = new List<Feed>();
-        private Feed _shareData = null;
+        private ObservableCollection<RssSchema> FeedCollection = new ObservableCollection<RssSchema>();
+        private List<RssSchema> AllFeeds = new List<RssSchema>();
         public static ChannelDetailPage Current;
         private bool _isInit = false;
         public ChannelDetailPage()
@@ -74,7 +74,7 @@ namespace RSS_Stalker.Pages
                     ChangeLayout();
                 }
                 // 当传入源为文章列表时（说明是上一级返回，不获取最新资讯）
-                else if(e.Parameter is List<Feed>)
+                else if(e.Parameter is List<RssSchema>)
                 {
                     LoadingRing.IsActive = true;
                     LastCacheTimeContainer.Visibility = Visibility.Collapsed;
@@ -88,7 +88,7 @@ namespace RSS_Stalker.Pages
                     {
                         await DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
                         {
-                            var feed = e.Parameter as List<Feed>;
+                            var feed = e.Parameter as List<RssSchema>;
                             AllFeeds = feed;
                             await FeedInit();
                             ChangeLayout();
@@ -116,7 +116,7 @@ namespace RSS_Stalker.Pages
             ChannelDescriptionTextBlock.Text = _sourceData.Description;
             ChannelNameTextBlock.Text = _sourceData.Name;
             FeedCollection.Clear();
-            var feed = new List<Feed>();
+            var feed = new List<RssSchema>();
             if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
                 bool isCacheFirst = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsCacheFirst, "False"));
@@ -180,9 +180,9 @@ namespace RSS_Stalker.Pages
         }
         private void FeedGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var item = e.ClickedItem as Feed;
-            var t = new Tuple<Feed, List<Feed>>(item, AllFeeds);
-            var text = AppTools.GetChildObject<TextBlock>(sender as FrameworkElement, "HeaderTitle");
+            var item = e.ClickedItem as RssSchema;
+            var t = new Tuple<RssSchema, List<RssSchema>>(item, AllFeeds);
+            var text = AppTools.GetChildObject<TextBlock>(sender as FrameworkElement, "TitleBlock");
             ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", text);
             MainPage.Current.MainFrame.Navigate(typeof(FeedDetailPage), t,new SuppressNavigationTransitionInfo());
         }
@@ -197,55 +197,6 @@ namespace RSS_Stalker.Pages
             {
                 new PopupToast(AppTools.GetReswLanguage("App_InvalidUrl"),AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
-        }
-
-        private async void OpenFeedButton_Click(object sender, RoutedEventArgs e)
-        {
-            var data = (sender as FrameworkElement).DataContext as Feed;
-            if (!string.IsNullOrEmpty(data.FeedUrl))
-            {
-                if (data.FeedUrl.Contains("www.ithome.com"))
-                {
-                    string link = data.FeedUrl.Replace("https://www.ithome.com/0/", "").Replace(".htm", "");
-                    link = link.Replace("/", "");
-                    link = $"ithome://news?id={link}";
-                    bool result = await Launcher.LaunchUriAsync(new Uri(link));
-                    if (result)
-                    {
-                        return;
-                    }
-                }
-                await Launcher.LaunchUriAsync(new Uri(data.FeedUrl));
-            }
-            else
-            {
-                new PopupToast(AppTools.GetReswLanguage("App_InvalidUrl"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
-            }
-        }
-
-        private void ShareFeedButton_Click(object sender, RoutedEventArgs e)
-        {
-            var data = (sender as FrameworkElement).DataContext as Feed;
-            _shareData = data;
-            DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
-            dataTransferManager.DataRequested += IndexPage_DataRequested;
-            DataTransferManager.ShowShareUI();
-        }
-        private void IndexPage_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
-        {
-            //创建一个数据包
-            DataPackage dataPackage = new DataPackage();
-            //把要分享的链接放到数据包里
-            dataPackage.SetHtmlFormat(HtmlFormatHelper.CreateHtmlFormat(_shareData.Content));
-            dataPackage.SetWebLink(new Uri(_shareData.FeedUrl));
-            //数据包的标题（内容和标题必须提供）
-            dataPackage.Properties.Title = _shareData.Title;
-            //数据包的描述
-            dataPackage.Properties.Description = _shareData.Summary;
-            //给dataRequest对象赋值
-            DataRequest request = args.Request;
-            request.Data = dataPackage;
-            _shareData = null;
         }
 
         private async void RefreshButton_Click(object sender, RoutedEventArgs e)

@@ -25,7 +25,7 @@ using Windows.Storage.Streams;
 using Microsoft.Toolkit.Uwp.Connectivity;
 using Windows.UI.Xaml.Media.Animation;
 using CoreLib.Models.App;
-using Windows.UI.Xaml.Input;
+using Rss.Parsers.Rss;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -37,9 +37,9 @@ namespace RSS_Stalker.Pages
     public sealed partial class FeedDetailPage : Page
     {
         private string _sourceContent;
-        private Feed _sourceFeed;
-        private ObservableCollection<Feed> ShowFeeds = new ObservableCollection<Feed>();
-        private List<Feed> AllFeeds = new List<Feed>();
+        private RssSchema _sourceFeed;
+        private ObservableCollection<RssSchema> ShowFeeds = new ObservableCollection<RssSchema>();
+        private List<RssSchema> AllFeeds = new List<RssSchema>();
         private bool _isInit = false;
         private UserActivitySession _currentActivity;
         public static FeedDetailPage Current;
@@ -79,7 +79,7 @@ namespace RSS_Stalker.Pages
             {
                 ShowFeeds.Clear();
                 // 这种情况表明入口点为频道
-                if(e.Parameter is Tuple<Feed, List<Feed>>)
+                if(e.Parameter is Tuple<RssSchema, List<RssSchema>>)
                 {
                     var anim = ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation");
                     if (anim != null)
@@ -87,7 +87,7 @@ namespace RSS_Stalker.Pages
                         anim.TryStart(TitleTextBlock);
                     }
                     LoadingRing.IsActive = true;
-                    var data = e.Parameter as Tuple<Feed, List<Feed>>;
+                    var data = e.Parameter as Tuple<RssSchema, List<RssSchema>>;
                     bool isUnread = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsJustUnread, "False"));
                     bool isCollection = Convert.ToBoolean(MainPage.Current.TodoButton.IsChecked) || Convert.ToBoolean(MainPage.Current.StarButton.IsChecked);
                     
@@ -128,16 +128,15 @@ namespace RSS_Stalker.Pages
                 else if(e.Parameter is string[])
                 {
                     var data = e.Parameter as string[];
-                    _sourceFeed = new Feed()
+                    _sourceFeed = new RssSchema()
                     {
                         InternalID = data[0],
                         Title = data[1],
                         Content = data[2],
                         FeedUrl = data[3],
                         ImageUrl = data[4],
-                        Date=data[5],
+                        PublishDate = Convert.ToDateTime(data[5]),
                         Summary=data[6],
-                        ImgVisibility = string.IsNullOrEmpty(data[4]) ? Visibility.Collapsed : Visibility.Visible
                     };
                     _sourceContent = data[2];
                     LoadingRing.IsActive = true;
@@ -225,7 +224,7 @@ namespace RSS_Stalker.Pages
         /// </summary>
         /// <param name="feed"></param>
         /// <returns></returns>
-        private async Task GenerateActivityAsync(Feed feed)
+        private async Task GenerateActivityAsync(RssSchema feed)
         {
             try
             {
@@ -234,7 +233,7 @@ namespace RSS_Stalker.Pages
                 userActivity.VisualElements.DisplayText = feed.Title;
                 userActivity.VisualElements.Content = AdaptiveCardBuilder.CreateAdaptiveCardFromJson(await AppTools.CreateAdaptiveJson(feed));
                 //Populate required properties
-                string url = $"richasy-rss://feed?id={WebUtility.UrlEncode(feed.InternalID)}&summary={WebUtility.UrlEncode(feed.Summary)}&date={WebUtility.UrlEncode(feed.Date)}&img={WebUtility.UrlEncode(feed.ImageUrl)}&url={WebUtility.UrlDecode(feed.FeedUrl)}&title={WebUtility.UrlEncode(feed.Title)}&content={WebUtility.UrlEncode(feed.Content)}";
+                string url = $"richasy-rss://feed?id={WebUtility.UrlEncode(feed.InternalID)}&summary={WebUtility.UrlEncode(feed.Summary)}&date={WebUtility.UrlEncode(feed.PublishDate.ToString())}&img={WebUtility.UrlEncode(feed.ImageUrl)}&url={WebUtility.UrlDecode(feed.FeedUrl)}&title={WebUtility.UrlEncode(feed.Title)}&content={WebUtility.UrlEncode(feed.Content)}";
                 userActivity.ActivationUri = new Uri(url);
                 await userActivity.SaveAsync(); //save the new metadata
 
@@ -261,7 +260,7 @@ namespace RSS_Stalker.Pages
 
         private async void FeedListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var data = e.ClickedItem as Feed;
+            var data = e.ClickedItem as RssSchema;
             
             bool isUnread = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsJustUnread, "False"));
             if (!isUnread)
@@ -383,7 +382,7 @@ namespace RSS_Stalker.Pages
                 LockButton.Visibility = Visibility.Visible;
                 bool isSideLocked = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.SideListLocked, "False"));
                 DetailSplitView.IsPaneOpen = isSideLocked;
-                if (!isSideLocked)
+                if (!isSideLocked || ShowFeeds.Count == 0)
                 {
                     
                     FeedListView.Visibility = Visibility.Collapsed;

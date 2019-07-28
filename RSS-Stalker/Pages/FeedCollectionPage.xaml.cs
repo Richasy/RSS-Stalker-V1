@@ -21,6 +21,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using CoreLib.Enums;
 using Windows.UI.Xaml.Media.Animation;
+using Rss.Parsers.Rss;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -31,9 +32,8 @@ namespace RSS_Stalker.Pages
     /// </summary>
     public sealed partial class FeedCollectionPage : Page
     {
-        private ObservableCollection<Feed> FeedCollection = new ObservableCollection<Feed>();
-        private Feed _shareData = null;
-        private List<Feed> AllFeed = new List<Feed>();
+        private ObservableCollection<RssSchema> FeedCollection = new ObservableCollection<RssSchema>();
+        private List<RssSchema> AllFeed = new List<RssSchema>();
         public static FeedCollectionPage Current;
         /// <summary>
         /// 用于处理待读列表和收藏列表的简易文章集合页面
@@ -52,9 +52,10 @@ namespace RSS_Stalker.Pages
             }
             if (e.Parameter != null)
             {
-                if (e.Parameter is Tuple<List<Feed>,string>)
+                NoDataTipContainer.Visibility = Visibility.Collapsed;
+                if (e.Parameter is Tuple<List<RssSchema>,string>)
                 {
-                    var data = e.Parameter as Tuple<List<Feed>, string>;
+                    var data = e.Parameter as Tuple<List<RssSchema>, string>;
                     var feed = data.Item1;
                     AllFeed = feed;
                     TitleTextBlock.Text = data.Item2;
@@ -65,7 +66,7 @@ namespace RSS_Stalker.Pages
                 }
             }
         }
-        public void UpdateLayout(List<Feed> feed,string title)
+        public void UpdateLayout(List<RssSchema> feed,string title)
         {
             LoadingRing.IsActive = true;
             NoDataTipContainer.Visibility = Visibility.Collapsed;
@@ -87,60 +88,11 @@ namespace RSS_Stalker.Pages
         }
         private void FeedGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var item = e.ClickedItem as Feed;
-            var t = new Tuple<Feed, List<Feed>>(item, FeedCollection.ToList());
-            var text = AppTools.GetChildObject<TextBlock>(sender as FrameworkElement, "HeaderTitle");
+            var item = e.ClickedItem as RssSchema;
+            var t = new Tuple<RssSchema, List<RssSchema>>(item, FeedCollection.ToList());
+            var text = AppTools.GetChildObject<TextBlock>(sender as FrameworkElement, "TitleBlock");
             ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", text);
             MainPage.Current.MainFrame.Navigate(typeof(FeedDetailPage), t);
-        }
-
-        private async void OpenFeedButton_Click(object sender, RoutedEventArgs e)
-        {
-            var data = (sender as FrameworkElement).DataContext as Feed;
-            if (!string.IsNullOrEmpty(data.FeedUrl))
-            {
-                if (data.FeedUrl.Contains("www.ithome.com"))
-                {
-                    string link = data.FeedUrl.Replace("https://www.ithome.com/0/", "").Replace(".htm", "");
-                    link = link.Replace("/", "");
-                    link = $"ithome://news?id={link}";
-                    bool result = await Launcher.LaunchUriAsync(new Uri(link));
-                    if (result)
-                    {
-                        return;
-                    }
-                }
-                await Launcher.LaunchUriAsync(new Uri(data.FeedUrl));
-            }
-            else
-            {
-                new PopupToast(AppTools.GetReswLanguage("App_InvalidUrl"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
-            }
-        }
-
-        private void ShareFeedButton_Click(object sender, RoutedEventArgs e)
-        {
-            var data = (sender as FrameworkElement).DataContext as Feed;
-            _shareData = data;
-            DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
-            dataTransferManager.DataRequested += IndexPage_DataRequested;
-            DataTransferManager.ShowShareUI();
-        }
-        private void IndexPage_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
-        {
-            //创建一个数据包
-            DataPackage dataPackage = new DataPackage();
-            //把要分享的链接放到数据包里
-            dataPackage.SetHtmlFormat(HtmlFormatHelper.CreateHtmlFormat(_shareData.Content));
-            dataPackage.SetWebLink(new Uri(_shareData.FeedUrl));
-            //数据包的标题（内容和标题必须提供）
-            dataPackage.Properties.Title = _shareData.Title;
-            //数据包的描述
-            dataPackage.Properties.Description = _shareData.Summary;
-            //给dataRequest对象赋值
-            DataRequest request = args.Request;
-            request.Data = dataPackage;
-            _shareData = null;
         }
 
         private void FeedSearchBox_TextChanged(object sender, TextChangedEventArgs e)

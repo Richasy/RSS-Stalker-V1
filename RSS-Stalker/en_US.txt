@@ -2,8 +2,9 @@
 
 The new version has been revised as follows:
 
-1. Improve data source loading speed
-2. Allow to remove the secondary description of the feed list, compress the list display space
+1. Add the "Hide Page" option to hide the custom page
+2. Improve the trigger mode of the pop-up menu, no longer the right button does not work.
+3. Fix the problem of garbled some feeds in the custom page
 
 Thank you :)
 

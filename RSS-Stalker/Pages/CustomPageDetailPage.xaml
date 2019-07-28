@@ -8,6 +8,7 @@
     xmlns:models="using:CoreLib.Models"
     xmlns:controls="using:RSS_Stalker.Controls"
     xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:rss="using:Rss.Parsers.Rss"
     SizeChanged="Page_SizeChanged"
     Loaded="Page_Loaded"
     mc:Ignorable="d">
@@ -18,83 +19,14 @@
                 <TextBlock Text="{Binding}" FontFamily="{StaticResource Basic}" FontSize="11" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{ThemeResource TipTextColor}"/>
             </Border>
         </DataTemplate>
-        <DataTemplate x:DataType="models:Feed" x:Key="FeedListItemTemplate" x:Name="FeedListItemTemplate">
-            <Grid Padding="20,15,20,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="{x:Bind Title}" Name="HeaderTitle" VerticalAlignment="Center" ToolTipService.ToolTip="{x:Bind Title}" Foreground="{ThemeResource ImportantTextColor}" TextTrimming="CharacterEllipsis" FontSize="15" FontFamily="{StaticResource Title}"/>
-                <TextBlock Text="{x:Bind Date}" VerticalAlignment="Center" Foreground="{ThemeResource NormalTextColor}" FontFamily="{StaticResource Basic}" FontSize="14" Grid.Column="1" Margin="15,0"/>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Column="2">
-                    <Button Style="{StaticResource TransparentButtonStyle}" Name="OpenFeedButton" Click="OpenFeedButton_Click" FontSize="14" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="{StaticResource Icon}" Content="&#xE975;"/>
-                    <Button Margin="10,0,0,0" Style="{StaticResource TransparentButtonStyle}" Name="ShareFeedButton" Click="ShareFeedButton_Click" FontSize="14" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="{StaticResource Icon}" Content="&#xE9CC;"/>
-                </StackPanel>
-            </Grid>
+        <DataTemplate x:DataType="rss:RssSchema" x:Key="FeedListItemTemplate" x:Name="FeedListItemTemplate">
+            <controls:Feed_List Data="{Binding}"/>
         </DataTemplate>
-        <DataTemplate x:DataType="models:Feed" x:Key="FeedCardItemTemplate" x:Name="FeedCardItemTemplate">
-            <Grid Background="{ThemeResource CardBackground}" Height="200">
-                <controls:HoldImage ImageLink="{x:Bind ImageUrl}" Visibility="{x:Bind ImgVisibility,Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                <StackPanel Background="Black" Opacity="0.6" Height="95" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"/>
-                <Grid HorizontalAlignment="Center" Padding="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Text="{x:Bind Title}" Name="HeaderTitle" Foreground="White" Grid.Row="1" Margin="0,0,0,10" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource Title}" FontWeight="Bold" TextWrapping="Wrap" FontSize="14" MaxLines="2" VerticalAlignment="Bottom"/>
-
-                    <RelativePanel Grid.Row="2">
-                        <TextBlock Text="{x:Bind Date}" FontFamily="{StaticResource Basic}" Foreground="LightGray" FontSize="13" RelativePanel.AlignVerticalCenterWithPanel="True" RelativePanel.AlignLeftWithPanel="True"/>
-                        <StackPanel Orientation="Horizontal" RelativePanel.AlignVerticalCenterWithPanel="True" RelativePanel.AlignRightWithPanel="True">
-                            <Button Style="{StaticResource TransparentButtonStyle}" Name="OpenFeedButton" Foreground="White" Click="OpenFeedButton_Click" FontSize="14" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="{StaticResource Icon}" Content="&#xE975;"/>
-                            <Button Margin="5,0,0,0" Style="{StaticResource TransparentButtonStyle}" Name="ShareFeedButton" Foreground="White" Click="ShareFeedButton_Click" FontSize="14" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="{StaticResource Icon}" Content="&#xE9CC;"/>
-                        </StackPanel>
-                    </RelativePanel>
-                </Grid>
-            </Grid>
+        <DataTemplate x:DataType="rss:RssSchema" x:Key="FeedCardItemTemplate" x:Name="FeedCardItemTemplate">
+            <controls:Feed_Card Data="{Binding}"/>
         </DataTemplate>
-        <DataTemplate x:DataType="models:Feed" x:Key="FeddItemTemplate" x:Name="FeedWaterfallItemTemplate">
-            <Grid Background="{ThemeResource CardBackground}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <controls:HoldImage Visibility="{x:Bind ImgVisibility,Mode=OneWay}" ImageLink="{x:Bind ImageUrl}" Height="150" HorizontalAlignment="Stretch"/>
-                <StackPanel Grid.Row="1" Margin="0,20,0,0" Padding="20,0,20,10" BorderBrush="{ThemeResource LineColor}" BorderThickness="0,0,0,1">
-                    <TextBlock Margin="0,0,0,0" Text="{x:Bind Title}" Name="HeaderTitle" LineHeight="20" ToolTipService.ToolTip="{x:Bind Title}" TextWrapping="Wrap" Foreground="{ThemeResource ImportantTextColor}" TextTrimming="CharacterEllipsis" FontSize="14" FontWeight="Bold" FontFamily="{StaticResource Title}"/>
-                    <TextBlock Margin="0,5" Text="{x:Bind Date}" Foreground="{ThemeResource TipTextColor}" FontSize="9" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource Basic}"/>
-                    <TextBlock Margin="0" Text="{x:Bind Summary}" MaxLines="6" Foreground="{ThemeResource NormalTextColor}" FontSize="12" FontFamily="{StaticResource Basic}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
-                    <ListView ItemTemplate="{StaticResource TagItemTemplate}"
-                              ItemsSource="{x:Bind Categories}"
-                              Visibility="{x:Bind TagVisibility,Mode=OneWay}"
-                              ItemContainerStyle="{StaticResource TransparentListItemContainer}"
-                              Style="{StaticResource BasicListView}"
-                              Margin="0,5,0,-5"
-                              >
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <controls1:WrapPanel
-                                                Padding="0,0,0,0"
-                                            HorizontalAlignment="Stretch"
-                                            Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ListView>
-                </StackPanel>
-                <Grid Row="2" Margin="0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="1"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button Style="{StaticResource TransparentButtonStyle}" Name="OpenFeedButton" Click="OpenFeedButton_Click" FontSize="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="{StaticResource Icon}" Content="&#xE975;"/>
-                    <StackPanel Grid.Column="1" Background="{ThemeResource LineColor}"/>
-                    <Button Grid.Column="2" Style="{StaticResource TransparentButtonStyle}" Name="ShareFeedButton" Click="ShareFeedButton_Click" FontSize="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="{StaticResource Icon}" Content="&#xE9CC;"/>
-                </Grid>
-            </Grid>
+        <DataTemplate x:DataType="rss:RssSchema" x:Key="FeddItemTemplate" x:Name="FeedWaterfallItemTemplate">
+            <controls:Feed_Waterful Data="{Binding}"/>
         </DataTemplate>
     </Page.Resources>
     <Grid>

@@ -9,10 +9,13 @@
     xmlns:models1="using:CoreLib.Models.App"
     xmlns:converter="using:CoreLib.Models.Converter"
     xmlns:controls="using:RSS_Stalker.Controls"
+    xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
     SizeChanged="Page_SizeChanged"
     mc:Ignorable="d">
     <Page.Resources>
         <converter:ShowFeedDescriptionConverter x:Key="FeedDescShowConverter"/>
+        <converter:ChannelIconConverter x:Key="ChannelIconConverter"/>
+        <converter:ShowUnreadConverter x:Key="ShowUnreadConverter"/>
         <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource BasicMenuFlyoutStyle}" x:Name="PageMenuFlyout" x:Key="PageMenuFlyout">
             <MenuFlyoutItem x:Uid="Control_HomeChannelMenuItem" FontFamily="{StaticResource Basic}" Name="HomePageMenuItem" Click="HomePageMenuItem_Click">
                 <MenuFlyoutItem.Icon>
@@ -108,9 +111,13 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="{x:Bind Icon,Mode=OneWay}" FontFamily="{StaticResource Icon}" FontSize="18" VerticalAlignment="Center"/>
                 <TextBlock Text="{x:Bind Name,Mode=OneWay}" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource PrimaryMenuTextColor}" FontSize="14" VerticalAlignment="Center" Grid.Column="1" Margin="15,0" TextTrimming="CharacterEllipsis" />
+                <Border Grid.Column="2" CornerRadius="2" Visibility="{Binding Id, Converter={StaticResource ShowUnreadConverter}}" Background="{ThemeResource CardBackground}" Padding="5,3" VerticalAlignment="Center">
+                    <TextBlock Text="{x:Bind NoRead, Mode=OneWay}" Style="{StaticResource BasicTipTextStyle}" Margin="0"/>
+                </Border>
             </Grid>
         </DataTemplate>
         <DataTemplate x:DataType="models:Channel" x:Key="ChannelItemTemplate">
@@ -119,7 +126,18 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Text="{x:Bind Name,Mode=OneWay}" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource Title}" Foreground="{ThemeResource ImportantTextColor}" FontWeight="Bold" FontSize="15"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <controls1:ImageEx Width="20" CachingStrategy="Internal" IsCacheEnabled="True" Height="20" Source="{Binding Link, Converter={StaticResource ChannelIconConverter}}" VerticalAlignment="Center"/>
+                    <TextBlock Text="{x:Bind Name,Mode=OneWay}" Grid.Column="1" TextTrimming="CharacterEllipsis" FontFamily="{StaticResource Title}" Foreground="{ThemeResource ImportantTextColor}" Margin="10,0" FontWeight="Bold" FontSize="15"/>
+                    <Border Grid.Column="2" CornerRadius="2" Visibility="{Binding Id, Converter={StaticResource ShowUnreadConverter}}" Background="{ThemeResource CardBackground}" Padding="5,3" VerticalAlignment="Center">
+                        <TextBlock Text="{x:Bind NoRead, Mode=OneWay}" Style="{StaticResource BasicTipTextStyle}" Margin="0"/>
+                    </Border>
+                </Grid>
                 <TextBlock Text="{x:Bind Description}" Visibility="{Binding Description,Converter={StaticResource FeedDescShowConverter}}" Grid.Row="1" Margin="0,5,0,0" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource TipTextColor}" FontSize="11" TextWrapping="Wrap" MaxLines="1" TextTrimming="CharacterEllipsis"/>
             </Grid>
         </DataTemplate>

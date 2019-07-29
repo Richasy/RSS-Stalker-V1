@@ -49,6 +49,7 @@ namespace CoreLib.Enums
         IsReadableChangeInOffline,
         SideListLocked,
         IsShowFeedDescription,
-        IsHidePage
+        IsHidePage,
+        IsShowNoRead
     }
 }

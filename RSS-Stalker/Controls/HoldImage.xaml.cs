@@ -1,12 +1,15 @@
-﻿using System;
+﻿using SharpDX.WIC;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Graphics.Imaging;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -22,6 +25,43 @@ namespace RSS_Stalker.Controls
 {
     public sealed partial class HoldImage : UserControl, INotifyPropertyChanged
     {
+
+
+        public string Source
+        {
+            get { return (string)GetValue(SourceProperty); }
+            set { SetValue(SourceProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Source.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SourceProperty =
+            DependencyProperty.Register("Source", typeof(string), typeof(HoldImage), new PropertyMetadata(null,new PropertyChangedCallback(SourceChanged)));
+
+        private async static void SourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if(e.NewValue!=null && e.NewValue is string url)
+            {
+                url = WebUtility.HtmlDecode(url);
+                var c = d as HoldImage;
+                var uri = new Uri(url);
+                HttpWebRequest myrequest = (HttpWebRequest)WebRequest.Create(url);
+                myrequest.Referer = $"http://{uri.Host}";
+                myrequest.Headers.Add(HttpRequestHeader.UserAgent, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3851.0 Safari/537.36 Edg/77.0.223.0");
+                WebResponse myresponse = await myrequest.GetResponseAsync();
+                
+                var bitmap = new BitmapImage();
+                using (var imgstream = myresponse.GetResponseStream())
+                using (var stream = new MemoryStream())
+                {
+                    await imgstream.CopyToAsync(stream);
+                    stream.Position = 0;
+                    await bitmap.SetSourceAsync(stream.AsRandomAccessStream());
+                    c.ImageBlock.Source = bitmap;
+                }
+                
+            }
+        }
+
         private string _imageLink;
         /// <summary>
         /// 图片链接

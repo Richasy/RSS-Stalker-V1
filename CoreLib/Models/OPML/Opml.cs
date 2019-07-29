@@ -52,7 +52,7 @@ namespace CoreLib.Models
             {
                 foreach (var match in matchs)
                 {
-                    content=content.Replace(match.ToString(), WebUtility.UrlDecode(match.ToString()));
+                    content=content.Replace(match.ToString(), WebUtility.HtmlEncode(match.ToString()));
                 }
             }
             XmlDocument doc = new XmlDocument();

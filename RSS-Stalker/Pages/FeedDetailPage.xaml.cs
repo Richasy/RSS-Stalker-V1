@@ -294,18 +294,6 @@ namespace RSS_Stalker.Pages
         }
         private async Task UpdateFeed()
         {
-            //ShowFeeds.Clear();
-            //bool isUnread = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsJustUnread, "False"));
-            //foreach (var item in AllFeeds)
-            //{
-            //    if (item.InternalID != _sourceFeed.InternalID)
-            //    {
-            //        if (isUnread && !MainPage.Current.ReadIds.Contains(item.InternalID))
-            //            ShowFeeds.Add(item);
-            //        else if (!isUnread)
-            //            ShowFeeds.Add(item);
-            //    }
-            //}
             ButtonStatusCheck();
             TitleTextBlock.Text = _sourceFeed.Title;
             string html = await PackageHTML(_sourceFeed.Content);

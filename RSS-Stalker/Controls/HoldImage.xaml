@@ -14,7 +14,6 @@
         <controls:ImageEx x:Name="ImageBlock"
                           IsCacheEnabled="True"
                           Stretch="{x:Bind Stretch,Mode=OneWay}"
-                          Source="{x:Bind ImageLink,Mode=OneWay}"
                           PlaceholderSource="{x:Bind HolderImage,Mode=OneWay}"
                           PlaceholderStretch="Fill"
                           CachingStrategy="Internal"

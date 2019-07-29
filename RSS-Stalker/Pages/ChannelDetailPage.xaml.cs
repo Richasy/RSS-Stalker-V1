@@ -50,18 +50,18 @@ namespace RSS_Stalker.Pages
         {
             if (e.NavigationMode == NavigationMode.Back)
             {
-                if (FeedCollection.Count > 0 && JustNoReadSwitch.IsOn)
-                {
-                    foreach (var temp in MainPage.Current.ReadIds)
-                    {
-                        FeedCollection.Remove(FeedCollection.Where(p => p.InternalID == temp).FirstOrDefault());
-                    }
-                    if (FeedCollection.Count == 0)
-                    {
-                        AllReadTipContainer.Visibility = Visibility.Visible;
-                        AllReadButton.Visibility = Visibility.Collapsed;
-                    }
-                }
+                //if (FeedCollection.Count > 0 && JustNoReadSwitch.IsOn)
+                //{
+                //    foreach (var temp in MainPage.Current.ReadIds)
+                //    {
+                //        FeedCollection.Remove(FeedCollection.Where(p => p.InternalID == temp).FirstOrDefault());
+                //    }
+                //    if (FeedCollection.Count == 0)
+                //    {
+                //        AllReadTipContainer.Visibility = Visibility.Visible;
+                //        AllReadButton.Visibility = Visibility.Collapsed;
+                //    }
+                //}
 
                 return;
             }
@@ -122,21 +122,28 @@ namespace RSS_Stalker.Pages
                 bool isCacheFirst = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsCacheFirst, "False"));
                 gg: if (isCacheFirst && !isForceRefresh)
                 {
-                    var data = await IOTools.GetLocalCache(channel);
-                    feed = data.Item1;
-                    int cacheTime = data.Item2;
-                    int now = AppTools.DateToTimeStamp(DateTime.Now.ToLocalTime());
-                    if (feed.Count == 0 || now > cacheTime + 1200)
+                    if (MainPage.Current.TempCache.Count > 0 && MainPage.Current.TempCache.Any(c=>c.Channel.Id==channel.Id))
                     {
-                        isForceRefresh = true;
-                        goto gg;
+                        feed = MainPage.Current.TempCache.Where(c=>c.Channel.Id==channel.Id).FirstOrDefault()?.Feeds;
                     }
                     else
                     {
-                        if (cacheTime > 0)
+                        var data = await IOTools.GetLocalCache(channel);
+                        feed = data.Item1;
+                        int cacheTime = data.Item2;
+                        int now = AppTools.DateToTimeStamp(DateTime.Now.ToLocalTime());
+                        if (feed.Count == 0 || now > cacheTime + 1200)
                         {
-                            LastCacheTimeContainer.Visibility = Visibility.Visible;
-                            LastCacheTimeBlock.Text = AppTools.TimeStampToDate(cacheTime).ToString("HH:mm");
+                            isForceRefresh = true;
+                            goto gg;
+                        }
+                        else
+                        {
+                            if (cacheTime > 0)
+                            {
+                                LastCacheTimeContainer.Visibility = Visibility.Visible;
+                                LastCacheTimeBlock.Text = AppTools.TimeStampToDate(cacheTime).ToString("HH:mm");
+                            }
                         }
                     }
                 }

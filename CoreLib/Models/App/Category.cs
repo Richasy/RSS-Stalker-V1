@@ -16,6 +16,7 @@ namespace CoreLib.Models
     {
         private string _name;
         private string _icon;
+        private int _noread;
         public string Name
         {
             get { return _name; }
@@ -25,6 +26,11 @@ namespace CoreLib.Models
         {
             get { return _icon; }
             set { _icon = value; OnPropertyChanged(); }
+        }
+        public int NoRead
+        {
+            get { return _noread; }
+            set { _noread = value; OnPropertyChanged(); }
         }
         public string Id { get; set; }
         public List<Channel> Channels { get; set; }

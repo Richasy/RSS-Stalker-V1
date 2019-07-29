@@ -61,6 +61,7 @@ namespace RSS_Stalker.Pages
             bool isFirstCache = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsCacheFirst, "False"));
             bool isShowFeedDescription = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsShowFeedDescription, "True"));
             bool isHidePage = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsHidePage, "False"));
+            bool isShowNoRead = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsShowNoRead, "True"));
 
             if (!isOneDrive)
             {
@@ -96,6 +97,7 @@ namespace RSS_Stalker.Pages
             HidePageSwitch.IsOn = isHidePage;
             AutoCacheChannel.IsOn = isAutoCache;
             FirstCacheChannel.IsOn = isFirstCache;
+            ShowNoReadChannel.IsOn = isShowNoRead;
             CacheSizeTextBlock.Text = await IOTools.GetCacheSize();
             VoiceGenderComboBox.SelectedIndex = gender == "Female" ? 1 : 0;
             SpeechRateSlider.Value = speechRate;
@@ -595,6 +597,13 @@ namespace RSS_Stalker.Pages
                 MainPage.Current.PageContainer.Visibility = Visibility.Collapsed;
             else
                 MainPage.Current.PageContainer.Visibility = Visibility.Visible;
+        }
+
+        private void ShowNoReadChannel_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (!_isInit)
+                return;
+            AppTools.WriteLocalSetting(AppSettings.IsShowNoRead, ShowNoReadChannel.IsOn.ToString());
         }
     }
 }

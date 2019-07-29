@@ -17,7 +17,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <controls:ImageEx CornerRadius="13" Width="25" Height="25" x:Name="FavIconImage" Margin="0,0,10,0" Background="White"/>
+        <controls:ImageEx CornerRadius="13" CacheMode="BitmapCache" CachingStrategy="Internal" IsCacheEnabled="True" Width="25" Height="25" x:Name="FavIconImage" Margin="0,0,10,0" Background="White"/>
         <TextBlock Grid.Column="1" x:Name="TitleBlock" VerticalAlignment="Center" Foreground="{ThemeResource ImportantTextColor}" TextTrimming="CharacterEllipsis" FontSize="15" FontFamily="{StaticResource Title}"/>
         <TextBlock x:Name="DateBlock" VerticalAlignment="Center" Foreground="{ThemeResource NormalTextColor}" FontFamily="{StaticResource Basic}" FontSize="14" Grid.Column="2" Margin="15,0"/>
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Column="3">

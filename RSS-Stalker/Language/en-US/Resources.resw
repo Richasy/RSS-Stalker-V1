@@ -361,7 +361,7 @@
     <value>This article already exists in the reading later list</value>
   </data>
   <data name="Tip_TryLinkFirst" xml:space="preserve">
-    <value>Please validate the link first.</value>
+    <value>Please validate the link first. Click the search icon.</value>
   </data>
   <data name="Tip_UpdateCategory" xml:space="preserve">
     <value>Modify Category</value>
@@ -698,5 +698,8 @@
   </data>
   <data name="Control_HidePageTipBlock.Text" xml:space="preserve">
     <value>Hide Custom page</value>
+  </data>
+  <data name="Control_ShowNoReadTipBlock.Text" xml:space="preserve">
+    <value>Show unread number</value>
   </data>
 </root>

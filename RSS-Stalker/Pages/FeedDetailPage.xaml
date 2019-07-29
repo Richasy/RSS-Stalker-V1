@@ -104,7 +104,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Style="{StaticResource GhostCircleButtonStyle}" Margin="0,0,10,0" Content="&#xE976;" FontFamily="{StaticResource Icon}" VerticalAlignment="Center" Name="GridViewButton" Click="GridViewButton_Click"/>
+            <Button Style="{StaticResource GhostCircleButtonStyle}" Margin="0,0,10,0" Content="&#xE911;" FontFamily="{StaticResource Icon}" VerticalAlignment="Center" Name="GridViewButton" Click="GridViewButton_Click"/>
             <TextBlock Grid.Column="1" Name="TitleTextBlock" VerticalAlignment="Center" FontFamily="{StaticResource Title}" TextTrimming="CharacterEllipsis" FontSize="19" HorizontalAlignment="Left"/>
         </Grid>
         <Grid Grid.Row="1">

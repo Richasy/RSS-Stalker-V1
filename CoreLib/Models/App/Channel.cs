@@ -16,6 +16,7 @@ namespace CoreLib.Models
     {
         private string _name;
         private string _description;
+        private int _noread;
         /// <summary>
         /// 频道名称
         /// </summary>
@@ -35,6 +36,11 @@ namespace CoreLib.Models
         {
             get { return _description; }
             set { _description = value; OnPropertyChanged(); }
+        }
+        public int NoRead
+        {
+            get { return _noread; }
+            set { _noread = value; OnPropertyChanged(); }
         }
         /// <summary>
         /// 频道对应的网页链接

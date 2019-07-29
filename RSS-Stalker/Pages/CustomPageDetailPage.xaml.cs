@@ -10,20 +10,10 @@ using RSS_Stalker.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
@@ -52,27 +42,40 @@ namespace RSS_Stalker.Pages
         {
             if (e.NavigationMode == NavigationMode.Back)
             {
-                if (FeedCollection.Count > 0 && JustNoReadSwitch.IsOn)
-                {
-                    foreach (var temp in MainPage.Current.ReadIds)
-                    {
-                        FeedCollection.Remove(FeedCollection.Where(p => p.InternalID == temp).FirstOrDefault());
-                    }
-                    if (FeedCollection.Count == 0)
-                    {
-                        AllReadTipContainer.Visibility = Visibility.Visible;
-                        AllReadButton.Visibility = Visibility.Collapsed;
-                    }
-                }
+                //if (FeedCollection.Count > 0 && JustNoReadSwitch.IsOn)
+                //{
+                //    foreach (var temp in MainPage.Current.ReadIds)
+                //    {
+                //        FeedCollection.Remove(FeedCollection.Where(p => p.InternalID == temp).FirstOrDefault());
+                //    }
+                //    if (FeedCollection.Count == 0)
+                //    {
+                //        AllReadTipContainer.Visibility = Visibility.Visible;
+                //        AllReadButton.Visibility = Visibility.Collapsed;
+                //    }
+                //}
                 return;
             }
             if (e.Parameter != null)
             {
+                NoDataTipContainer.Visibility = Visibility.Collapsed;
                 // 当传入源为频道数据时（获取当前频道最新资讯）
                 if (e.Parameter is CustomPage)
                 {
-                    await UpdateLayout(e.Parameter as CustomPage);
-                    ChangeLayout();
+                    try
+                    {
+                        await UpdateLayout(e.Parameter as CustomPage);
+                    }
+                    catch (Exception)
+                    {
+                        NoDataTipContainer.Visibility = Visibility.Visible;
+                        LoadingRing.IsActive = false;
+                    }
+                    finally
+                    {
+                        ChangeLayout();
+                    }
+                    
                 }
                 // 当传入源为文章列表时（说明是上一级返回，不获取最新资讯）
                 else if (e.Parameter is List<RssSchema>)
@@ -187,7 +190,7 @@ namespace RSS_Stalker.Pages
                 }
                 else
                 {
-                    var schema = await AppTools.GetSchemaFromPage(_sourceData);
+                    var schema = await IOTools.GetSchemaFromPage(_sourceData);
                     foreach (var item in schema)
                     {
                         feed.Add(new Feed(item));

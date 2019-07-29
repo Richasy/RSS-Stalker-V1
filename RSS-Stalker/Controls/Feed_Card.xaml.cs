@@ -50,18 +50,8 @@ namespace RSS_Stalker.Controls
                 c.FavIconImage.Source = new BitmapImage(new Uri(AppTools.GetFavIcon(data.FeedUrl)));
                 if (!string.IsNullOrEmpty(data.ImageUrl))
                 {
-                    var brush = new ImageBrush();
                     string imageUrl = data.ImageUrl.StartsWith("//") ? "http" + data.ImageUrl : data.ImageUrl;
-                    brush.ImageSource = new BitmapImage(new Uri(imageUrl));
-                    brush.Stretch = Stretch.UniformToFill;
-                    c.CardContainer.Background = brush;
-                    brush.ImageFailed += (_s, _e) =>
-                    {
-                        c.ContentContainer.VerticalAlignment = VerticalAlignment.Top;
-                        c.SummaryBlock.MaxLines = 5;
-                        c.CardContainer.Background = AppTools.GetThemeSolidColorBrush(ColorType.CardBackground);
-                        c.MainContainer.Background = AppTools.GetThemeSolidColorBrush(ColorType.TransparentBackground);
-                    };
+                    c.Hold.Source = imageUrl;
                 }
                 else
                 {

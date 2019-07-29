@@ -2,9 +2,10 @@
 
 The new version has been revised as follows:
 
-1. Add the "Hide Page" option to hide the custom page
-2. Improve the trigger mode of the pop-up menu, no longer the right button does not work.
-3. Fix the problem of garbled some feeds in the custom page
+1. Increase the channel icon display
+2. Increase the display of the unread items of the category and channel (loading will be performed at startup, and the loading progress will be displayed in the sidebar)
+3. Adjust the data loading mode of the custom page, and read the local cache first.
+4. Fix some feeds image loading failures
 
 Thank you :)
 

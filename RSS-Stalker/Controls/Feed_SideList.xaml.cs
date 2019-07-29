@@ -36,7 +36,7 @@ namespace RSS_Stalker.Controls
                 else
                 {
                     c.HoldImageControl.Visibility = Visibility.Visible;
-                    c.HoldImageControl.ImageLink = data.ImageUrl.StartsWith("//") ? "http:" + data.ImageUrl : data.ImageUrl;
+                    c.HoldImageControl.Source = data.ImageUrl.StartsWith("//") ? "http:" + data.ImageUrl : data.ImageUrl;
                 }
                 c.TitleBlock.Text = data.Title;
                 c.SummaryBlock.Text = data.Summary;

@@ -361,7 +361,7 @@
     <value>稍后阅读列表中已存在该文章</value>
   </data>
   <data name="Tip_TryLinkFirst" xml:space="preserve">
-    <value>请先完成链接验证</value>
+    <value>请先完成链接验证，点一下放大镜试试</value>
   </data>
   <data name="Tip_UpdateCategory" xml:space="preserve">
     <value>修改分类</value>
@@ -698,5 +698,8 @@
   </data>
   <data name="Control_HidePageTipBlock.Text" xml:space="preserve">
     <value>隐藏自定义页面</value>
+  </data>
+  <data name="Control_ShowNoReadTipBlock.Text" xml:space="preserve">
+    <value>显示未读条目数</value>
   </data>
 </root>

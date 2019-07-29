@@ -50,7 +50,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-                <controls1:ImageEx x:Name="FavIconImage" CornerRadius="10" Width="20" Height="20" VerticalAlignment="Center" Background="White"/>
+                <controls1:ImageEx CacheMode="BitmapCache" CachingStrategy="Internal" IsCacheEnabled="True" x:Name="FavIconImage" CornerRadius="10" Width="20" Height="20" VerticalAlignment="Center" Background="White"/>
                 <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Name="AuthorNameBlock" MaxWidth="150" Margin="10,0,0,0" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Grid.Column="1">

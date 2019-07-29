@@ -22,7 +22,6 @@ namespace AutoCache
             if (!isOn)
                 return;
             var categories = await GetLocalCategories();
-            var pages = await GetLocalPages();
             var list = new List<Channel>();
             foreach (var item in categories)
             {
@@ -31,11 +30,8 @@ namespace AutoCache
                     list.Add(cha);
                 }
             }
-            var tasks = new Task[2];
-            tasks[0] = Task.Run(async () => { await AddCacheChannel(list.ToArray()); });
-            tasks[1] = Task.Run(async()=> { await AddCachePage(pages.ToArray()); });
-            Task.WaitAll(tasks);
-            
+            await AddCacheChannel(list.ToArray());
+
             def.Complete();
         }
         /// <summary>

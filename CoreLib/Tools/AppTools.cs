@@ -30,7 +30,6 @@ namespace CoreLib.Tools
 {
     public class AppTools
     {
-        public static List<HttpClient> ClientCollection = new List<HttpClient>();
         /// <summary>
         /// 写入本地设置
         /// </summary>
@@ -278,18 +277,13 @@ namespace CoreLib.Tools
         public static HttpClient GetClient(string url)
         {
             HttpClient client;
-            client = ClientCollection.Where(p => p.BaseAddress.ToString() == url).FirstOrDefault();
-            if (client == null)
+            client = new HttpClient(new HttpClientHandler
             {
-                client = new HttpClient(new HttpClientHandler
-                {
-                    AutomaticDecompression = DecompressionMethods.GZip
+                AutomaticDecompression = DecompressionMethods.GZip
                                  | DecompressionMethods.Deflate
-                })
-                { BaseAddress = new Uri(url) };
-                client.DefaultRequestHeaders.Connection.Add("keep-alive");
-                ClientCollection.Add(client);
-            }
+            })
+            { BaseAddress = new Uri(url) };
+            client.DefaultRequestHeaders.Connection.Add("keep-alive");
             return client;
         }
         /// <summary>
@@ -401,7 +395,7 @@ namespace CoreLib.Tools
         /// </summary>
         /// <param name="page">地址</param>
         /// <returns></returns>
-        public static async Task<List<RssSchema>> GetSchemaFromPage(CustomPage page,bool isLimit=false)
+        public static async Task<List<RssSchema>> GetSchemaFromPage(CustomPage page,bool isLimit=false,Action<List<RssSchema>>Success=null)
         {
             var allList = new List<RssSchema>();
             var tasks = new List<Task>();
@@ -419,6 +413,7 @@ namespace CoreLib.Tools
                                 schemas = FilterRssList(schemas, rule);
                             }
                         }
+                        Success?.Invoke(schemas);
                         foreach (var s in schemas)
                         {
                             allList.Add(s);
@@ -428,21 +423,21 @@ namespace CoreLib.Tools
             }
             await Task.WhenAll(tasks.ToArray());
             allList = allList.OrderByDescending(p => p.PublishDate).ToList();
-            if (page.Rules.Count > 0)
-            {
-                var total = page.Rules.Where(r => r.Rule.Type == FilterRuleType.TotalLimit).FirstOrDefault();
-                if (total != null)
-                {
-                    int limit = Convert.ToInt32(total.Content);
-                    if (allList.Count > limit)
-                    {
-                        allList = allList.GetRange(0, limit);
-                    }
-                }
-            }
+            //if (page.Rules.Count > 0)
+            //{
+            //    var total = page.Rules.Where(r => r.Rule.Type == FilterRuleType.TotalLimit).FirstOrDefault();
+            //    if (total != null)
+            //    {
+            //        int limit = Convert.ToInt32(total.Content);
+            //        if (allList.Count > limit)
+            //        {
+            //            allList = allList.GetRange(0, limit);
+            //        }
+            //    }
+            //}
             return allList;
         }
-        private static List<RssSchema> FilterRssList(List<RssSchema> list,FilterItem rule)
+        public static List<RssSchema> FilterRssList(List<RssSchema> list,FilterItem rule)
         {
             var results = new List<RssSchema>();
             if (rule.Rule.Type == FilterRuleType.Filter)
@@ -497,7 +492,7 @@ namespace CoreLib.Tools
         /// </summary>
         /// <param name="url">地址</param>
         /// <returns></returns>
-        public static async Task<List<RssSchema>> GetFeedsFromUrl(string url,bool isLimit=false)
+        public static async Task<List<RssSchema>> GetFeedsFromUrl(string url,bool isLimit=false, Action<List<RssSchema>> Success=null)
         {
             string feed = null;
 
@@ -543,6 +538,7 @@ namespace CoreLib.Tools
                 }
                 
             }
+            Success?.Invoke(list);
             return list;
         }
         /// <summary>
@@ -688,8 +684,8 @@ namespace CoreLib.Tools
         public static string GetFavIcon(string url)
         {
             var neUri = new Uri(url);
-            //string baseUrl = "http://statics.dnspod.cn/proxy_favicon/_/favicon?domain=";
-            return "http://"+neUri.Host+"/favicon.ico";
+            string baseUrl = "http://api.grabz.it/services/icon.ashx?key=ODVmOGU3MDMwNTY4NDcyZDhlYmFjMWZhMDljNmMxNWI=&size=48&url=";
+            return baseUrl+neUri.Host;
         }
     }
 }

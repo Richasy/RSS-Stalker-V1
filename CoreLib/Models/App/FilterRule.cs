@@ -49,7 +49,7 @@ namespace CoreLib.Models.App
             {
                 new FilterRule(FilterRuleType.Filter),
                 new FilterRule(FilterRuleType.FilterOut),
-                new FilterRule(FilterRuleType.TotalLimit),
+                //new FilterRule(FilterRuleType.TotalLimit),
                 new FilterRule(FilterRuleType.SingleLimit),
             };
             return list;

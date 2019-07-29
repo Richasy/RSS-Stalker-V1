@@ -42,6 +42,7 @@ namespace RSS_Stalker
         public List<RssSchema> StarList = new List<RssSchema>();
         public List<Channel> ToastList = new List<Channel>();
         public List<Channel> ReadableList = new List<Channel>();
+        public List<CacheModel> TempCache = new List<CacheModel>();
         public List<string> ReadIds = new List<string>();
         public bool _isFromTimeline = false;
         public static MainPage Current;
@@ -142,6 +143,11 @@ namespace RSS_Stalker
             LoadingRing.IsActive = true;
             string theme = AppTools.GetRoamingSetting(AppSettings.Theme, "Light");
             var icon = new BitmapImage();
+            bool isHidePage = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsHidePage, "False"));
+            if (isHidePage)
+                PageContainer.Visibility = Visibility.Collapsed;
+            else
+                PageContainer.Visibility = Visibility.Visible;
             icon.UriSource = new Uri($"ms-appx:///Assets/{theme}.png");
             AppIcon.Source = icon;
             bool isOneDrive = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsBindingOneDrive, "False"));
@@ -190,29 +196,27 @@ namespace RSS_Stalker
                     AppSplitView.OpenPaneLength = 250;
                 }
             }
-            bool isHidePage = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsHidePage, "False"));
-            if (isHidePage)
-                PageContainer.Visibility = Visibility.Collapsed;
-            else
-                PageContainer.Visibility = Visibility.Visible;
             // 在完成列表装载后，将列表的数量重新赋值给标识符
             _categoryListCount = Categories.Count;
             _channelListCount = Channels.Count;
             LoadingRing.IsActive = false;
+            
             // 完成OneDrive的数据链接
-            if(isOneDrive && NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+            if (isOneDrive && NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
                 await App.OneDrive.OneDriveAuthorize();
             // TimerInit();
-            
+            bool isShowNoRead = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsShowNoRead, "True"));
+            if (isShowNoRead)
+                await CacheAll();
             // 注册后台
             RegisterBackground();
-            // 检查版本更新
-            await CheckVersion();
             // 注册快捷键
             Window.Current.Dispatcher.AcceleratorKeyActivated += AccelertorKeyActivedHandle;
             SystemFonts = SystemFont.GetFonts();
             _isInit = true;
             CheckUpdateLocalData();
+            // 检查版本更新
+            await CheckVersion();
         }
         private async Task OtherListInit()
         {
@@ -1045,6 +1049,7 @@ namespace RSS_Stalker
             {
                 try
                 {
+                    CategroyAndChannelDecrease();
                     await IOTools.ReplaceReadIds(ReadIds);
                 }
                 catch (Exception)
@@ -1066,6 +1071,95 @@ namespace RSS_Stalker
                 await IOTools.AddNeedReadableChannel(data);
                 ReadableList.Add(data);
                 new PopupToast(AppTools.GetReswLanguage("Tip_Added")).ShowPopup();
+            }
+        }
+        private async Task CacheAll()
+        {
+            var list = new List<Channel>();
+            foreach (var item in Categories)
+            {
+                foreach (var cha in item.Channels)
+                {
+                    list.Add(cha);
+                }
+            }
+            
+            if (list.Count > 0)
+            {
+                try
+                {
+                    CacheProgressBar.Visibility = Visibility.Visible;
+                    CacheProgressBar.Maximum = list.Count;
+                    int channelCount = 0;
+                    var categoryTask = new List<Task>();
+                    TempCache.Clear();
+                    foreach (var category in Categories)
+                    {
+                        var channelTasks = new List<Task>();
+                        int cateNoRead = 0;
+                        foreach (var channel in category.Channels)
+                        {
+                            channelTasks.Add(Task.Run(async () =>
+                            {
+                                await DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
+                                {
+                                    var feeds = await AppTools.GetFeedsFromUrl(channel.Link, true, (d) =>
+                                    {
+                                        var noread = d.Where(p => !ReadIds.Any(u => u == p.InternalID));
+                                        channel.NoRead = noread.Count();
+                                        cateNoRead += noread.Count();
+                                        if (Channels.Count != 0)
+                                        {
+                                            var showChannel = Channels.Where(p => p.Id == channel.Id).FirstOrDefault();
+                                            if (showChannel != null)
+                                            {
+                                                showChannel.NoRead = channel.NoRead;
+                                            }
+                                        }
+                                        TempCache.Add(new CacheModel()
+                                        {
+                                            Channel = channel,
+                                            Feeds = d,
+                                            CacheTime = AppTools.DateToTimeStamp(DateTime.Now.ToLocalTime())
+                                        });
+                                    });
+                                    channelCount += 1;
+                                    CacheProgressBar.Value = channelCount;
+                                    
+                                });
+                            }));
+                        }
+                        categoryTask.Add(Task.Run(async () =>
+                        {
+                            await DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
+                            {
+                                await Task.WhenAll(channelTasks);
+                                category.NoRead = cateNoRead;
+                                
+                            });
+                        }));
+                    }
+                    await Task.WhenAll(categoryTask);
+                    await IOTools.AddCacheChannel(TempCache);
+                    CacheProgressBar.Visibility = Visibility.Collapsed;
+                    TempCache.Clear();
+                }
+                catch (Exception ex)
+                {
+                    new PopupToast(ex.Message).ShowPopup();
+                }
+            }
+        }
+        public void CategroyAndChannelDecrease()
+        {
+            var cate = CategoryListView.SelectedItem as Category;
+            var channel = ChannelListView.SelectedItem as Channel;
+            if(cate!=null && channel != null)
+            {
+                if (cate.NoRead > 0)
+                    cate.NoRead -= 1;
+                if (channel.NoRead > 0)
+                    channel.NoRead -= 1;
             }
         }
     }

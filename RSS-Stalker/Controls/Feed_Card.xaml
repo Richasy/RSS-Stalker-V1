@@ -10,13 +10,15 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
     <Grid x:Name="CardContainer" Height="200">
+        <local:HoldImage x:Name="Hold" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         <Grid Name="MainContainer" Background="{ThemeResource MaskBackground}" Padding="15">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            
             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center">
-                <controls:ImageEx CornerRadius="10" Background="White" x:Name="FavIconImage" Width="20" Height="20" HorizontalAlignment="Left"/>
+                <controls:ImageEx CornerRadius="10" CacheMode="BitmapCache" CachingStrategy="Internal" IsCacheEnabled="True" Background="White" x:Name="FavIconImage" Width="20" Height="20" HorizontalAlignment="Left"/>
             </StackPanel>
             <Button Style="{StaticResource TransparentButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="15" FontFamily="{StaticResource Icon}" Content="&#xE9A1;">
                 <Button.Flyout>

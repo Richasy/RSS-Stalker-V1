@@ -702,4 +702,7 @@
   <data name="Control_ShowNoReadTipBlock.Text" xml:space="preserve">
     <value>Show unread number</value>
   </data>
+  <data name="Control_IconTypeTipBlock.Text" xml:space="preserve">
+    <value>Feeds Icon source</value>
+  </data>
 </root>

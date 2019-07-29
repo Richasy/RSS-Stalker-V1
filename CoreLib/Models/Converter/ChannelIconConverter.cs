@@ -16,7 +16,7 @@ namespace CoreLib.Models.Converter
             if(value is string url)
             {
                 string u = AppTools.GetFavIcon(url);
-                return new BitmapImage(new Uri(u));
+                return u;
             }
             return null;
         }

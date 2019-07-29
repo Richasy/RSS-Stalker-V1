@@ -2,7 +2,8 @@
 
 The new version has been revised as follows:
 
-1. Fix something...
+1. Improve the home page loading speed
+2. Adjust the icon display mode, you can set it to Google to display the icon more comprehensively on Settings.
 
 Thank you :)
 

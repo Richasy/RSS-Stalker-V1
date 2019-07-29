@@ -52,6 +52,7 @@ namespace RSS_Stalker.Pages
             string language = AppTools.GetRoamingSetting(AppSettings.Language,"en_US");
             string oneDriveUserName = AppTools.GetLocalSetting(AppSettings.UserName, "");
             string searchEngine = AppTools.GetRoamingSetting(AppSettings.SearchEngine, "Bing");
+            string iconType = AppTools.GetRoamingSetting(AppSettings.FaviconType, "Default");
             bool isSyncWithStart = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.SyncWithStart, "False"));
             bool isScreenChannel = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsScreenChannelCustom, "False"));
             bool isScreenPage = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsScreenPageCustom, "False"));
@@ -89,6 +90,17 @@ namespace RSS_Stalker.Pages
                     break;
                 case "Bing":
                     SearchEngineComboBox.SelectedIndex = 2;
+                    break;
+                default:
+                    break;
+            }
+            switch (iconType)
+            {
+                case "Default":
+                    IconTypeComboBox.SelectedIndex = 0;
+                    break;
+                case "Google":
+                    IconTypeComboBox.SelectedIndex = 1;
                     break;
                 default:
                     break;
@@ -604,6 +616,14 @@ namespace RSS_Stalker.Pages
             if (!_isInit)
                 return;
             AppTools.WriteLocalSetting(AppSettings.IsShowNoRead, ShowNoReadChannel.IsOn.ToString());
+        }
+
+        private void IconTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!_isInit)
+                return;
+            string name = (IconTypeComboBox.SelectedItem as ComboBoxItem).Name.Replace("Icon_", "");
+            AppTools.WriteLocalSetting(AppSettings.FaviconType, name);
         }
     }
 }

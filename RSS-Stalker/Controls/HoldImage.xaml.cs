@@ -43,7 +43,7 @@ namespace RSS_Stalker.Controls
             {
                 url = WebUtility.HtmlDecode(url);
                 var c = d as HoldImage;
-                c.ImageBlock.Source = new BitmapImage(new Uri(url));
+                c.ImageBlock.Source = url;
             }
         }
 

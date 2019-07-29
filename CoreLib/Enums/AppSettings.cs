@@ -50,6 +50,7 @@ namespace CoreLib.Enums
         SideListLocked,
         IsShowFeedDescription,
         IsHidePage,
-        IsShowNoRead
+        IsShowNoRead,
+        FaviconType
     }
 }

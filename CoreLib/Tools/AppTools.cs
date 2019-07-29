@@ -684,8 +684,17 @@ namespace CoreLib.Tools
         public static string GetFavIcon(string url)
         {
             var neUri = new Uri(url);
-            string baseUrl = "http://api.grabz.it/services/icon.ashx?key=ODVmOGU3MDMwNTY4NDcyZDhlYmFjMWZhMDljNmMxNWI=&size=48&url=";
-            return baseUrl+neUri.Host;
+            string iconType = GetLocalSetting(AppSettings.FaviconType, "Default");
+            if (iconType == "Default")
+            {
+                return $"http://{neUri.Host}/favicon.ico";
+            }
+            else if (iconType == "Google")
+            {
+                string baseUrl = "http://www.google.com/s2/favicons?domain=";
+                return baseUrl + neUri.Host;
+            }
+            return "http://via.placeholder.com/20";
         }
     }
 }

@@ -702,4 +702,7 @@
   <data name="Control_ShowNoReadTipBlock.Text" xml:space="preserve">
     <value>显示未读条目数</value>
   </data>
+  <data name="Control_IconTypeTipBlock.Text" xml:space="preserve">
+    <value>订阅图标源</value>
+  </data>
 </root>

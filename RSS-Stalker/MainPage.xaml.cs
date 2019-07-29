@@ -120,10 +120,6 @@ namespace RSS_Stalker
                 await IOTools.ReplacePage(list, true);
             }
         }
-        private async void CheckUpdateLocalData()
-        {
-            await IOTools.UpdateAllListToOneDrive();
-        }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if(e.Parameter !=null && e.Parameter is string)
@@ -200,23 +196,46 @@ namespace RSS_Stalker
             _categoryListCount = Categories.Count;
             _channelListCount = Channels.Count;
             LoadingRing.IsActive = false;
-            
+            var tempTasks = new Task[3];
+            tempTasks[0] = Task.Run(async () =>
+            {
+                await DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
+                {
+                    if (isOneDrive && NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+                        await App.OneDrive.OneDriveAuthorize();
+                    await IOTools.UpdateAllListToOneDrive();
+                });
+            });
+            tempTasks[1] = Task.Run(async () =>
+            {
+                await DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
+                {
+                    bool isShowNoRead = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsShowNoRead, "True"));
+                    if (isShowNoRead)
+                        await CacheAll();
+                });
+            });
+            tempTasks[2] = Task.Run(async () =>
+            {
+                await DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
+                {
+                    SystemFonts = SystemFont.GetFonts();
+                    await CheckVersion();
+                });
+
+            });
             // 完成OneDrive的数据链接
-            if (isOneDrive && NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
-                await App.OneDrive.OneDriveAuthorize();
+            
             // TimerInit();
-            bool isShowNoRead = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsShowNoRead, "True"));
-            if (isShowNoRead)
-                await CacheAll();
+            
             // 注册后台
             RegisterBackground();
             // 注册快捷键
             Window.Current.Dispatcher.AcceleratorKeyActivated += AccelertorKeyActivedHandle;
-            SystemFonts = SystemFont.GetFonts();
+            await Task.WhenAll(tempTasks);
             _isInit = true;
-            CheckUpdateLocalData();
             // 检查版本更新
-            await CheckVersion();
+            
         }
         private async Task OtherListInit()
         {
@@ -1049,7 +1068,7 @@ namespace RSS_Stalker
             {
                 try
                 {
-                    CategroyAndChannelDecrease();
+                    CategroyAndChannelDecrease(ids.Count());
                     await IOTools.ReplaceReadIds(ReadIds);
                 }
                 catch (Exception)
@@ -1150,16 +1169,16 @@ namespace RSS_Stalker
                 }
             }
         }
-        public void CategroyAndChannelDecrease()
+        public void CategroyAndChannelDecrease(int count=1)
         {
             var cate = CategoryListView.SelectedItem as Category;
             var channel = ChannelListView.SelectedItem as Channel;
             if(cate!=null && channel != null)
             {
-                if (cate.NoRead > 0)
-                    cate.NoRead -= 1;
-                if (channel.NoRead > 0)
-                    channel.NoRead -= 1;
+                if (cate.NoRead > count-1)
+                    cate.NoRead -= count;
+                if (channel.NoRead > count-1)
+                    channel.NoRead -= count;
             }
         }
     }

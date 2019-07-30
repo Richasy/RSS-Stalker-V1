@@ -240,3 +240,31 @@ tbody > tr:nth-child(2n+1) > td, tbody > tr:nth-child(2n+1) > th {
     border-left-style: solid;
     margin: 1rem 0;
 }
+
+#content_progress {
+    /* Positioning */
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    height: 2px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+    background-color: transparent;
+    color: #208CF7;
+}
+
+    #content_progress::-webkit-progress-bar {
+        background-color: transparent;
+    }
+
+    #content_progress::-webkit-progress-value {
+        background-color: #208CF7;
+    }
+
+    #content_progress::-moz-progress-bar {
+        background-color: #208CF7;
+    }

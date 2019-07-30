@@ -43,6 +43,7 @@ namespace RSS_Stalker.Pages
         {
             this.InitializeComponent();
             Current = this;
+            NavigationCacheMode = NavigationCacheMode.Enabled;
             PageInit();
         }
         public async void PageInit()

@@ -41,10 +41,14 @@ namespace RSS_Stalker.Pages
         public OperaterCustomPage()
         {
             this.InitializeComponent();
+            NavigationCacheMode = NavigationCacheMode.Enabled;
             Current = this;
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            AllList.Clear();
+            IconCollection.Clear();
+            RuleCollection.Clear();
             foreach (var item in MainPage.Current.Categories)
             {
                 AllList.Add(new GroupChannelList(item.Channels) { Key = item.Name });
@@ -67,6 +71,7 @@ namespace RSS_Stalker.Pages
                     _sourcePage = e.Parameter as CustomPage;
                     IconTextBlock.Text = _sourcePage.Icon;
                     PageNameTextBox.Text = _sourcePage.Name;
+                    FilterCollection.Clear();
                     foreach (var item in _sourcePage.Rules)
                     {
                         FilterCollection.Add(item);

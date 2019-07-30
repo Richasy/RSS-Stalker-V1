@@ -48,6 +48,8 @@ namespace RSS_Stalker.Pages
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
+            NoDataTipContainer.Visibility = Visibility.Collapsed;
+            AllReadTipContainer.Visibility = Visibility.Collapsed;
             if (e.NavigationMode == NavigationMode.Back)
             {
                 //if (FeedCollection.Count > 0 && JustNoReadSwitch.IsOn)
@@ -119,8 +121,7 @@ namespace RSS_Stalker.Pages
             var feed = new List<RssSchema>();
             if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
-                bool isCacheFirst = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsCacheFirst, "False"));
-                gg: if (isCacheFirst && !isForceRefresh)
+                gg: if (!isForceRefresh)
                 {
                     if (MainPage.Current.TempCache.Count > 0 && MainPage.Current.TempCache.Any(c=>c.Channel.Id==channel.Id))
                     {

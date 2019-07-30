@@ -275,11 +275,27 @@ namespace RSS_Stalker
             if (args.EventType.ToString().Contains("Down"))
             {
                 var esc = Window.Current.CoreWindow.GetKeyState(Windows.System.VirtualKey.Escape);
+                var left = Window.Current.CoreWindow.GetKeyState(Windows.System.VirtualKey.Left);
+                var right = Window.Current.CoreWindow.GetKeyState(Windows.System.VirtualKey.Right);
                 if (esc.HasFlag(CoreVirtualKeyStates.Down))
                 {
                     if (MainFrame.Content is Pages.FeedDetailPage)
                     {
                         Pages.FeedDetailPage.Current.CheckBack();
+                    }
+                }
+                else if (left.HasFlag(CoreVirtualKeyStates.Down))
+                {
+                    if (MainFrame.Content is Pages.FeedDetailPage)
+                    {
+                        Pages.FeedDetailPage.Current.PreviousArticle();
+                    }
+                }
+                else if (right.HasFlag(CoreVirtualKeyStates.Down))
+                {
+                    if (MainFrame.Content is Pages.FeedDetailPage)
+                    {
+                        Pages.FeedDetailPage.Current.NextArticle();
                     }
                 }
             }

@@ -87,6 +87,7 @@
                   Padding="0,20,0,0"
                   Name="FeedGridView"
                   ItemTemplate="{StaticResource FeddItemTemplate}"
+                  ScrollViewer.VerticalScrollMode="Auto"
                   ItemsSource="{x:Bind FeedCollection}"
                   IsItemClickEnabled="True"
                   ItemContainerStyle="{StaticResource BasicGridViewItemContainerStyle}"

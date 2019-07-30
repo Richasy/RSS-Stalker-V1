@@ -1070,10 +1070,10 @@ namespace RSS_Stalker.Tools
             if (results.Count > 0)
             {
                 results.RemoveAll(p => data.Any(c => c.Channel.Id == p.Channel.Id));
-                results.AddRange(data);
-                content = JsonConvert.SerializeObject(results);
-                await FileIO.WriteTextAsync(file, content);
             }
+            results.AddRange(data);
+            content = JsonConvert.SerializeObject(results);
+            await FileIO.WriteTextAsync(file, content);
         }
         /// <summary>
         /// 升级缓存

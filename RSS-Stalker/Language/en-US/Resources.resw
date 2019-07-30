@@ -705,4 +705,10 @@
   <data name="Control_IconTypeTipBlock.Text" xml:space="preserve">
     <value>Feeds Icon source</value>
   </data>
+  <data name="Tip_NoNextArticle" xml:space="preserve">
+    <value>This is already the last article~</value>
+  </data>
+  <data name="Tip_NoPreviousArticle" xml:space="preserve">
+    <value>This is already the first article~</value>
+  </data>
 </root>

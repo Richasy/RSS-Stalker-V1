@@ -2,8 +2,14 @@
 
 The new version has been revised as follows:
 
-1. Improve the home page loading speed
-2. Adjust the icon display mode, you can set it to Google to display the icon more comprehensively on Settings.
+1. Add a reading progress bar at the top of the article details screen
+2. Add a shortcut to the article details page:
+
+	← ：View previous article
+	→ ：View next article
+	Esc ：Back to article list
+
+3. Custom page time fixes, stability fixes, optimized memory footprint, etc.
 
 Thank you :)
 

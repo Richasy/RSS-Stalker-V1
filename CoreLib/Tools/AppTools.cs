@@ -295,11 +295,12 @@ namespace CoreLib.Tools
         {
             try
             {
-                var client = GetClient(url);
-                if (isLimit)
-                    client.Timeout = TimeSpan.FromSeconds(20);
-                return await client.GetStringAsync(url);
-                
+                using (var client = GetClient(url))
+                {
+                    if (isLimit)
+                        client.Timeout = TimeSpan.FromSeconds(20);
+                    return await client.GetStringAsync(url);
+                }
             }
             catch (Exception)
             {
@@ -538,6 +539,7 @@ namespace CoreLib.Tools
                 }
                 
             }
+            client.Dispose();
             Success?.Invoke(list);
             return list;
         }

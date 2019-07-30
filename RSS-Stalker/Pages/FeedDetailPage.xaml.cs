@@ -257,11 +257,42 @@ namespace RSS_Stalker.Pages
                 MainPage.Current.MainFrame.Navigate(typeof(ChannelDetailPage), AllFeeds);
             }
         }
+        public async void PreviousArticle()
+        {
+            if (AllFeeds.Count > 0)
+            {
+                var index = AllFeeds.IndexOf(_sourceFeed);
+                if (index > 0)
+                {
+                    var data = AllFeeds[index - 1];
+                    await FeedReInit(data);
+                    return;
+                }
+            }
+            new PopupToast(AppTools.GetReswLanguage("Tip_NoPreviousArticle"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+        }
+        public async void NextArticle()
+        {
+            if (AllFeeds.Count > 0)
+            {
+                var index = AllFeeds.IndexOf(_sourceFeed);
+                if (index < AllFeeds.Count-1)
+                {
+                    var data = AllFeeds[index + 1];
+                    await FeedReInit(data);
+                    return;
+                }
+            }
+            new PopupToast(AppTools.GetReswLanguage("Tip_NoNextArticle"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+        }
 
         private async void FeedListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var data = e.ClickedItem as RssSchema;
-            
+            await FeedReInit(data);
+        }
+        private async Task FeedReInit(RssSchema data)
+        {
             bool isUnread = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsJustUnread, "False"));
             if (!isUnread)
             {
@@ -276,7 +307,6 @@ namespace RSS_Stalker.Pages
                 if (MainPage.Current.ReadableList.Any(c => c.Id == selectChannel.Id))
                 {
                     DetailWebView.NavigateToString("");
-                    
                     SmartReader.Article article = await SmartReader.Reader.ParseArticleAsync(_sourceFeed.FeedUrl);
                     if (article.IsReadable || !string.IsNullOrEmpty(article.TextContent))
                     {
@@ -286,7 +316,7 @@ namespace RSS_Stalker.Pages
                     {
                         new PopupToast(AppTools.GetReswLanguage("Tip_ReadError"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
                     }
-                    
+
                 }
             }
             await UpdateFeed();

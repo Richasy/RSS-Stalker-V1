@@ -705,4 +705,10 @@
   <data name="Control_IconTypeTipBlock.Text" xml:space="preserve">
     <value>订阅图标源</value>
   </data>
+  <data name="Tip_NoNextArticle" xml:space="preserve">
+    <value>这已经是最后一篇文章啦~</value>
+  </data>
+  <data name="Tip_NoPreviousArticle" xml:space="preserve">
+    <value>这已经是第一篇文章啦~</value>
+  </data>
 </root>

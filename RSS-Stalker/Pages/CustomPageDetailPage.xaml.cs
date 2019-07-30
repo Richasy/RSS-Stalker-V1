@@ -167,40 +167,17 @@ namespace RSS_Stalker.Pages
             var feed = new List<RssSchema>();
             if (NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
-                bool isCacheFirst = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsCacheFirst, "False"));
-                gg: if (isCacheFirst && !isForceRefresh)
+                var schema = await IOTools.GetSchemaFromPage(_sourceData);
+                foreach (var item in schema)
                 {
-                    var data = await IOTools.GetLocalCache(page);
-                    feed = data.Item1;
-                    _lastCacheTime = data.Item2;
-                    int now = AppTools.DateToTimeStamp(DateTime.Now.ToLocalTime());
-                    if (feed.Count == 0 || now > _lastCacheTime + 1200)
-                    {
-                        isForceRefresh = true;
-                        goto gg;
-                    }
-                    else
-                    {
-                        if (_lastCacheTime > 0)
-                        {
-                            LastCacheTimeContainer.Visibility = Visibility.Visible;
-                            LastCacheTimeBlock.Text = AppTools.TimeStampToDate(_lastCacheTime).ToString("HH:mm");
-                        }
-                    }
+                    feed.Add(item);
                 }
-                else
+                bool isAutoCache = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.AutoCacheWhenOpenChannel, "False"));
+                if (isAutoCache && feed.Count > 0)
                 {
-                    var schema = await IOTools.GetSchemaFromPage(_sourceData);
-                    foreach (var item in schema)
-                    {
-                        feed.Add(new Feed(item));
-                    }
-                    bool isAutoCache = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.AutoCacheWhenOpenChannel, "False"));
-                    if (isAutoCache && feed.Count > 0)
-                    {
-                        await IOTools.AddCachePage(null, page);
-                    }
+                    await IOTools.AddCachePage(null, page);
                 }
+
             }
             else
             {

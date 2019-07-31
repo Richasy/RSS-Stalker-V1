@@ -8,10 +8,9 @@
     <meta name="referrer" content="no-referrer" />
     <meta name="viewport" content="width =device-width,initial-scale =1.0, maximum-scale=1.0, user-scalable=0; ">
     <link href="https://cdn.bootcss.com/highlight.js/9.15.6/styles/atom-one-$theme$.min.css" rel="stylesheet">
-    <script src="./lib/highlight.min.js"></script>
     <script>
         hljs.initHighlightingOnLoad();
-        
+
     </script>
     <script>
         var getHtml = function () {
@@ -60,27 +59,25 @@
     <style>
         $style$
     </style>
-
 </head>
-<body>
+<body $noscroll$>
     <progress id="content_progress" value="0"></progress>
     $body$
-
 
     <script>
         $sinaMiniBlogShare();
         document.addEventListener('DOMContentLoaded', function () {
-      var winHeight = window.innerHeight,
-            docHeight = document.documentElement.scrollHeight,
-            progressBar = document.querySelector('#content_progress');
-      progressBar.max = docHeight - winHeight;
-      progressBar.value = window.scrollY;
-
-      document.addEventListener('scroll', function () {
-            progressBar.max = document.documentElement.scrollHeight - window.innerHeight;
+            $return$
+            var winHeight = window.innerHeight,
+                docHeight = document.documentElement.scrollHeight,
+                progressBar = document.querySelector('#content_progress');
+            progressBar.max = docHeight - winHeight;
             progressBar.value = window.scrollY;
-      });
-});
+            document.addEventListener('scroll', function () {
+                progressBar.max = document.documentElement.scrollHeight - window.innerHeight;
+                progressBar.value = window.scrollY;
+            });
+        });
         var links = document.getElementsByTagName('a');
         var imgs = document.getElementsByTagName('img');
         // 拦截所有导航事件

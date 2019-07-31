@@ -711,4 +711,7 @@
   <data name="Tip_NoPreviousArticle" xml:space="preserve">
     <value>This is already the first article~</value>
   </data>
+  <data name="Control_HideWebScrollTipBlock.Text" xml:space="preserve">
+    <value>Hide article web scroll bar</value>
+  </data>
 </root>

@@ -2,14 +2,9 @@
 
 The new version has been revised as follows:
 
-1. Add a reading progress bar at the top of the article details screen
-2. Add a shortcut to the article details page:
-
-	← ：View previous article
-	→ ：View next article
-	Esc ：Back to article list
-
-3. Custom page time fixes, stability fixes, optimized memory footprint, etc.
+1. Add new shortcuts:
+	1. Global status: Shift + R refresh all feeds
+	2. Feed list or custom page: Shift + A All articles set to read
 
 Thank you :)
 

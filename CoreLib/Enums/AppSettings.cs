@@ -51,6 +51,7 @@ namespace CoreLib.Enums
         IsShowFeedDescription,
         IsHidePage,
         IsShowNoRead,
-        FaviconType
+        FaviconType,
+        IsHideWebScroll
     }
 }

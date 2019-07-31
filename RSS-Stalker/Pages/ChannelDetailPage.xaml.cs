@@ -332,6 +332,11 @@ namespace RSS_Stalker.Pages
 
         private async void AllReadButton_Click(object sender, RoutedEventArgs e)
         {
+            await AllRead();
+        }
+
+        public async Task AllRead()
+        {
             var list = new List<string>();
             foreach (var item in AllFeeds)
             {
@@ -340,7 +345,7 @@ namespace RSS_Stalker.Pages
             MainPage.Current.AddReadId(list.ToArray());
             AllReadButton.Visibility = Visibility.Collapsed;
             bool isJustUnread = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsJustUnread, "False"));
-            if(isJustUnread)
+            if (isJustUnread)
                 await FeedInit();
         }
 

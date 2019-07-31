@@ -711,4 +711,7 @@
   <data name="Tip_NoPreviousArticle" xml:space="preserve">
     <value>这已经是第一篇文章啦~</value>
   </data>
+  <data name="Control_HideWebScrollTipBlock.Text" xml:space="preserve">
+    <value>隐藏文章页滚动条</value>
+  </data>
 </root>

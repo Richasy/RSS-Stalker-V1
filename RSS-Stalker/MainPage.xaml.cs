@@ -270,13 +270,15 @@ namespace RSS_Stalker
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void AccelertorKeyActivedHandle(CoreDispatcher sender, AcceleratorKeyEventArgs args)
+        private async void AccelertorKeyActivedHandle(CoreDispatcher sender, AcceleratorKeyEventArgs args)
         {
             if (args.EventType.ToString().Contains("Down"))
             {
                 var esc = Window.Current.CoreWindow.GetKeyState(Windows.System.VirtualKey.Escape);
                 var left = Window.Current.CoreWindow.GetKeyState(Windows.System.VirtualKey.Left);
                 var right = Window.Current.CoreWindow.GetKeyState(Windows.System.VirtualKey.Right);
+                var ctrl = Window.Current.CoreWindow.GetKeyState(Windows.System.VirtualKey.Control);
+                var shift = Window.Current.CoreWindow.GetKeyState(Windows.System.VirtualKey.Shift);
                 if (esc.HasFlag(CoreVirtualKeyStates.Down))
                 {
                     if (MainFrame.Content is Pages.FeedDetailPage)
@@ -296,6 +298,24 @@ namespace RSS_Stalker
                     if (MainFrame.Content is Pages.FeedDetailPage)
                     {
                         Pages.FeedDetailPage.Current.NextArticle();
+                    }
+                }
+                else if (shift.HasFlag(CoreVirtualKeyStates.Down))
+                {
+                    if (args.VirtualKey == Windows.System.VirtualKey.R)
+                    {
+                        await CacheAll();
+                    }
+                    else if(args.VirtualKey==Windows.System.VirtualKey.A)
+                    {
+                        if(MainFrame.Content is Pages.ChannelDetailPage)
+                        {
+                            await Pages.ChannelDetailPage.Current.AllRead();
+                        }
+                        else if(MainFrame.Content is Pages.CustomPageDetailPage)
+                        {
+                            await Pages.CustomPageDetailPage.Current.AllRead();
+                        }
                     }
                 }
             }
@@ -1072,11 +1092,13 @@ namespace RSS_Stalker
         public async void AddReadId(params string[] ids)
         {
             bool isAdd = false;
+            int addCount = 0;
             foreach (var id in ids)
             {
                 if (!ReadIds.Contains(id))
                 {
                     ReadIds.Add(id);
+                    addCount += 1;
                     isAdd = true;
                 }
             }
@@ -1084,7 +1106,7 @@ namespace RSS_Stalker
             {
                 try
                 {
-                    CategroyAndChannelDecrease(ids.Count());
+                    CategroyAndChannelDecrease(addCount);
                     await IOTools.ReplaceReadIds(ReadIds);
                 }
                 catch (Exception)
@@ -1110,6 +1132,10 @@ namespace RSS_Stalker
         }
         private async Task CacheAll()
         {
+            if (!NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+            {
+                return;
+            }
             var list = new List<Channel>();
             foreach (var item in Categories)
             {
@@ -1130,10 +1156,12 @@ namespace RSS_Stalker
                     TempCache.Clear();
                     foreach (var category in Categories)
                     {
+                        category.NoRead = 0;
                         var channelTasks = new List<Task>();
                         int cateNoRead = 0;
                         foreach (var channel in category.Channels)
                         {
+                            channel.NoRead = 0;
                             channelTasks.Add(Task.Run(async () =>
                             {
                                 await DispatcherHelper.ExecuteOnUIThreadAsync(async () =>

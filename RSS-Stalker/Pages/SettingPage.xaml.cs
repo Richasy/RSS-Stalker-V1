@@ -64,6 +64,7 @@ namespace RSS_Stalker.Pages
             bool isShowFeedDescription = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsShowFeedDescription, "True"));
             bool isHidePage = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsHidePage, "False"));
             bool isShowNoRead = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsShowNoRead, "True"));
+            bool isHideWebScroll = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsHideWebScroll, "True"));
 
             if (!isOneDrive)
             {
@@ -116,6 +117,7 @@ namespace RSS_Stalker.Pages
             SpeechRateSlider.Value = speechRate;
             SyncWithStartSwitch.IsOn = isSyncWithStart;
             OneDriveNameTextBlock.Text = oneDriveUserName;
+            HideWebScrollSwitch.IsOn = isHideWebScroll;
             ToastChannels.Clear();
             var toastList = await IOTools.GetNeedToastChannels();
             if (toastList.Count > 0)
@@ -625,6 +627,13 @@ namespace RSS_Stalker.Pages
                 return;
             string name = (IconTypeComboBox.SelectedItem as ComboBoxItem).Name.Replace("Icon_", "");
             AppTools.WriteLocalSetting(AppSettings.FaviconType, name);
+        }
+
+        private void HideWebScrollSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (!_isInit)
+                return;
+            AppTools.WriteLocalSetting(AppSettings.IsHideWebScroll, HideWebScrollSwitch.IsOn.ToString());
         }
     }
 }

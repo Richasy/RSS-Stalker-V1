@@ -210,6 +210,7 @@ namespace RSS_Stalker.Pages
         /// <returns></returns>
         private async Task<string> PackageHTML(string content)
         {
+            bool isHideScroll = Convert.ToBoolean(AppTools.GetLocalSetting(AppSettings.IsHideWebScroll, "True"));
             string html = await FileIO.ReadTextAsync(await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Template/ShowPage.html")));
             string theme = AppTools.GetRoamingSetting(AppSettings.Theme,"Light");
             string css = await FileIO.ReadTextAsync(await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Template/{theme}.css")));
@@ -217,6 +218,8 @@ namespace RSS_Stalker.Pages
             string fontSize = AppTools.GetLocalSetting(AppSettings.ReadFontSize, "16");
             css = css.Replace("$FontFamily$", fontFamily).Replace("FontSize", fontSize);
             string result = html.Replace("$theme$", theme.ToLower()).Replace("$style$", css).Replace("$body$", content);
+            result = isHideScroll ? result.Replace("$noscroll$", "style=\"-ms-overflow-style: none;\"") : result.Replace("$noscroll$", "");
+            result = isHideScroll ? result.Replace("$return$", "") : result.Replace("$return$", "return;");
             return result;
         }
         /// <summary>
@@ -753,6 +756,7 @@ namespace RSS_Stalker.Pages
         private void DetailWebView_DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
         {
             LoadingRing.IsActive = false;
+            DetailWebView.Focus(FocusState.Programmatic);
         }
 
         private void SettingButton_Click(object sender, RoutedEventArgs e)

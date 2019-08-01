@@ -216,7 +216,7 @@ namespace RSS_Stalker.Pages
             string css = await FileIO.ReadTextAsync(await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Template/{theme}.css")));
             string fontFamily = AppTools.GetLocalSetting(AppSettings.ReadFontFamily, "Tw Cen MT");
             string fontSize = AppTools.GetLocalSetting(AppSettings.ReadFontSize, "16");
-            css = css.Replace("$FontFamily$", fontFamily).Replace("FontSize", fontSize);
+            css = css.Replace("$FontFamily$", fontFamily).Replace("$FontSize$", fontSize);
             string result = html.Replace("$theme$", theme.ToLower()).Replace("$style$", css).Replace("$body$", content);
             result = isHideScroll ? result.Replace("$noscroll$", "style=\"-ms-overflow-style: none;\"") : result.Replace("$noscroll$", "");
             result = isHideScroll ? result.Replace("$return$", "") : result.Replace("$return$", "return;");

@@ -2,9 +2,7 @@
 
 The new version has been revised as follows:
 
-1. Add new shortcuts:
-	1. Global status: Shift + R refresh all feeds
-	2. Feed list or custom page: Shift + A All articles set to read
+1. Fix article page font size issue.
 
 Thank you :)
 

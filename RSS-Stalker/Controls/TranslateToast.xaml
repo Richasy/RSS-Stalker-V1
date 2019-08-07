@@ -57,32 +57,33 @@
         </Storyboard>
 
     </UserControl.Resources>
-    <Grid MaxWidth="300" CornerRadius="3">
+    <Grid MaxWidth="300" CornerRadius="3" Name="PopupContainer"
+          HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Opacity="0">
+        <Grid.RenderTransform>
+            <TranslateTransform Y="-10"></TranslateTransform>
+        </Grid.RenderTransform>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid Padding="10,5" >
+        <Grid Padding="10,5,0,10" Background="{ThemeResource LineColor}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock x:Uid="Control_TranslateCardTipBlock" TextTrimming="CharacterEllipsis" FontSize="12" Foreground="{ThemeResource CardBackground}" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{StaticResource Basic}"/>
+            <TextBlock x:Uid="Control_TranslateCardTipBlock" TextTrimming="CharacterEllipsis" FontSize="12" Foreground="{ThemeResource NormalTextColor}" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{StaticResource Basic}"/>
             <Button Style="{StaticResource TransparentButtonStyle}" Grid.Column="1" FontFamily="{StaticResource Icon}" Content="&#xEA0E;" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="12" x:Name="CloseButton" Click="CloseButton_Click" Foreground="{ThemeResource ImportantTextColor}"/>
         </Grid>
         <Grid Background="{ThemeResource SpecialColor}"
               Grid.Row="1"
                     Padding="10"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Bottom"
-                    Name="PopupContainer"
-                    Opacity="0">
+                    >
 
             <!--改变Y轴和透明底-->
-            <Grid.RenderTransform>
-                <TranslateTransform Y="-10"></TranslateTransform>
-            </Grid.RenderTransform>
-            <TextBlock Name="PopupContent" TextWrapping="Wrap" TextAlignment="Center" Foreground="White" FontSize="14"></TextBlock>
+            
+            <TextBlock Name="PopupContent" TextWrapping="Wrap" IsTextSelectionEnabled="True" TextAlignment="Center" Foreground="White" FontSize="14"></TextBlock>
 
         </Grid>
     </Grid>

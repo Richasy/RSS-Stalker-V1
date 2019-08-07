@@ -74,8 +74,7 @@ namespace RSS_Stalker.Pages
             {
                 this.PointerPressed += (_s, _e) =>
                 {
-                    var pointer = _e.GetCurrentPoint(this);
-                    _latestPoint = pointer;
+                    
                 };
             }
             
@@ -846,6 +845,16 @@ namespace RSS_Stalker.Pages
                 LockButton.Foreground = AppTools.GetThemeSolidColorBrush(ColorType.PrimaryColor);
             }
             AppTools.WriteLocalSetting(AppSettings.SideListLocked, (!isSideLocked).ToString());
+        }
+
+        private void DetailWebView_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            
+            var pointer = e.GetCurrentPoint(this);
+            if (pointer.PointerDevice.PointerDeviceType != Windows.Devices.Input.PointerDeviceType.Mouse)
+            {
+                _latestPoint = pointer;
+            }
         }
     }
 }

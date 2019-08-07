@@ -18,13 +18,17 @@
             <controls:Feed_SideList Data="{Binding}" Margin="0,5,0,0"/>
         </DataTemplate>
         <MenuFlyout x:Name="SelectTextFlyout" MenuFlyoutPresenterStyle="{StaticResource BasicMenuFlyoutStyle}">
-            <MenuFlyoutSubItem x:Uid="Control_TranslateMenuItem">
-                <MenuFlyoutSubItem.Icon>
+            <MenuFlyoutItem Text="English -> 中文" Name="SelectMenu_Translate_Zh" Click="TextMenu_Translate_Click">
+                <MenuFlyoutItem.Icon>
                     <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE9C1;"/>
-                </MenuFlyoutSubItem.Icon>
-                <MenuFlyoutItem Text="中文" Name="SelectMenu_Translate_Zh" Click="TextMenu_Translate_Click"/>
-                <MenuFlyoutItem Text="English" Name="SelectMenu_Translate_En" Click="TextMenu_Translate_Click"/>
-            </MenuFlyoutSubItem>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem Text="中文 -> English" Name="SelectMenu_Translate_En" Click="TextMenu_Translate_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE9C1;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutSeparator/>
             <MenuFlyoutItem x:Uid="Control_MarkMenuItem" Name="SelectMenu_Mark" Click="SelectMenu_Mark_Click">
                 <MenuFlyoutItem.Icon>
                     <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE91F;"/>
@@ -167,7 +171,7 @@
                     <WebView Name="DetailWebView"
                              DOMContentLoaded="DetailWebView_DOMContentLoaded"
                              ScriptNotify="DetailWebView_ScriptNotify"
-                             
+                             PointerPressed="DetailWebView_PointerPressed"
                  DefaultBackgroundColor="{ThemeResource PageColor}"
                  />
                     <MediaElement Width="5" Height="5" VerticalAlignment="Bottom" HorizontalAlignment="Right" Name="VoiceMediaElement" Visibility="Collapsed"/>

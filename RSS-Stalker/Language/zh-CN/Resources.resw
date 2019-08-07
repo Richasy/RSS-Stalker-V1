@@ -714,4 +714,7 @@
   <data name="Control_HideWebScrollTipBlock.Text" xml:space="preserve">
     <value>隐藏文章页滚动条</value>
   </data>
+  <data name="Control_TranslateCardTipBlock.Text" xml:space="preserve">
+    <value>翻译卡片</value>
+  </data>
 </root>

@@ -26,6 +26,8 @@ using Microsoft.Toolkit.Uwp.Connectivity;
 using Windows.UI.Xaml.Media.Animation;
 using CoreLib.Models.App;
 using Rss.Parsers.Rss;
+using Windows.UI.Input;
+using Windows.Foundation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -45,6 +47,7 @@ namespace RSS_Stalker.Pages
         public static FeedDetailPage Current;
         private string _selectText;
         private string _tempHtml;
+        private PointerPoint _latestPoint;
         /// <summary>
         /// 文章详情页面，主体是WebView
         /// </summary>
@@ -67,6 +70,15 @@ namespace RSS_Stalker.Pages
             {
                 LockButton.Foreground = AppTools.GetThemeSolidColorBrush(ColorType.PrimaryColor);
             }
+            if (_latestPoint == null)
+            {
+                this.PointerPressed += (_s, _e) =>
+                {
+                    var pointer = _e.GetCurrentPoint(this);
+                    _latestPoint = pointer;
+                };
+            }
+            
         }
     protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -547,11 +559,15 @@ namespace RSS_Stalker.Pages
                 // 文本选中事件，弹出对应菜单
                 else if(data.Key=="SelectText" && !string.IsNullOrEmpty(data.Value))
                 {
-                    var pos = Window.Current.CoreWindow.PointerPosition;
+                    var pos = new Point();
+                    if (_latestPoint == null)
+                        pos = Window.Current.CoreWindow.PointerPosition;
+                    else
+                        pos = _latestPoint.Position;
                     double x = pos.X - Window.Current.Bounds.X;
                     double y = pos.Y - Window.Current.Bounds.Y;
                     _selectText = data.Value;
-                    SelectTextFlyout.ShowAt(MainPage.Current.RootGrid, new Windows.Foundation.Point(x,y));
+                    SelectTextFlyout.ShowAt(MainPage.Current.RootGrid, new Point(x,y));
                 }
                 else if(data.Key=="LinkClick" && !string.IsNullOrEmpty(data.Value))
                 {
@@ -612,7 +628,7 @@ namespace RSS_Stalker.Pages
                 string output = await TranslateTools.Translate(_selectText, appId, appKey, "auto", language.ToLower());
                 if (!string.IsNullOrEmpty(output))
                 {
-                    new PopupToast(output,AppTools.GetThemeSolidColorBrush(ColorType.SpecialColor)).ShowPopup();
+                    new TranslateToast(output).ShowPopup();
                 }
                 else
                 {

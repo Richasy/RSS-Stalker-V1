@@ -30,7 +30,7 @@
               Grid.Row="1"
                     Padding="10"
                     >
-                    <TextBlock Name="TranslateContent" TextWrapping="Wrap" IsTextSelectionEnabled="True" TextAlignment="Left" Foreground="White" FontSize="14"></TextBlock>
+                    <TextBlock Name="TranslateContent" TextWrapping="Wrap" IsTextSelectionEnabled="True" TextAlignment="Left" Foreground="{ThemeResource ImportantTextColor}" FontSize="14"></TextBlock>
 
                 </Grid>
             </Grid>

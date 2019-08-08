@@ -19,7 +19,7 @@
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <PackageCertificateKeyFile>
     </PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>8430933C99F7BF0FA100C41CF6FEEC4D7A1721DE</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>491FB5982A27A9C721FA0AF98C80873680B166BC</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxPackageDir>E:\Package\RSS Stalker\</AppxPackageDir>

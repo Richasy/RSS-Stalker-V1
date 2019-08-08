@@ -17,6 +17,24 @@
         <DataTemplate x:DataType="rss:RssSchema" x:Key="FeedItemTemplate">
             <controls:Feed_SideList Data="{Binding}" Margin="0,5,0,0"/>
         </DataTemplate>
+        <Flyout x:Name="TranslateFlyout" FlyoutPresenterStyle="{StaticResource TranslateFlyoutStyle}" Placement="RightEdgeAlignedTop">
+            <Grid MaxWidth="300" CornerRadius="3" Name="PopupContainer">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Padding="10,5,0,10" BorderBrush="{ThemeResource LineColorOver}" BorderThickness="0,0,0,1">
+                    <TextBlock x:Uid="Control_TranslateCardTipBlock" TextTrimming="CharacterEllipsis" FontSize="12" Foreground="{ThemeResource NormalTextColor}" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{StaticResource Basic}"/>
+                </Grid>
+                <Grid
+              Grid.Row="1"
+                    Padding="10"
+                    >
+                    <TextBlock Name="TranslateContent" TextWrapping="Wrap" IsTextSelectionEnabled="True" TextAlignment="Left" Foreground="White" FontSize="14"></TextBlock>
+
+                </Grid>
+            </Grid>
+        </Flyout>
         <MenuFlyout x:Name="SelectTextFlyout" MenuFlyoutPresenterStyle="{StaticResource BasicMenuFlyoutStyle}">
             <MenuFlyoutItem Text="English -> 中文" Name="SelectMenu_Translate_Zh" Click="TextMenu_Translate_Click">
                 <MenuFlyoutItem.Icon>

@@ -19,7 +19,7 @@
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <PackageCertificateKeyFile>
     </PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>A646EE1E2290B787BF67AE1B048E5EB470C3840C</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>8430933C99F7BF0FA100C41CF6FEEC4D7A1721DE</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxPackageDir>E:\Package\RSS Stalker\</AppxPackageDir>
@@ -148,9 +148,6 @@
     </Compile>
     <Compile Include="Controls\PopupToast.xaml.cs">
       <DependentUpon>PopupToast.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\TranslateToast.xaml.cs">
-      <DependentUpon>TranslateToast.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialog\BaiduTranslateDialog.xaml.cs">
       <DependentUpon>BaiduTranslateDialog.xaml</DependentUpon>
@@ -328,10 +325,6 @@
     <Page Include="Controls\PopupToast.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\TranslateToast.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialog\BaiduTranslateDialog.xaml">
       <SubType>Designer</SubType>

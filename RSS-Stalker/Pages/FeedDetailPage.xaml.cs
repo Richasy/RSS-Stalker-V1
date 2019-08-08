@@ -627,7 +627,22 @@ namespace RSS_Stalker.Pages
                 string output = await TranslateTools.Translate(_selectText, appId, appKey, "auto", language.ToLower());
                 if (!string.IsNullOrEmpty(output))
                 {
-                    new TranslateToast(output).ShowPopup();
+                    var pos = new Point();
+                    if (_latestPoint == null)
+                        pos = Window.Current.CoreWindow.PointerPosition;
+                    else
+                        pos = _latestPoint.Position;
+                    double x = pos.X - Window.Current.Bounds.X;
+                    double y = pos.Y - Window.Current.Bounds.Y;
+                    if (_latestPoint == null)
+                    {
+                        x -= 30;
+                        y -= 50;
+                    }
+                    var option = new FlyoutShowOptions();
+                    option.Position = new Point(x, y);
+                    TranslateContent.Text = output;
+                    TranslateFlyout.ShowAt(MainPage.Current.RootGrid, option);
                 }
                 else
                 {

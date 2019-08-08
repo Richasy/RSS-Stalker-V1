@@ -2,9 +2,7 @@
 
 The new version has been revised as follows:
 
-1. The article details page provides the priority of Chinese to English and English to Chinese.
-2. Changed the way the translated card is displayed. Now you need to manually close it and copy the translated content.
-3. Adjust the trigger mode under the touch screen to make the pop-up menu more “follow the hand”
+1. Modify how the translation card is displayed
 
 Thank you :)
 

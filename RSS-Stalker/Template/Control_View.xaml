@@ -16,6 +16,16 @@
         <Setter Property="CornerRadius" Value="3"/>
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden"/>
     </Style>
+    <Style TargetType="FlyoutPresenter" x:Key="TranslateFlyoutStyle">
+        <Setter Property="Background" Value="{ThemeResource FlyoutBackground}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource LineColor}"/>
+        <Setter Property="MaxHeight" Value="9999"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="MaxWidth" Value="900"/>
+        <Setter Property="CornerRadius" Value="3"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden"/>
+    </Style>
     <ControlTemplate x:Name="ScrollViewerScrollBarlessTemplate" TargetType="ScrollViewer">
         <Grid Background="{TemplateBinding Background}">
             <ScrollContentPresenter x:Name="ScrollContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="{TemplateBinding Padding}"/>

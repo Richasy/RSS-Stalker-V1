@@ -2,7 +2,7 @@
 
 The new version has been revised as follows:
 
-1. Modify how the translation card is displayed
+1. Fix the issue of the article time of some of the feeds showing the wrong question
 
 Thank you :)
 

@@ -154,7 +154,7 @@ namespace Rss.Parsers.Rss
             XNamespace ns = "http://search.yahoo.com/mrss/";
             var rssItem = ParseItem(item);
 
-            rssItem.PublishDate = item.GetSafeElementDate("pubDate");
+            rssItem.PublishDate = item.GetSafeElementDate("pubDate").ToLocalTime();
 
             string image = item.GetSafeElementString("image");
             if (string.IsNullOrEmpty(image))

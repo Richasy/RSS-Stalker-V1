@@ -23,6 +23,7 @@ using Windows.UI.Xaml.Navigation;
 using RSS_Stalker.Pages;
 using Microsoft.Toolkit.Uwp.Connectivity;
 using System.Text;
+using Microsoft.AspNetCore.Http;
 
 namespace RSS_Stalker
 {
@@ -142,6 +143,15 @@ namespace RSS_Stalker
                             OpenContentFromTimeline(query);
                         }
                     }
+                    else if (args.Kind == ActivationKind.ToastNotification)
+                    {
+                        var toastArgs=args as ToastNotificationActivatedEventArgs;
+                        if (MainPage.Current != null)
+                        {
+                            MainPage.Current.MainFrame.Navigate(typeof(FeedDetailPage), toastArgs.Argument);
+                            MainPage.Current.ChannelListView.SelectedIndex = -1;
+                        }
+                    }
                 };
                 // 将框架放在当前窗口中
                 Window.Current.Content = rootFrame;
@@ -160,6 +170,15 @@ namespace RSS_Stalker
                     {
                         string[] query = uriArgs.Uri.Query.Split('&');
                         OpenContentFromTimeline(query);
+                    }
+                }
+                else if (args.Kind == ActivationKind.ToastNotification)
+                {
+                    var toastArgs = args as ToastNotificationActivatedEventArgs;
+                    if (MainPage.Current != null)
+                    {
+                        MainPage.Current.MainFrame.Navigate(typeof(FeedDetailPage), toastArgs.Argument);
+                        MainPage.Current.ChannelListView.SelectedIndex = -1;
                     }
                 }
             }

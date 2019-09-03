@@ -1,5 +1,6 @@
 ﻿using CoreLib.Models;
 using CoreLib.Tools;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Newtonsoft.Json;
 using Rss.Parsers.Rss;
@@ -95,7 +96,8 @@ namespace StalkerToast
         {
             var content = new ToastContent()
             {
-                Scenario = ToastScenario.Reminder,
+                Launch = $"{schema.FeedUrl}",
+                Scenario = ToastScenario.Default,
                 Visual = new ToastVisual()
                 {
                     BindingGeneric = new ToastBindingGeneric()
@@ -110,7 +112,8 @@ namespace StalkerToast
                             Text = GetLanguage("RSS 追踪", "RSS Stalker")
                         }
                     }
-                }
+                },
+                ActivationType = ToastActivationType.Foreground
             };
             if (!string.IsNullOrEmpty(schema.ImageUrl))
             {

@@ -150,6 +150,9 @@ namespace RSS_Stalker.Pages
             else
                 ScreenChannelComboBox.SelectedIndex = 0;
             //TestRoamingTimeBlock.Text = AppTools.GetRoamingSetting(AppSettings.BasicUpdateTime, "1");
+            string shortcutFileName = language == "zh_CN" ? "shortcut_zh" : "shortcut_en";
+            var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///{shortcutFileName}.txt"));
+            ShortcutMarkdown.Text = await FileIO.ReadTextAsync(file);
             _isInit = true;
         }
 

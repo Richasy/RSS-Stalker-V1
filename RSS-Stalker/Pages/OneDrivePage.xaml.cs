@@ -88,7 +88,7 @@ namespace RSS_Stalker.Pages
                     var readable = Task.Run(async () =>
                     {
                         var ReadList = await App.OneDrive.GetReadableList();
-                        await IOTools.ReplaceToast(ReadList);
+                        await IOTools.ReplaceReadable(ReadList);
                     });
                     tasks.Add(cate);
                     tasks.Add(todo);

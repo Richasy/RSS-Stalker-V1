@@ -318,6 +318,16 @@ namespace RSS_Stalker
                         }
                     }
                 }
+                else if (ctrl.HasFlag(CoreVirtualKeyStates.Down))
+                {
+                    if (args.VirtualKey == Windows.System.VirtualKey.B)
+                    {
+                        if(MainFrame.Content is Pages.FeedDetailPage)
+                        {
+                            await Pages.FeedDetailPage.Current.OpenWeb();
+                        }
+                    }
+                }
             }
         }
         /// <summary>

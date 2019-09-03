@@ -1,0 +1,8 @@
+﻿|Shortcut|Applicable page|Function Description|
+|-|-|-|
+|Esc|Article details page|Back to previous|
+|←|Article details page|Previous article|
+|→|Article details page|Next article|
+|`Shift` + `R`|Global|Cache all articles|
+|`Shift` + `A`|Article list page|All articles have been read|
+|`Ctrl` + `B`|Article details page|Open your browser and jump to the current article|

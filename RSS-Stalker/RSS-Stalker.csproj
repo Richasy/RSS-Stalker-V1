@@ -19,7 +19,7 @@
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <PackageCertificateKeyFile>
     </PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>491FB5982A27A9C721FA0AF98C80873680B166BC</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>C90902D9605BC67BF9AE1479B699E77EF5A50143</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxPackageDir>E:\Package\RSS Stalker\</AppxPackageDir>
@@ -28,7 +28,7 @@
     <AppInstallerUpdateFrequency>0</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <GenerateTestArtifacts>False</GenerateTestArtifacts>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
@@ -220,6 +220,8 @@
     <Content Include="Assets\Logo\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
     <Content Include="Card.json" />
     <Content Include="en_US.txt" />
+    <Content Include="shortcut_zh.txt" />
+    <Content Include="shortcut_en.txt" />
     <Content Include="Template\lib\highlight.min.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -238,7 +240,6 @@
     <Content Include="Assets\Fonts\Lobste.ttf" />
     <Content Include="Assets\Fonts\YunLinHeiTi.ttf" />
     <None Include="RSS-Stalker_StoreKey.pfx" />
-    <None Include="RSS-Stalker_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\imgHolder_dark.png" />
@@ -428,6 +429,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions">
+      <Version>2.2.0</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.8</Version>
     </PackageReference>

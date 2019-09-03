@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:CoreLib.Models"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d">
     <Page.Resources>
         <DataTemplate x:DataType="models:Channel" x:Key="ChannelItemTemplate">
@@ -241,6 +242,18 @@
                       SelectionMode="None"
                       />
                         </Grid>
+                    </PivotItem>
+                    <PivotItem>
+                        <PivotItem.Header>
+                            <TextBlock x:Uid="Control_ShortcutListTipBlock" FontFamily="{StaticResource Title}" FontWeight="Bold" Foreground="{ThemeResource ImportantTextColor}" FontSize="15"/>
+                        </PivotItem.Header>
+                        <controls:MarkdownTextBlock x:Name="ShortcutMarkdown"
+                                                    TextWrapping="Wrap"
+                                                    Margin="0,15,0,0"
+                                                    VerticalAlignment="Stretch"
+                                                    Background="Transparent"
+                                                    FontFamily="{StaticResource Basic}"
+                                                    />
                     </PivotItem>
                 </Pivot>
             </StackPanel>

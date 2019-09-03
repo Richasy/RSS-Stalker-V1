@@ -28,6 +28,7 @@ using CoreLib.Models.App;
 using Rss.Parsers.Rss;
 using Windows.UI.Input;
 using Windows.Foundation;
+using SmartReader;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -150,6 +151,31 @@ namespace RSS_Stalker.Pages
                         Summary=data[6],
                     };
                     _sourceContent = data[2];
+                    LoadingRing.IsActive = true;
+                    GridViewButton.Visibility = Visibility.Collapsed;
+                    SideListButton.Visibility = Visibility.Collapsed;
+                    FeedListView.Visibility = Visibility.Collapsed;
+                    Grid.SetColumn(SideControlContainer, 1);
+                    MainPage.Current.SideHide();
+                    SideControlContainer.HorizontalAlignment = HorizontalAlignment.Right;
+                    SideControlContainer.Margin = new Thickness(0, 0, 10, 0);
+                    DetailSplitView.IsPaneOpen = false;
+                }
+                // 入口点是通知
+                else if(e.Parameter is string)
+                {
+                    string url = e.Parameter as string;
+                    _sourceFeed = new RssSchema
+                    {
+                        InternalID=url,
+                        FeedUrl=url
+                    };
+                    var content = await ReadabilityFromUrl(url);
+                    _sourceFeed.Content = content.Content??content.TextContent;
+                    _sourceFeed.Title = content.Title;
+                    _sourceFeed.PublishDate = Convert.ToDateTime(content.PublicationDate).ToLocalTime();
+                    _sourceFeed.ImageUrl = content.FeaturedImage;
+                    _sourceContent = content.Content ?? content.TextContent;
                     LoadingRing.IsActive = true;
                     GridViewButton.Visibility = Visibility.Collapsed;
                     SideListButton.Visibility = Visibility.Collapsed;
@@ -686,20 +712,14 @@ namespace RSS_Stalker.Pages
 
         private async void WebButton_Click(object sender, RoutedEventArgs e)
         {
-            //if (_sourceFeed.FeedUrl.Contains("www.ithome.com"))
-            //{
-            //    string link = _sourceFeed.FeedUrl.Replace("https://www.ithome.com/0/", "").Replace(".htm", "");
-            //    link = link.Replace("/", "");
-            //    link = $"ithome://news?id={link}";
-            //    bool result = await Launcher.LaunchUriAsync(new Uri(link));
-            //    if (result)
-            //    {
-            //        return;
-            //    }
-            //}
-            var opt=new LauncherOptions();
+            await OpenWeb();
+        }
+
+        public async Task OpenWeb()
+        {
+            var opt = new LauncherOptions();
             opt.IgnoreAppUriHandlers = true;
-            await Launcher.LaunchUriAsync(new Uri(_sourceFeed.FeedUrl),opt);
+            await Launcher.LaunchUriAsync(new Uri(_sourceFeed.FeedUrl), opt);
         }
 
         private async void SelectMenu_Speech_Click(object sender, RoutedEventArgs e)
@@ -740,26 +760,35 @@ namespace RSS_Stalker.Pages
         /// <param name="e"></param>
         private async void ReadabilityButton_Click(object sender, RoutedEventArgs e)
         {
+            var result = await ReadabilityFromUrl(_sourceFeed.FeedUrl);
+            if (!string.IsNullOrEmpty(_sourceFeed.Content))
+            {
+                DetailWebView.NavigateToString(await PackageHTML(_sourceFeed.Content));
+            }
+        }
+
+        public async Task<Article> ReadabilityFromUrl(string url)
+        {
             if (!NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
                 new PopupToast(AppTools.GetReswLanguage("Tip_FailedWithoutInternet"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
-                return;
+                return null;
             }
             LoadingRing.IsActive = true;
             ReadabilityButton.IsEnabled = false;
-            SmartReader.Article article = await SmartReader.Reader.ParseArticleAsync(_sourceFeed.FeedUrl);
+            Article article = await Reader.ParseArticleAsync(url);
             if (article.IsReadable || !string.IsNullOrEmpty(article.TextContent))
             {
-                string content=await PackageHTML(article.Content??article.TextContent);
-                _sourceFeed.Content = article.Content;
-                DetailWebView.NavigateToString(content);
+                if(_sourceFeed!=null)
+                    _sourceFeed.Content = article.Content ?? article.TextContent;
             }
             else
             {
-                new PopupToast(AppTools.GetReswLanguage("Tip_ReadError"),AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_ReadError"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
             ReadabilityButton.IsEnabled = true;
             LoadingRing.IsActive = false;
+            return article;
         }
 
         private async void SelectMenu_Mark_Click(object sender, RoutedEventArgs e)

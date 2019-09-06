@@ -720,4 +720,7 @@
   <data name="Control_ShortcutListTipBlock.Text" xml:space="preserve">
     <value>快捷键列表</value>
   </data>
+  <data name="Control_CopyMenuItem.Text" xml:space="preserve">
+    <value>复制</value>
+  </data>
 </root>

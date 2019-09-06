@@ -900,5 +900,15 @@ namespace RSS_Stalker.Pages
                 _latestPoint = pointer;
             }
         }
+
+        private void SelectMenu_Copy_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(_selectText))
+            {
+                var dataPackage = new DataPackage();
+                dataPackage.SetText(_selectText);
+                Clipboard.SetContent(dataPackage);
+            }
+        }
     }
 }

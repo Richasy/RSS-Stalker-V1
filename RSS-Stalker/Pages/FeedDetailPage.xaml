@@ -36,6 +36,12 @@
             </Grid>
         </Flyout>
         <MenuFlyout x:Name="SelectTextFlyout" MenuFlyoutPresenterStyle="{StaticResource BasicMenuFlyoutStyle}">
+            <MenuFlyoutItem x:Uid="Control_CopyMenuItem" x:Name="SelectMenu_Copy" Click="SelectMenu_Copy_Click">
+                <MenuFlyoutItem.Icon>
+                    <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE966;"/>
+                </MenuFlyoutItem.Icon>
+            </MenuFlyoutItem>
+            <MenuFlyoutSeparator/>
             <MenuFlyoutItem Text="English -> 中文" Name="SelectMenu_Translate_Zh" Click="TextMenu_Translate_Click">
                 <MenuFlyoutItem.Icon>
                     <FontIcon FontFamily="{StaticResource Icon}" Glyph="&#xE9C1;"/>

@@ -2,7 +2,7 @@
 
 The new version has been revised as follows:
 
-1. Fixed an issue where the page could not jump properly when clicking the notification
+1. Add copy option to the article details pop-up menu
 
 Thank you :)
 

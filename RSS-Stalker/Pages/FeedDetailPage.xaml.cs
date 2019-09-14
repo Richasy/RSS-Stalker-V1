@@ -527,15 +527,13 @@ namespace RSS_Stalker.Pages
             }
             (sender as Button).IsEnabled = true;
         }
-
-        private async void Menu_Translate_Click(object sender, RoutedEventArgs e)
+        public async Task TranslateArticle(string language)
         {
             if (!NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
                 new PopupToast(AppTools.GetReswLanguage("Tip_FailedWithoutInternet"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
                 return;
             }
-            string language = (sender as MenuFlyoutItem).Name.Replace("Menu_Translate_", "");
             string appId = AppTools.GetRoamingSetting(AppSettings.Translate_BaiduAppId, "");
             if (string.IsNullOrEmpty(appId))
             {
@@ -551,7 +549,7 @@ namespace RSS_Stalker.Pages
             else
             {
                 LoadingRing.IsActive = true;
-                string output=await TranslateTools.Translate(_sourceFeed.Content, appId, appKey, "auto", language.ToLower());
+                string output = await TranslateTools.Translate(_sourceFeed.Content, appId, appKey, "auto", language.ToLower());
                 if (!string.IsNullOrEmpty(output))
                 {
                     string html = await PackageHTML(output);
@@ -563,6 +561,11 @@ namespace RSS_Stalker.Pages
                 }
                 LoadingRing.IsActive = false;
             }
+        }
+        private async void Menu_Translate_Click(object sender, RoutedEventArgs e)
+        {
+            string language = (sender as MenuFlyoutItem).Name.Replace("Menu_Translate_", "");
+            await TranslateArticle(language);
         }
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {

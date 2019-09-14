@@ -327,6 +327,14 @@ namespace RSS_Stalker
                             await Pages.FeedDetailPage.Current.OpenWeb();
                         }
                     }
+                    else if(args.VirtualKey == Windows.System.VirtualKey.T)
+                    {
+                        if (MainFrame.Content is Pages.FeedDetailPage)
+                        {
+                            string language = AppTools.GetLocalSetting(AppSettings.Language,"zh_CN").Substring(0, 2).ToLower();
+                            await Pages.FeedDetailPage.Current.TranslateArticle(language);
+                        }
+                    }
                 }
             }
         }

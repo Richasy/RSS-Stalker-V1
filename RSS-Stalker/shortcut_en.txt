@@ -6,3 +6,4 @@
 |`Shift` + `R`|Global|Cache all articles|
 |`Shift` + `A`|Article list page|All articles have been read|
 |`Ctrl` + `B`|Article details page|Open your browser and jump to the current article|
+|`Ctrl` + `T`|Article details page|Full-text translation to default display language|

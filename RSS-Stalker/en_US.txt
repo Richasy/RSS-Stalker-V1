@@ -2,7 +2,7 @@
 
 The new version has been revised as follows:
 
-1. Add copy option to the article details pop-up menu
+1. Add full-text translation shortcuts: Ctrl + T
 
 Thank you :)
 

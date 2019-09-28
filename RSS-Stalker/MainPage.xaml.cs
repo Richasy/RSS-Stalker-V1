@@ -331,7 +331,7 @@ namespace RSS_Stalker
                     {
                         if (MainFrame.Content is Pages.FeedDetailPage)
                         {
-                            string language = AppTools.GetLocalSetting(AppSettings.Language,"zh_CN").Substring(0, 2).ToLower();
+                            string language = AppTools.GetRoamingSetting(AppSettings.Language,"zh_CN").Substring(0, 2).ToLower();
                             await Pages.FeedDetailPage.Current.TranslateArticle(language);
                         }
                     }

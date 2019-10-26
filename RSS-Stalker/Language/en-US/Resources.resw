@@ -723,4 +723,7 @@
   <data name="Control_CopyMenuItem.Text" xml:space="preserve">
     <value>Copy</value>
   </data>
+  <data name="Control_TotalSourceTipRun.Text" xml:space="preserve">
+    <value>Feeds</value>
+  </data>
 </root>

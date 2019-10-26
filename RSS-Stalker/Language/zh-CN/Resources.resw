@@ -723,4 +723,7 @@
   <data name="Control_CopyMenuItem.Text" xml:space="preserve">
     <value>复制</value>
   </data>
+  <data name="Control_TotalSourceTipRun.Text" xml:space="preserve">
+    <value>个订阅源</value>
+  </data>
 </root>

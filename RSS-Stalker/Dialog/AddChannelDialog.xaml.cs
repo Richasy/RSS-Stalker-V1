@@ -66,6 +66,9 @@ namespace RSS_Stalker.Dialog
                         selectCategory.Channels.Add(_sourceChannel);
                         MainPage.Current.Channels.Add(_sourceChannel);
                         MainPage.Current._channelListCount += 1;
+                        int count = Convert.ToInt32(MainPage.Current.TotalSourceNumRun.Text);
+                        count++;
+                        MainPage.Current.TotalSourceNumRun.Text = count.ToString();
                         new PopupToast(AppTools.GetReswLanguage("Tip_AddChannelSuccess")).ShowPopup();
                         Hide();
                         try

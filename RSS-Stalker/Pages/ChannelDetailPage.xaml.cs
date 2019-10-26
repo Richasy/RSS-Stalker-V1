@@ -126,6 +126,11 @@ namespace RSS_Stalker.Pages
                     if (MainPage.Current.TempCache.Count > 0 && MainPage.Current.TempCache.Any(c=>c.Channel.Id==channel.Id))
                     {
                         feed = MainPage.Current.TempCache.Where(c=>c.Channel.Id==channel.Id).FirstOrDefault()?.Feeds;
+                        if (feed.Count == 0)
+                        {
+                            isForceRefresh = true;
+                            goto gg;
+                        }
                     }
                     else
                     {

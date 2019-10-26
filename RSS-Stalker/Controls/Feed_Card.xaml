@@ -41,7 +41,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <TextBlock x:Name="TitleBlock" LineHeight="18" Foreground="{ThemeResource ImportantTextColor}" TextTrimming="CharacterEllipsis" FontSize="14" FontWeight="SemiBold" FontFamily="{StaticResource Title}"/>
+                <TextBlock x:Name="TitleBlock" LineHeight="18" TextTrimming="CharacterEllipsis" FontSize="14" FontWeight="SemiBold" FontFamily="{StaticResource Title}"/>
                 <TextBlock x:Name="SummaryBlock" Margin="0,10,0,0" Grid.Row="1" MaxLines="3" Foreground="{ThemeResource NormalTextColor}" FontSize="12" FontFamily="{StaticResource Basic}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
             </Grid>
         </Grid>

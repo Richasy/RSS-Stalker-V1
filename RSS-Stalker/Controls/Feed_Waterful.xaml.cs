@@ -58,7 +58,9 @@ namespace RSS_Stalker.Controls
                     c.HoldImageControl.Visibility = Visibility.Visible;
                     c.HoldImageControl.Source = data.ImageUrl.StartsWith("//") ? "http:" + data.ImageUrl : data.ImageUrl;
                 }
+                bool isRead = MainPage.Current.ReadIds.Any(p => p.Equals(data.InternalID, StringComparison.OrdinalIgnoreCase));
                 c.TitleBlock.Text = data.Title;
+                c.TitleBlock.Foreground = isRead ? AppTools.GetThemeSolidColorBrush(ColorType.TipTextColor) : AppTools.GetThemeSolidColorBrush(ColorType.ImportantTextColor);
                 c.AuthorNameBlock.Text = data.Author ?? "Yo!";
                 c.SummaryBlock.Text = data.Summary;
                 c.DateBlock.Text= data.PublishDate.ToString(AppTools.GetReswLanguage("App_DateFormat"));

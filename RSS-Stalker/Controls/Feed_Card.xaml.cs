@@ -45,7 +45,9 @@ namespace RSS_Stalker.Controls
             if (data != null)
             {
                 var c = d as Feed_Card;
+                bool isRead = MainPage.Current.ReadIds.Any(p => p.Equals(data.InternalID, StringComparison.OrdinalIgnoreCase));
                 c.TitleBlock.Text = data.Title;
+                c.TitleBlock.Foreground = isRead ? AppTools.GetThemeSolidColorBrush(ColorType.TipTextColor) : AppTools.GetThemeSolidColorBrush(ColorType.ImportantTextColor);
                 c.SummaryBlock.Text = data.Summary;
                 c.FavIconImage.Source = new BitmapImage(new Uri(AppTools.GetFavIcon(data.FeedUrl)));
                 if (!string.IsNullOrEmpty(data.ImageUrl))

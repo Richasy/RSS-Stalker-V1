@@ -11,6 +11,7 @@
     xmlns:controls="using:RSS_Stalker.Controls"
     xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
     SizeChanged="Page_SizeChanged"
+    PointerPressed="Page_PointerPressed"
     mc:Ignorable="d">
     <Page.Resources>
         <converter:ShowFeedDescriptionConverter x:Key="FeedDescShowConverter"/>
@@ -158,6 +159,7 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Horizontal" Margin="0,30" HorizontalAlignment="Center">
                             <!--<TextBlock FontFamily="{StaticResource Icon}" Text="&#xEA14;" Foreground="{ThemeResource PrimaryColor}" FontSize="22" VerticalAlignment="Center" Margin="0,0,10,0"/>-->
@@ -214,7 +216,11 @@
                                   />
                         </Grid>
                         <ProgressBar Grid.Row="3" Background="{ThemeResource LineColor}" Foreground="{ThemeResource PrimaryColor}" x:FieldModifier="Public" Name="CacheProgressBar" Margin="30,0" Height="3" Visibility="Collapsed"/>
-                        <StackPanel Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Center" Margin="0,15">
+                        <TextBlock Style="{StaticResource BasicTipTextStyle}" Grid.Row="4" HorizontalAlignment="Center" Margin="0,10,0,0">
+                            <Run x:Name="TotalSourceNumRun" x:FieldModifier="Public"/>
+                            <Run x:Uid="Control_TotalSourceTipRun"/>
+                        </TextBlock>
+                        <StackPanel Orientation="Horizontal" Grid.Row="5" HorizontalAlignment="Center" Margin="0,15">
                             <ToggleButton Style="{StaticResource CircleToggleButtonStyle}" x:FieldModifier="Public" Name="TodoButton" Click="TodoButton_Click" Content="&#xE924;"/>
                             <ToggleButton Style="{StaticResource CircleToggleButtonStyle}" x:FieldModifier="Public" Margin="15,0" Name="StarButton" Click="StarButton_Click" Content="&#xE9DD;"/>
                             <ToggleButton Style="{StaticResource CircleToggleButtonStyle}" Content="&#xE9CB;" Name="SettingButton" Click="SettingButton_Click"/>

@@ -192,6 +192,12 @@ namespace RSS_Stalker
                     AppSplitView.OpenPaneLength = 250;
                 }
             }
+            int totalSource = 0;
+            foreach (var cate in categories)
+            {
+                totalSource += cate.Channels.Count;
+            }
+            TotalSourceNumRun.Text = totalSource.ToString();
             // 在完成列表装载后，将列表的数量重新赋值给标识符
             _categoryListCount = Categories.Count;
             _channelListCount = Channels.Count;
@@ -440,10 +446,13 @@ namespace RSS_Stalker
             string selectChannelId = (ChannelListView.SelectedItem as Channel)?.Id;
             _categoryListCount = -1;
             Categories.Clear();
+            int totalCount = 0;
             foreach (var item in list)
             {
                 Categories.Add(item);
+                totalCount += item.Channels.Count;
             }
+            TotalSourceNumRun.Text = totalCount.ToString();
             if (!string.IsNullOrEmpty(selectCategoryId))
             {
                 var selectCategory = Categories.Where(p => p.Id == selectCategoryId).FirstOrDefault();
@@ -659,6 +668,9 @@ namespace RSS_Stalker
                     {
                         MainFrame.Navigate(typeof(Pages.WelcomePage));
                     }
+                    int count = Convert.ToInt32(TotalSourceNumRun.Text);
+                    count--;
+                    TotalSourceNumRun.Text = count.ToString();
                     confirmDialog.IsPrimaryButtonEnabled = false;
                     confirmDialog.PrimaryButtonText = AppTools.GetReswLanguage("Tip_Waiting");
                     category.Channels.RemoveAll(p => p.Id == data.Id);
@@ -782,6 +794,9 @@ namespace RSS_Stalker
                     await IOTools.DeleteCategory(data);
                     Categories.Remove(data);
                     _categoryListCount -= 1;
+                    int count = Convert.ToInt32(TotalSourceNumRun.Text);
+                    count-=data.Channels.Count;
+                    TotalSourceNumRun.Text = count.ToString();
                     new PopupToast(AppTools.GetReswLanguage("Tip_DeleteCategorySuccess")).ShowPopup();
                     data = null;
                     confirmDialog.Hide();
@@ -1241,6 +1256,17 @@ namespace RSS_Stalker
                     cate.NoRead -= count;
                 if (channel.NoRead > count-1)
                     channel.NoRead -= count;
+            }
+        }
+
+        private void Page_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            var pointer = e.GetCurrentPoint(this);
+            if(pointer.PointerDevice.PointerDeviceType==Windows.Devices.Input.PointerDeviceType.Mouse
+                && (pointer.Properties.IsXButton1Pressed || pointer.Properties.IsXButton1Pressed))
+            {
+                if (MainFrame.CanGoBack)
+                    MainFrame.GoBack();
             }
         }
     }

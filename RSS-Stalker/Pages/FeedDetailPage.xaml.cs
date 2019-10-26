@@ -292,9 +292,9 @@ namespace RSS_Stalker.Pages
         /// </summary>
         public void CheckBack()
         {
-            if (GridViewButton.Visibility == Visibility.Visible)
+            if (MainPage.Current.MainFrame.CanGoBack)
             {
-                MainPage.Current.MainFrame.Navigate(typeof(ChannelDetailPage), AllFeeds);
+                MainPage.Current.MainFrame.GoBack();
             }
         }
         public async void PreviousArticle()
@@ -608,6 +608,10 @@ namespace RSS_Stalker.Pages
                         new PopupToast(AppTools.GetReswLanguage("Tip_LaunchUriError")).ShowPopup();
                     }
                 }
+                else if (data.Key == "Back")
+                {
+                    CheckBack();
+                }
             }
             catch (Exception)
             {
@@ -778,20 +782,30 @@ namespace RSS_Stalker.Pages
                 return null;
             }
             LoadingRing.IsActive = true;
-            ReadabilityButton.IsEnabled = false;
-            Article article = await Reader.ParseArticleAsync(url);
-            if (article.IsReadable || !string.IsNullOrEmpty(article.TextContent))
+            try
             {
-                if(_sourceFeed!=null)
-                    _sourceFeed.Content = article.Content ?? article.TextContent;
+                ReadabilityButton.IsEnabled = false;
+                Article article = await Reader.ParseArticleAsync(url);
+                if (article.IsReadable || !string.IsNullOrEmpty(article.TextContent))
+                {
+                    if (_sourceFeed != null)
+                        _sourceFeed.Content = article.Content ?? article.TextContent;
+                }
+                else
+                {
+                    new PopupToast(AppTools.GetReswLanguage("Tip_ReadError"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+                }
+                ReadabilityButton.IsEnabled = true;
+                LoadingRing.IsActive = false;
+                return article;
             }
-            else
+            catch (Exception ex)
             {
-                new PopupToast(AppTools.GetReswLanguage("Tip_ReadError"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+                ReadabilityButton.IsEnabled = true;
+                LoadingRing.IsActive = false;
+                new PopupToast(ex.Message, AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+                return null;
             }
-            ReadabilityButton.IsEnabled = true;
-            LoadingRing.IsActive = false;
-            return article;
         }
 
         private async void SelectMenu_Mark_Click(object sender, RoutedEventArgs e)

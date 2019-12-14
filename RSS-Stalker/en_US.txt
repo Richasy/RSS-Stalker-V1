@@ -2,10 +2,7 @@
 
 The new version has been revised as follows:
 
-1. Fix the exception that failed to get data when opening the feed
-2. Now read/unread articles can be distinguished on the title (the title of the unread article is lighter)
-3. The bottom of the sidebar is now increasing to show the current total number of feeds.
-4. An optional operation - Click the mouse side button to return to the previous page (the cursor can not be placed in the reading page, it will be intercepted)
+1. Added a fold button to the sidebar and lowered the width that triggers a full fold (now 900)
 
 Thank you :)
 

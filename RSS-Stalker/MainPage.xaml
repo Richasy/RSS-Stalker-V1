@@ -97,7 +97,7 @@
             </MenuFlyoutItem>
         </MenuFlyout>
         
-        <DataTemplate x:DataType="models1:CustomPage" x:Key="PageItemTemplate">
+        <DataTemplate x:DataType="models1:CustomPage" x:Name="PageItemTemplate">
             <Grid Padding="15,15,0,15" Background="{ThemeResource TransparentBackground}" ContextFlyout="{StaticResource PageMenuFlyout}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -107,7 +107,12 @@
                 <TextBlock Text="{x:Bind Name,Mode=OneWay}" FontFamily="{StaticResource Basic}" Foreground="{ThemeResource PrimaryMenuTextColor}" FontSize="14" VerticalAlignment="Center" Grid.Column="1" Margin="15,0" TextTrimming="CharacterEllipsis" />
             </Grid>
         </DataTemplate>
-        <DataTemplate x:DataType="models:Category" x:Key="CategoryItemTemplate">
+        <DataTemplate x:DataType="models1:CustomPage" x:Name="SlimPageItemTemplate">
+            <Grid Padding="0,15" Background="{ThemeResource TransparentBackground}" ContextFlyout="{StaticResource PageMenuFlyout}">
+                <TextBlock Text="{x:Bind Icon,Mode=OneWay}" HorizontalAlignment="Center" FontFamily="{StaticResource Icon}" ToolTipService.ToolTip="{x:Bind Name}" FontSize="18" VerticalAlignment="Center"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:DataType="models:Category" x:Name="CategoryItemTemplate">
             <Grid Padding="15,15,0,15" Background="{ThemeResource TransparentBackground}" ContextFlyout="{StaticResource CategoryMenuFlyout}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -119,6 +124,11 @@
                 <Border Grid.Column="2" CornerRadius="2" Visibility="{Binding Id, Converter={StaticResource ShowUnreadConverter}}" Background="{ThemeResource CardBackground}" Padding="5,3" VerticalAlignment="Center">
                     <TextBlock Text="{x:Bind NoRead, Mode=OneWay}" Style="{StaticResource BasicTipTextStyle}" Margin="0"/>
                 </Border>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:DataType="models:Category" x:Name="SlimCategoryItemTemplate">
+            <Grid Padding="0,15" Background="{ThemeResource TransparentBackground}" ContextFlyout="{StaticResource CategoryMenuFlyout}">
+                <TextBlock Text="{x:Bind Icon,Mode=OneWay}" FontFamily="{StaticResource Icon}" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTipService.ToolTip="{x:Bind Name,Mode=OneWay}"/>
             </Grid>
         </DataTemplate>
         <DataTemplate x:DataType="models:Channel" x:Key="ChannelItemTemplate">
@@ -156,22 +166,24 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Horizontal" Margin="0,30" HorizontalAlignment="Center">
-                            <!--<TextBlock FontFamily="{StaticResource Icon}" Text="&#xEA14;" Foreground="{ThemeResource PrimaryColor}" FontSize="22" VerticalAlignment="Center" Margin="0,0,10,0"/>-->
-                            <Image Name="AppIcon" VerticalAlignment="Center" Width="20" Margin="0,0,10,0"/>
-                            <TextBlock Name="AppTitleBlock" Foreground="{ThemeResource ImportantTextColor}" FontFamily="{ThemeResource English}" VerticalAlignment="Center" FontSize="15"/>
+                            <Image Name="AppIcon" VerticalAlignment="Center" Width="20"/>
+                            <TextBlock Name="AppTitleBlock" Margin="10,0,0,0" Foreground="{ThemeResource ImportantTextColor}" FontFamily="{ThemeResource English}" VerticalAlignment="Center" FontSize="15"/>
                         </StackPanel>
-                        <Grid Grid.Row="1" x:Name="PageContainer" x:FieldModifier="Public">
+                        <Button Style="{StaticResource TransparentButtonStyle}" FontFamily="{StaticResource Icon}" FontSize="20" VerticalAlignment="Center" Grid.Row="1"
+                                Content="&#xE994;" Margin="40,10,20,10" x:Name="CategoryMenuButton" Click="CategoryMenuButton_Click"/>
+                        <Grid Grid.Row="2" x:Name="PageContainer" x:FieldModifier="Public">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <RelativePanel Padding="50,0,30,0">
+                            <RelativePanel Padding="50,0,30,0" x:Name="PageHeaderContainer">
                                 <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_CustomPageTipBlock" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True"/>
                                 <Button Style="{StaticResource GhostCircleButtonStyle}" Content="&#xE9BA;" Name="AddPageButton" Click="AddPageButton_Click" RelativePanel.AlignVerticalCenterWithPanel="True" RelativePanel.AlignRightWithPanel="True"/>
                             </RelativePanel>
@@ -191,12 +203,12 @@
                                       MaxHeight="300"
                             />
                         </Grid>
-                        <Grid Grid.Row="2" Margin="0,10,0,0">
+                        <Grid Grid.Row="3" Margin="0,10,0,0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <RelativePanel Padding="50,0,30,0">
+                            <RelativePanel Padding="50,0,30,0" x:Name="CategoryHeaderContainer">
                                 <TextBlock Style="{StaticResource BasicTipTextStyle}" x:Uid="Control_CategoryTipBlock" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True"/>
                                 <Button Style="{StaticResource GhostCircleButtonStyle}" Content="&#xE9BA;" Name="AddCategoryButton" Click="AddCategoryButton_Click"  RelativePanel.AlignVerticalCenterWithPanel="True" RelativePanel.AlignRightWithPanel="True"/>
                             </RelativePanel>
@@ -215,12 +227,12 @@
                                   ItemClick="CategoryListView_ItemClick"
                                   />
                         </Grid>
-                        <ProgressBar Grid.Row="3" Background="{ThemeResource LineColor}" Foreground="{ThemeResource PrimaryColor}" x:FieldModifier="Public" Name="CacheProgressBar" Margin="30,0" Height="3" Visibility="Collapsed"/>
-                        <TextBlock Style="{StaticResource BasicTipTextStyle}" Grid.Row="4" HorizontalAlignment="Center" Margin="0,10,0,0">
+                        <ProgressBar Grid.Row="4" Background="{ThemeResource LineColor}" Foreground="{ThemeResource PrimaryColor}" x:FieldModifier="Public" Name="CacheProgressBar" Margin="30,0" Height="3" Visibility="Collapsed"/>
+                        <TextBlock x:Name="TotalSourceContainer" Style="{StaticResource BasicTipTextStyle}" Grid.Row="5" HorizontalAlignment="Center" Margin="0,10,0,0">
                             <Run x:Name="TotalSourceNumRun" x:FieldModifier="Public"/>
                             <Run x:Uid="Control_TotalSourceTipRun"/>
                         </TextBlock>
-                        <StackPanel Orientation="Horizontal" Grid.Row="5" HorizontalAlignment="Center" Margin="0,15">
+                        <StackPanel Orientation="Horizontal" x:Name="OtherControlContainer" Grid.Row="6" HorizontalAlignment="Center" Margin="0,15">
                             <ToggleButton Style="{StaticResource CircleToggleButtonStyle}" x:FieldModifier="Public" Name="TodoButton" Click="TodoButton_Click" Content="&#xE924;"/>
                             <ToggleButton Style="{StaticResource CircleToggleButtonStyle}" x:FieldModifier="Public" Margin="15,0" Name="StarButton" Click="StarButton_Click" Content="&#xE9DD;"/>
                             <ToggleButton Style="{StaticResource CircleToggleButtonStyle}" Content="&#xE9CB;" Name="SettingButton" Click="SettingButton_Click"/>

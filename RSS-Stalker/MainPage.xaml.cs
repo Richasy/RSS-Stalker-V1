@@ -47,6 +47,8 @@ namespace RSS_Stalker
         public bool _isFromTimeline = false;
         public static MainPage Current;
         public bool _isCacheAlert = false;
+        private bool _isCategorySlim = false;
+        private bool _isChannelSlim = false;
         /// <summary>
         /// 分类列表数量标识，在进行数据替换和拖放排序时作为参照。在清空列表前，一定要将该标识设为-1
         /// </summary>
@@ -62,7 +64,7 @@ namespace RSS_Stalker
         /// <summary>
         /// 检测同步的计时器（由于RoamingSettings的不即时性，当前已弃用该功能）
         /// </summary>
-        private DispatcherTimer _checkUpdateTimer=new DispatcherTimer();
+        private DispatcherTimer _checkUpdateTimer = new DispatcherTimer();
         private bool _isInit = false;
         private bool _isTodoButtonClick = false;
         public MainPage()
@@ -88,7 +90,7 @@ namespace RSS_Stalker
             var list = Categories.ToList();
             if (list.Count == _categoryListCount)
             {
-                await IOTools.ReplaceCategory(list,true);
+                await IOTools.ReplaceCategory(list, true);
             }
         }
         private async void ChannelCollectionReordered(object sender, NotifyCollectionChangedEventArgs e)
@@ -122,10 +124,10 @@ namespace RSS_Stalker
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if(e.Parameter !=null && e.Parameter is string)
+            if (e.Parameter != null && e.Parameter is string)
             {
                 string type = e.Parameter as string;
-                if(type=="Timeline")
+                if (type == "Timeline")
                     _isFromTimeline = true;
             }
         }
@@ -181,7 +183,7 @@ namespace RSS_Stalker
             }
             else
             {
-                if(!_isFromTimeline)
+                if (!_isFromTimeline)
                     SelectChannelByCustom();
                 else
                 {
@@ -231,9 +233,9 @@ namespace RSS_Stalker
 
             });
             // 完成OneDrive的数据链接
-            
+
             // TimerInit();
-            
+
             // 注册后台
             RegisterBackground();
             // 注册快捷键
@@ -241,7 +243,7 @@ namespace RSS_Stalker
             await Task.WhenAll(tempTasks);
             _isInit = true;
             // 检查版本更新
-            
+
         }
         private async Task OtherListInit()
         {
@@ -312,13 +314,13 @@ namespace RSS_Stalker
                     {
                         await CacheAll();
                     }
-                    else if(args.VirtualKey==Windows.System.VirtualKey.A)
+                    else if (args.VirtualKey == Windows.System.VirtualKey.A)
                     {
-                        if(MainFrame.Content is Pages.ChannelDetailPage)
+                        if (MainFrame.Content is Pages.ChannelDetailPage)
                         {
                             await Pages.ChannelDetailPage.Current.AllRead();
                         }
-                        else if(MainFrame.Content is Pages.CustomPageDetailPage)
+                        else if (MainFrame.Content is Pages.CustomPageDetailPage)
                         {
                             await Pages.CustomPageDetailPage.Current.AllRead();
                         }
@@ -328,16 +330,16 @@ namespace RSS_Stalker
                 {
                     if (args.VirtualKey == Windows.System.VirtualKey.B)
                     {
-                        if(MainFrame.Content is Pages.FeedDetailPage)
+                        if (MainFrame.Content is Pages.FeedDetailPage)
                         {
                             await Pages.FeedDetailPage.Current.OpenWeb();
                         }
                     }
-                    else if(args.VirtualKey == Windows.System.VirtualKey.T)
+                    else if (args.VirtualKey == Windows.System.VirtualKey.T)
                     {
                         if (MainFrame.Content is Pages.FeedDetailPage)
                         {
-                            string language = AppTools.GetRoamingSetting(AppSettings.Language,"zh_CN").Substring(0, 2).ToLower();
+                            string language = AppTools.GetRoamingSetting(AppSettings.Language, "zh_CN").Substring(0, 2).ToLower();
                             await Pages.FeedDetailPage.Current.TranslateArticle(language);
                         }
                     }
@@ -375,7 +377,7 @@ namespace RSS_Stalker
         private async void CheckRssListUpdate(object sender, object e)
         {
             string localBasicTime = AppTools.GetLocalSetting(AppSettings.BasicUpdateTime, "0");
-            string roamBasicTime = AppTools.GetRoamingSetting(AppSettings.BasicUpdateTime,"1");
+            string roamBasicTime = AppTools.GetRoamingSetting(AppSettings.BasicUpdateTime, "1");
             string localTodoTime = AppTools.GetLocalSetting(AppSettings.TodoUpdateTime, "0");
             string roamTodoTime = AppTools.GetRoamingSetting(AppSettings.TodoUpdateTime, "1");
             string localStarTime = AppTools.GetLocalSetting(AppSettings.StarUpdateTime, "0");
@@ -396,7 +398,7 @@ namespace RSS_Stalker
                 await IOTools.ReplaceTodo(list);
                 TodoList = list;
                 // 如果正在浏览待读页，则替换
-                if(MainFrame.Content is Pages.FeedCollectionPage && _isTodoButtonClick)
+                if (MainFrame.Content is Pages.FeedCollectionPage && _isTodoButtonClick)
                 {
                     Pages.FeedCollectionPage.Current.UpdateLayout(TodoList, AppTools.GetReswLanguage("Tip_Todo"));
                 }
@@ -441,7 +443,7 @@ namespace RSS_Stalker
         public void ReplaceList(List<Category> list)
         {
             string roamTime = AppTools.GetRoamingSetting(AppSettings.BasicUpdateTime, "1");
-            
+
             string selectCategoryId = (CategoryListView.SelectedItem as Category)?.Id;
             string selectChannelId = (ChannelListView.SelectedItem as Channel)?.Id;
             _categoryListCount = -1;
@@ -473,8 +475,8 @@ namespace RSS_Stalker
                     }
                 }
             }
-            
-            
+
+
             _categoryListCount = Categories.Count;
             _channelListCount = Channels.Count;
             AppTools.WriteLocalSetting(AppSettings.BasicUpdateTime, roamTime);
@@ -520,7 +522,7 @@ namespace RSS_Stalker
             {
                 string localVersion = AppTools.GetLocalSetting(AppSettings.AppVersion, "");
                 string nowVersion = string.Format("{0}.{1}.{2}.{3}", Package.Current.Id.Version.Major, Package.Current.Id.Version.Minor, Package.Current.Id.Version.Build, Package.Current.Id.Version.Revision);
-                string lan = AppTools.GetRoamingSetting(AppSettings.Language,"en_US");
+                string lan = AppTools.GetRoamingSetting(AppSettings.Language, "en_US");
                 if (localVersion != nowVersion)
                 {
                     var updateFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///{lan}.txt"));
@@ -533,7 +535,7 @@ namespace RSS_Stalker
             {
                 return;
             }
-            
+
         }
         private void CategoryListView_ItemClick(object sender, ItemClickEventArgs e)
         {
@@ -545,7 +547,7 @@ namespace RSS_Stalker
             ChannelListView.SelectedIndex = -1;
             PageListView.SelectedIndex = -1;
             SideChannelGrid.Visibility = Visibility.Visible;
-            AppSplitView.OpenPaneLength = 550;
+            AppSplitView.OpenPaneLength = _isCategorySlim ? 350 : 550;
             _channelListCount = -1;
             Channels.Clear();
             foreach (var cha in item.Channels)
@@ -564,7 +566,7 @@ namespace RSS_Stalker
             {
                 AppSplitView.IsPaneOpen = false;
             }
-            if(MainFrame.Content is Pages.ChannelDetailPage)
+            if (MainFrame.Content is Pages.ChannelDetailPage)
             {
                 await Pages.ChannelDetailPage.Current.UpdateLayout(item);
             }
@@ -619,7 +621,7 @@ namespace RSS_Stalker
         {
             if (!NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
-                new PopupToast(AppTools.GetReswLanguage("Tip_FailedWithoutInternet"),AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_FailedWithoutInternet"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
                 return;
             }
             var dialog = new AddChannelDialog();
@@ -664,7 +666,7 @@ namespace RSS_Stalker
                 var selectChannel = ChannelListView.SelectedItem as Channel;
                 if (category != null)
                 {
-                    if(selectChannel!=null && selectChannel.Id == data.Id)
+                    if (selectChannel != null && selectChannel.Id == data.Id)
                     {
                         MainFrame.Navigate(typeof(Pages.WelcomePage));
                     }
@@ -702,7 +704,8 @@ namespace RSS_Stalker
             try
             {
                 CacheProgressBar.Maximum = 1;
-                await IOTools.AddCachePage(async (count) => {
+                await IOTools.AddCachePage(async (count) =>
+                {
                     await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
                     {
                         CacheProgressBar.Value = count;
@@ -795,7 +798,7 @@ namespace RSS_Stalker
                     Categories.Remove(data);
                     _categoryListCount -= 1;
                     int count = Convert.ToInt32(TotalSourceNumRun.Text);
-                    count-=data.Channels.Count;
+                    count -= data.Channels.Count;
                     TotalSourceNumRun.Text = count.ToString();
                     new PopupToast(AppTools.GetReswLanguage("Tip_DeleteCategorySuccess")).ShowPopup();
                     data = null;
@@ -812,7 +815,7 @@ namespace RSS_Stalker
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             double width = e.NewSize.Width;
-            if (width > 1400)
+            if (width > 900)
             {
                 AppSplitView.IsPaneOpen = true;
                 AppSplitView.DisplayMode = SplitViewDisplayMode.Inline;
@@ -883,7 +886,7 @@ namespace RSS_Stalker
         private async void ToastChannelMenuItem_Click(object sender, RoutedEventArgs e)
         {
             var data = (sender as FrameworkElement).DataContext as Channel;
-            if (ToastList.Any(p => p.Link == data.Link || p.Id==data.Id))
+            if (ToastList.Any(p => p.Link == data.Link || p.Id == data.Id))
             {
                 new PopupToast(AppTools.GetReswLanguage("Tip_ToastRepeat"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
@@ -906,7 +909,7 @@ namespace RSS_Stalker
             if (IsCustomHome)
             {
                 SideChannelGrid.Visibility = Visibility.Visible;
-                AppSplitView.OpenPaneLength = 550;
+                AppSplitView.OpenPaneLength = _isCategorySlim? 350: 550;
                 if (string.IsNullOrEmpty(channelId))
                 {
                     CategoryListView.SelectedItem = Categories.FirstOrDefault();
@@ -927,7 +930,7 @@ namespace RSS_Stalker
                 }
                 else
                 {
-                    Channel selectItem=null;
+                    Channel selectItem = null;
                     foreach (var cat in Categories)
                     {
                         if (cat.Channels.Any(p => p.Id == channelId))
@@ -965,7 +968,7 @@ namespace RSS_Stalker
                 AppSplitView.OpenPaneLength = 250;
                 if (string.IsNullOrEmpty(pageId))
                 {
-                    var first= CustomPages.FirstOrDefault();
+                    var first = CustomPages.FirstOrDefault();
                     if (first != null)
                     {
                         PageListView.SelectedItem = first;
@@ -1002,7 +1005,7 @@ namespace RSS_Stalker
             else
             {
                 SideChannelGrid.Visibility = Visibility.Visible;
-                AppSplitView.OpenPaneLength = 550;
+                AppSplitView.OpenPaneLength = _isCategorySlim ? 350 : 550;
                 CategoryListView.SelectedItem = Categories.FirstOrDefault();
                 CategoryNameTextBlock.Text = Categories.First().Name;
                 foreach (var channel in Categories.First().Channels)
@@ -1011,7 +1014,7 @@ namespace RSS_Stalker
                 }
                 MainFrame.Navigate(typeof(Pages.WelcomePage));
             }
-            
+
         }
 
         private void HomeChannelMenuItem_Click(object sender, RoutedEventArgs e)
@@ -1029,12 +1032,12 @@ namespace RSS_Stalker
             LoadingRing.IsActive = true;
             try
             {
-                await IOTools.AddCacheChannel(null,data);
+                await IOTools.AddCacheChannel(null, data);
                 new PopupToast(AppTools.GetReswLanguage("Tip_CacheSuccess")).ShowPopup();
             }
             catch (Exception)
             {
-                new PopupToast(AppTools.GetReswLanguage("Tip_CacheFailed"),AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_CacheFailed"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
             }
             LoadingRing.IsActive = false;
         }
@@ -1047,12 +1050,13 @@ namespace RSS_Stalker
             try
             {
                 CacheProgressBar.Maximum = data.Channels.Count;
-                await IOTools.AddCacheChannel(async (count)=> {
+                await IOTools.AddCacheChannel(async (count) =>
+                {
                     await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
                     {
                         CacheProgressBar.Value = count;
                     });
-                     },
+                },
                     data.Channels.ToArray());
                 new PopupToast(AppTools.GetReswLanguage("Tip_CacheSuccess")).ShowPopup();
             }
@@ -1088,7 +1092,7 @@ namespace RSS_Stalker
                 MainFrame.Navigate(typeof(Pages.OperaterCustomPage));
             }
             else
-                new PopupToast(AppTools.GetReswLanguage("Tip_AddChannelFirst"),AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
+                new PopupToast(AppTools.GetReswLanguage("Tip_AddChannelFirst"), AppTools.GetThemeSolidColorBrush(ColorType.ErrorColor)).ShowPopup();
         }
 
         private async void PageListView_ItemClick(object sender, ItemClickEventArgs e)
@@ -1177,7 +1181,7 @@ namespace RSS_Stalker
                     list.Add(cha);
                 }
             }
-            
+
             if (list.Count > 0)
             {
                 try
@@ -1221,7 +1225,7 @@ namespace RSS_Stalker
                                     });
                                     channelCount += 1;
                                     CacheProgressBar.Value = channelCount;
-                                    
+
                                 });
                             }));
                         }
@@ -1231,7 +1235,7 @@ namespace RSS_Stalker
                             {
                                 await Task.WhenAll(channelTasks);
                                 category.NoRead = cateNoRead;
-                                
+
                             });
                         }));
                     }
@@ -1246,15 +1250,15 @@ namespace RSS_Stalker
                 }
             }
         }
-        public void CategroyAndChannelDecrease(int count=1)
+        public void CategroyAndChannelDecrease(int count = 1)
         {
             var cate = CategoryListView.SelectedItem as Category;
             var channel = ChannelListView.SelectedItem as Channel;
-            if(cate!=null && channel != null)
+            if (cate != null && channel != null)
             {
-                if (cate.NoRead > count-1)
+                if (cate.NoRead > count - 1)
                     cate.NoRead -= count;
-                if (channel.NoRead > count-1)
+                if (channel.NoRead > count - 1)
                     channel.NoRead -= count;
             }
         }
@@ -1262,11 +1266,50 @@ namespace RSS_Stalker
         private void Page_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             var pointer = e.GetCurrentPoint(this);
-            if(pointer.PointerDevice.PointerDeviceType==Windows.Devices.Input.PointerDeviceType.Mouse
+            if (pointer.PointerDevice.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse
                 && (pointer.Properties.IsXButton1Pressed || pointer.Properties.IsXButton1Pressed))
             {
                 if (MainFrame.CanGoBack)
                     MainFrame.GoBack();
+            }
+        }
+
+        private void CategoryMenuButton_Click(object sender, RoutedEventArgs e)
+        {
+            _isCategorySlim = !_isCategorySlim;
+            if (_isCategorySlim)
+            {
+                CategoryListView.ItemTemplate = SlimCategoryItemTemplate;
+                PageListView.ItemTemplate = SlimPageItemTemplate;
+                PageListView.Margin = new Thickness(0, 10, 0, 0);
+                CategoryListView.Margin = new Thickness(0, 10, 0, 0);
+                CategoryMenuButton.HorizontalAlignment = HorizontalAlignment.Center;
+                CategoryMenuButton.Margin = new Thickness(0, 10, 0, 10);
+                SideCategoryGrid.Width = 50;
+                OtherControlContainer.Orientation = Orientation.Vertical;
+                StarButton.Margin = new Thickness(0, 15, 0, 15);
+                PageHeaderContainer.Visibility = Visibility.Collapsed;
+                CategoryHeaderContainer.Visibility = Visibility.Collapsed;
+                AppTitleBlock.Visibility = Visibility.Collapsed;
+                TotalSourceContainer.Visibility = Visibility.Collapsed;
+                AppSplitView.OpenPaneLength = 350;
+            }
+            else
+            {
+                CategoryListView.ItemTemplate = CategoryItemTemplate;
+                PageListView.ItemTemplate = PageItemTemplate;
+                PageListView.Margin = new Thickness(20, 10, 20, 0);
+                CategoryListView.Margin = new Thickness(20, 10, 20, 0);
+                CategoryMenuButton.HorizontalAlignment = HorizontalAlignment.Left;
+                CategoryMenuButton.Margin = new Thickness(40, 10, 20, 10);
+                SideCategoryGrid.Width = 250;
+                OtherControlContainer.Orientation = Orientation.Horizontal;
+                StarButton.Margin = new Thickness(15, 0, 15, 0);
+                PageHeaderContainer.Visibility = Visibility.Visible;
+                CategoryHeaderContainer.Visibility = Visibility.Visible;
+                AppTitleBlock.Visibility = Visibility.Visible;
+                TotalSourceContainer.Visibility = Visibility.Visible;
+                AppSplitView.OpenPaneLength = 550;
             }
         }
     }

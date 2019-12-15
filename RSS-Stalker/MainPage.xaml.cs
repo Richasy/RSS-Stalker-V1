@@ -49,6 +49,7 @@ namespace RSS_Stalker
         public bool _isCacheAlert = false;
         private bool _isCategorySlim = false;
         private bool _isChannelSlim = false;
+        public bool _isChannelAbout = false;
         /// <summary>
         /// 分类列表数量标识，在进行数据替换和拖放排序时作为参照。在清空列表前，一定要将该标识设为-1
         /// </summary>
@@ -635,7 +636,7 @@ namespace RSS_Stalker
             {
                 AppSplitView.IsPaneOpen = false;
             }
-            AppSplitView.OpenPaneLength = 250;
+            AppSplitView.OpenPaneLength = _isCategorySlim ? 50 : 250; ;
             CategoryListView.SelectedIndex = -1;
             TodoButton.IsChecked = false;
             StarButton.IsChecked = false;
@@ -845,7 +846,7 @@ namespace RSS_Stalker
             StarButton.IsChecked = false;
             PageListView.SelectedIndex = -1;
             SideChannelGrid.Visibility = Visibility.Collapsed;
-            AppSplitView.OpenPaneLength = 250;
+            AppSplitView.OpenPaneLength = _isCategorySlim ? 50 : 250;
             CategoryListView.SelectedIndex = -1;
             string title = AppTools.GetReswLanguage("Tip_TodoList");
             if (MainFrame.Content is Pages.FeedCollectionPage)
@@ -869,7 +870,7 @@ namespace RSS_Stalker
             SettingButton.IsChecked = false;
             PageListView.SelectedIndex = -1;
             SideChannelGrid.Visibility = Visibility.Collapsed;
-            AppSplitView.OpenPaneLength = 250;
+            AppSplitView.OpenPaneLength = _isCategorySlim ? 50 : 250; 
             CategoryListView.SelectedIndex = -1;
             string title = AppTools.GetReswLanguage("Tip_StarList");
             if (MainFrame.Content is Pages.FeedCollectionPage)
@@ -965,7 +966,7 @@ namespace RSS_Stalker
             {
                 CategoryNameTextBlock.Text = "RSS Stalker";
                 SideChannelGrid.Visibility = Visibility.Collapsed;
-                AppSplitView.OpenPaneLength = 250;
+                AppSplitView.OpenPaneLength = _isCategorySlim ? 50 : 250; ;
                 if (string.IsNullOrEmpty(pageId))
                 {
                     var first = CustomPages.FirstOrDefault();
@@ -1087,7 +1088,7 @@ namespace RSS_Stalker
                 SettingButton.IsChecked = false;
                 CategoryListView.SelectedIndex = -1;
                 SideChannelGrid.Visibility = Visibility.Collapsed;
-                AppSplitView.OpenPaneLength = 250;
+                AppSplitView.OpenPaneLength = _isCategorySlim ? 50 : 250; ;
                 CategoryNameTextBlock.Text = AppTools.GetReswLanguage("Tip_AddCustomPage");
                 MainFrame.Navigate(typeof(Pages.OperaterCustomPage));
             }
@@ -1121,7 +1122,7 @@ namespace RSS_Stalker
             CategoryListView.SelectedIndex = -1;
             ChannelListView.SelectedIndex = -1;
             SideChannelGrid.Visibility = Visibility.Collapsed;
-            AppSplitView.OpenPaneLength = 250;
+            AppSplitView.OpenPaneLength = _isCategorySlim ? 50 : 250; ;
             _channelListCount = -1;
             Channels.Clear();
             _channelListCount = 0;
@@ -1292,7 +1293,7 @@ namespace RSS_Stalker
                 CategoryHeaderContainer.Visibility = Visibility.Collapsed;
                 AppTitleBlock.Visibility = Visibility.Collapsed;
                 TotalSourceContainer.Visibility = Visibility.Collapsed;
-                AppSplitView.OpenPaneLength = 350;
+                AppSplitView.OpenPaneLength = _isChannelAbout?350:50;
             }
             else
             {
@@ -1309,7 +1310,7 @@ namespace RSS_Stalker
                 CategoryHeaderContainer.Visibility = Visibility.Visible;
                 AppTitleBlock.Visibility = Visibility.Visible;
                 TotalSourceContainer.Visibility = Visibility.Visible;
-                AppSplitView.OpenPaneLength = 550;
+                AppSplitView.OpenPaneLength = _isChannelAbout ? 550 : 250;
             }
         }
     }

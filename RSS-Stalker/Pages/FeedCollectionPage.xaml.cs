@@ -46,6 +46,7 @@ namespace RSS_Stalker.Pages
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            MainPage.Current._isChannelAbout = false;
             if (e.NavigationMode == NavigationMode.Back)
             {
                 return;

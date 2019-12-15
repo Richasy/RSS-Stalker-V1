@@ -40,6 +40,7 @@ namespace RSS_Stalker.Pages
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
+            MainPage.Current._isChannelAbout = false;
             if (e.NavigationMode == NavigationMode.Back)
             {
                 //if (FeedCollection.Count > 0 && JustNoReadSwitch.IsOn)

@@ -46,6 +46,7 @@ namespace RSS_Stalker.Pages
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            MainPage.Current._isChannelAbout = true;
             AllList.Clear();
             IconCollection.Clear();
             RuleCollection.Clear();

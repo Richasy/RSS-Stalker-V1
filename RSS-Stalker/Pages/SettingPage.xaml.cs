@@ -46,6 +46,12 @@ namespace RSS_Stalker.Pages
             NavigationCacheMode = NavigationCacheMode.Enabled;
             PageInit();
         }
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            MainPage.Current._isChannelAbout = false;
+            if (e.NavigationMode == NavigationMode.Back || _isInit)
+                return;
+        }
         public async void PageInit()
         {
             string theme = AppTools.GetRoamingSetting(AppSettings.Theme,"Light");

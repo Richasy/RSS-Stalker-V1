@@ -50,6 +50,7 @@ namespace RSS_Stalker.Pages
         {
             NoDataTipContainer.Visibility = Visibility.Collapsed;
             AllReadTipContainer.Visibility = Visibility.Collapsed;
+            MainPage.Current._isChannelAbout = true;
             if (e.NavigationMode == NavigationMode.Back)
             {
                 //if (FeedCollection.Count > 0 && JustNoReadSwitch.IsOn)

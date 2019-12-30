@@ -549,6 +549,7 @@ namespace RSS_Stalker
             PageListView.SelectedIndex = -1;
             SideChannelGrid.Visibility = Visibility.Visible;
             AppSplitView.OpenPaneLength = _isCategorySlim ? 350 : 550;
+            _isChannelAbout = true;
             _channelListCount = -1;
             Channels.Clear();
             foreach (var cha in item.Channels)
@@ -838,6 +839,7 @@ namespace RSS_Stalker
         private void TodoButton_Click(object sender, RoutedEventArgs e)
         {
             _isTodoButtonClick = true;
+            _isChannelAbout = false;
             if (MinsizeHeaderContainer.Visibility == Visibility.Visible)
             {
                 AppSplitView.IsPaneOpen = false;
@@ -866,6 +868,7 @@ namespace RSS_Stalker
             {
                 AppSplitView.IsPaneOpen = false;
             }
+            _isChannelAbout = false;
             TodoButton.IsChecked = false;
             SettingButton.IsChecked = false;
             PageListView.SelectedIndex = -1;
@@ -909,6 +912,7 @@ namespace RSS_Stalker
             string pageId = AppTools.GetLocalSetting(AppSettings.ScreenPage, "");
             if (IsCustomHome)
             {
+                _isChannelAbout = true;
                 SideChannelGrid.Visibility = Visibility.Visible;
                 AppSplitView.OpenPaneLength = _isCategorySlim? 350: 550;
                 if (string.IsNullOrEmpty(channelId))
@@ -964,6 +968,7 @@ namespace RSS_Stalker
             }
             else if (IsCustomPage)
             {
+                _isChannelAbout = false;
                 CategoryNameTextBlock.Text = "RSS Stalker";
                 SideChannelGrid.Visibility = Visibility.Collapsed;
                 AppSplitView.OpenPaneLength = _isCategorySlim ? 50 : 250; ;
@@ -1013,6 +1018,7 @@ namespace RSS_Stalker
                 {
                     Channels.Add(channel);
                 }
+                _isChannelAbout = true;
                 MainFrame.Navigate(typeof(Pages.WelcomePage));
             }
 
@@ -1099,6 +1105,7 @@ namespace RSS_Stalker
         private async void PageListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as CustomPage;
+            _isChannelAbout = false;
             CloseCategory();
             if (MinsizeHeaderContainer.Visibility == Visibility.Visible)
             {

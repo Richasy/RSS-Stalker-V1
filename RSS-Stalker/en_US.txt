@@ -2,7 +2,7 @@
 
 The new version has been revised as follows:
 
-1. Added a fold button to the sidebar and lowered the width that triggers a full fold (now 900)
+1. Fix the problem of abnormal blank when the sidebar is collapsed
 
 Thank you :)
 

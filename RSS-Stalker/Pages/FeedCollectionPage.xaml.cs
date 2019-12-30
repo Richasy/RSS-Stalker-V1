@@ -60,6 +60,7 @@ namespace RSS_Stalker.Pages
                     var feed = data.Item1;
                     AllFeed = feed;
                     TitleTextBlock.Text = data.Item2;
+                    FeedCollection.Clear();
                     foreach (var item in feed)
                     {
                         FeedCollection.Add(item);

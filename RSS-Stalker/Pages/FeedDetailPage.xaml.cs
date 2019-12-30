@@ -82,7 +82,6 @@ namespace RSS_Stalker.Pages
         }
     protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            MainPage.Current._isChannelAbout = true;
             if (e.NavigationMode == NavigationMode.Back)
             {
                 ReadabilityButton.IsEnabled = true;

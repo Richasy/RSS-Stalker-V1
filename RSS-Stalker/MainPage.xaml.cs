@@ -24,6 +24,7 @@ using CoreLib.Models.App;
 using Windows.UI.Xaml.Media.Imaging;
 using System.Text;
 using Rss.Parsers.Rss;
+using RSS_Stalker.Pages;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -680,6 +681,11 @@ namespace RSS_Stalker
                     category.Channels.RemoveAll(p => p.Id == data.Id);
                     await IOTools.UpdateCategory(category);
                     Channels.Remove(data);
+                    await IOTools.RemoveNeedToastChannel(data);
+                    if (SettingPage.Current != null)
+                    {
+                        SettingPage.Current.ToastChannels.Remove(data);
+                    }
                     _channelListCount -= 1;
                     new PopupToast(AppTools.GetReswLanguage("Tip_DeleteChannelSuccess")).ShowPopup();
                     data = null;

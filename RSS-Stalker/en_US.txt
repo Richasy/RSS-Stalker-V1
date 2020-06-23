@@ -2,7 +2,7 @@
 
 The new version has been revised as follows:
 
-1. Fix the problem of abnormal blank when the sidebar is collapsed
+1. Fixed the issue that the channel notification was not removed when deleting the channel
 
 Thank you :)
 

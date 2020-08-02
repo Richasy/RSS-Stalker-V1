@@ -25,6 +25,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using System.Text;
 using Rss.Parsers.Rss;
 using RSS_Stalker.Pages;
+using Windows.System;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -529,7 +530,12 @@ namespace RSS_Stalker
                 {
                     var updateFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///{lan}.txt"));
                     string updateInfo = await FileIO.ReadTextAsync(updateFile);
-                    await new ConfirmDialog(AppTools.GetReswLanguage("Tip_UpdateTip"), updateInfo).ShowAsync();
+                    var dialog = new ConfirmDialog(AppTools.GetReswLanguage("Tip_UpdateTip"), updateInfo);
+                    dialog.PrimaryButtonClick += async (_s, _e) =>
+                    {
+                        await Launcher.LaunchUriAsync(new Uri("https://www.richasy.cn/document/rss/beta.html"));
+                    };
+                    await dialog.ShowAsync();
                     AppTools.WriteLocalSetting(AppSettings.AppVersion, nowVersion);
                 }
             }

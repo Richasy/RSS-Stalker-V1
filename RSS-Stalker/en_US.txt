@@ -1,12 +1,17 @@
-﻿You have updated to the new version.
+﻿Important news! ! !
 
-The new version has been revised as follows:
+RSS Tracking V2 internal beta is now open and the official version is expected to be released in mid-August.
 
-1. Fixed the issue that the channel notification was not removed when deleting the channel
+The new version is not compatible with the old version data, please make a backup of the feed in advance
 
-Thank you :)
+The new version has been newly designed and brought a new experience:
 
----
-My E-mail: thansy@foxmail.com
+1. UI redesign, improve information density, enhance usage efficiency, and support global font modification
+2. Adapt to a variety of mainstream RSS cloud services to ensure a smooth multi-terminal experience
+3. Support podcast sources, now you can listen to the audio on the reading page
+3. The "Page" function has been redesigned to ensure compatibility between different RSS services
+4. Redesign the reading right-click menu, especially strengthen the translation function, no need to manually integrate Baidu translation tokens
+5. Support full-screen viewing of pictures, double-click the picture or click the blank space of the pop-up layer to close it.
+6. Strengthen the adaptive experience of the application to ensure that the application has a good experience on devices with different resolutions
 
-That's all, good luck.
+For early access, please click the button to view related instructions

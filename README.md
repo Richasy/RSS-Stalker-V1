@@ -8,6 +8,8 @@
 
 V1版本是RSS Stalker的初始版本，通过OneDrive保存订阅源。
 
+*V2版本已将应用英文名更为RSS Tracker，原因是Stalker在英文语境中有很强的贬义*
+
 考虑到实际的使用需求，通过OneDrive作为RSS的服务只能满足基本的需求，而无法应对多端阅读的场景。遂放弃对该版本的开发，转而开发面向在线服务的新版客户端。
 
 该版本目前已作归档处理，并开源。在[Release](https://github.com/Richasy/RSS-Stalker-Old/releases/)页面，你可以下载应用的侧加载包进行安装。

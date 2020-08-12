@@ -25,7 +25,7 @@ namespace CoreLib.Tools
         /// <summary>
         /// 客户端ID
         /// </summary>
-        private string _clientId = "e4ef459e-d6cb-47e7-a462-f028083d1968";
+        private string _clientId = "your_client_id";
         /// <summary>
         /// 授权范围
         /// </summary>
